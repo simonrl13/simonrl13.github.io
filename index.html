@@ -1,137 +1,179 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simon Laborde – Resume</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            background-image: url('background_2.jpg');
-            background-size: cover;
-        }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 40px 0;
-            color: #000;
-        }
-        h1 {
-            font-family: 'Arial Black', sans-serif;
-        }
-        h2 {
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-            color: #007bff;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: #333;
-        }
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        a:hover {
-            color: #0056b3;
-        }
-        .icon {
-            margin-right: 8px;
-        }
-    </style>
+    <title>Simon Laborde | Software Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>Simon Rodrigues Laborde</h1>
-        <p>Software Developer</p>
-        <p>Campina Grande, Paraíba – Brazil</p>
-        <p>Phone: +55 83 99895-2969 | Email: <a href="mailto:simonrl865@gmail.com">simonrl865@gmail.com</a></p>
-        <p>GitHub: <a href="https://github.com/simonrl13">github.com/simonrl13</a></p>
-    </header>
 
-    <section class="section">
-        <h2>Objective</h2>
-        <p>Versatile software developer with strong skills in Python and Java, open to working across different development areas including frontend technologies and machine learning/AI. Seeking opportunities to contribute to impactful projects while continuously learning and evolving as a professional.</p>
-    </section>
-
-    <section class="section">
-        <h2>Education</h2>
-        <ul>
-            <li><strong>UNIFACISA</strong> – Bachelor in Information Systems (expected Dec/2025)</li>
-            <li><strong>UFCG</strong> – Computer Science (2016–2018)</li>
-            <li><strong>UNIFACISA</strong> – Game Development (2018–2020)</li>
-            <li><strong>Thesis (in progress):</strong> “AI-Based Tool for Automating Medical Records and Recommending Preventive Exams” – Focus: integration with the PEC system (Brazil’s public health record system)</li>
+    <nav id="navbar">
+        <div class="logo">SL.</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
+        <div class="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="hero-content">
+            <h3>Hello, I'm</h3>
+            <h1>Simon Laborde</h1>
+            <h3 class="typing-text">I am a <span class="typewriter"></span></h3>
+            <p>Versatile software developer bridging the gap between Backend Systems and AI.</p>
+            <div class="social-icons">
+                <a href="https://github.com/simonrl13" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/simon-laborde-2131861bb/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:simonrl865@gmail.com"><i class="fas fa-envelope"></i></a>
+            </div>
+            <a href="#contact" class="btn">Get In Touch</a>
+        </div>
+        <div class="hero-blob"></div>
     </section>
 
-    <section class="section">
-        <h2>Languages</h2>
-        <ul>
-            <li>Portuguese – C2</li>
-            <li>English – C1</li>
-            <li>French – C1</li>
-            <li>Spanish – B1</li>
-        </ul>
+    <section id="about">
+        <h2 class="section-title">My Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item left">
+                <div class="content">
+                    <h3>2022 - 2023</h3>
+                    <h2>Software Developer</h2>
+                    <h4>Accenture</h4>
+                    <p>Optimized backend processes using Oracle BRM, Shell Script, and C. Generated financial reports with Oracle BI Publisher in an Agile environment.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="content">
+                    <h3>2025 (Expected)</h3>
+                    <h2>Bachelor in Info. Systems</h2>
+                    <h4>UNIFACISA</h4>
+                    <p>Focusing on AI integration with health systems. Thesis: "AI-Based Tool for Automating Medical Records".</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="content">
+                    <h3>2018 - 2020</h3>
+                    <h2>Game Development</h2>
+                    <h4>UNIFACISA</h4>
+                    <p>Foundation in interactive software design and logic.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="section">
-        <h2>Technical Skills</h2>
-        <p><strong>Programming Languages:</strong> Python (Advanced), Java (Advanced), C (Intermediate), PL/SQL (Advanced), JavaScript (Basic), Shell Script (Basic), Ionic (Basic), C# (Basic)</p>
-        <p><strong>Web Development:</strong> HTML (Intermediate), CSS (Intermediate), Bootstrap (Intermediate), Vue.js (Basic)</p>
-        <p><strong>Tools & Platforms:</strong> Git, Oracle BI Publisher, Oracle BRM, Figma, JIRA, Adobe Photoshop, Adobe Illustrator</p>
-        <p><strong>Methodologies:</strong> Agile / Scrum (Experienced)</p>
+    <section id="skills">
+        <h2 class="section-title">Technical Arsenal</h2>
+        <div class="skills-container">
+            <div class="skill-category">
+                <h3>Languages</h3>
+                <div class="skill-tags">
+                    <span>Python (Adv)</span>
+                    <span>Java (Adv)</span>
+                    <span>PL/SQL</span>
+                    <span>C</span>
+                    <span>JavaScript</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>Web & Tools</h3>
+                <div class="skill-tags">
+                    <span>HTML/CSS</span>
+                    <span>Bootstrap</span>
+                    <span>Git</span>
+                    <span>Oracle BI</span>
+                    <span>Docker</span>
+                    <span>Figma</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>Spoken Languages</h3>
+                <div class="skill-tags">
+                    <span>Portuguese (C2)</span>
+                    <span>English (C1)</span>
+                    <span>French (C1)</span>
+                    <span>Spanish (B1)</span>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="section">
-        <h2>Professional Experience</h2>
-        <ul>
-            <li><strong>Accenture</strong> – Software Developer (06/2022 – 06/2023)<br>
-                - Worked on a financial system using Oracle BRM, Shell Script, and C<br>
-                - Used Agile methodology with JIRA for coordination<br>
-                - Generated financial reports with Oracle BI Publisher<br>
-                - Optimized backend processes
-            </li>
-            <li><strong>Freelancer</strong> – Software Development<br>
-                - Built interfaces using HTML, CSS, JavaScript, Bootstrap, and Vue<br>
-                - Backend with Python and Java<br>
-                - Hybrid app with Ionic<br>
-                - Designed with Figma
-            </li>
-        </ul>
+    <section id="portfolio">
+        <h2 class="section-title">Portfolio</h2>
+        <div class="carousel-container">
+            <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <div class="carousel-track-container">
+                <ul class="carousel-track">
+                    <li class="carousel-slide current-slide">
+                        <div class="project-card">
+                            <div class="card-icon"><i class="fas fa-brain"></i></div>
+                            <h3>AI Medical Records</h3>
+                            <p>An AI tool integrating with Brazil's PEC system to automate records and recommend exams.</p>
+                            <button class="details-btn" data-project="1">View Details</button>
+                        </div>
+                    </li>
+                    <li class="carousel-slide">
+                        <div class="project-card">
+                            <div class="card-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                            <h3>Financial System Optimization</h3>
+                            <p>Backend optimization for a major financial system using Oracle BRM and Shell Scripting.</p>
+                            <button class="details-btn" data-project="2">View Details</button>
+                        </div>
+                    </li>
+                    <li class="carousel-slide">
+                        <div class="project-card">
+                            <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <h3>Hybrid Mobile App</h3>
+                            <p>Developed using Ionic and Vue.js, featuring a clean UI designed in Figma.</p>
+                            <button class="details-btn" data-project="3">View Details</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="carousel-nav">
+            <button class="carousel-indicator current-slide"></button>
+            <button class="carousel-indicator"></button>
+            <button class="carousel-indicator"></button>
+        </div>
     </section>
 
-    <section class="section">
-        <h2>Certificates</h2>
-        <ul>
-            <li>Accenture Academy – Tech’s Cool: Oracle BRM</li>
-            <li>Scrum Fundamentals Certified (SFC)</li>
-        </ul>
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">Project Title</h2>
+            <p id="modal-desc">Project description goes here...</p>
+            <div class="modal-tags" id="modal-tech"></div>
+        </div>
+    </div>
+
+    <section id="contact">
+        <h2 class="section-title">Let's Connect</h2>
+        <div class="contact-container">
+            <form class="contact-form" action="mailto:simonrl865@gmail.com" method="post" enctype="text/plain">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
     </section>
 
-    <section class="section">
-        <h2>LinkedIn</h2>
-        <p><a href="https://www.linkedin.com/in/simon-laborde-2131861bb/"><i class="fab fa-linkedin icon"></i> View LinkedIn Profile</a></p>
-    </section>
-</div>
+    <footer>
+        <p>&copy; 2025 Simon Laborde. Built with code & coffee.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
