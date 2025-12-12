@@ -163,7 +163,7 @@ const projectData = {
     },
     4: {
         title: "Financial System Optimization - Accenture",
-        desc: "Backend optimization project for a major financial system handling high-volume transaction processing. Worked with Oracle BRM and C to improve system performance, automated financial reporting with Shell scripts, reducing processing time by 15% and improving data accuracy. Generated comprehensive financial reports using Oracle BI Publisher. Collaborated in Agile teams using JIRA for project coordination. Tech Stack: Oracle BRM, C, Shell Script, Oracle BI Publisher, Agile/Scrum."
+        desc: "Backend optimization project for a major financial system handling high-volume transaction processing. Worked with Oracle BRM and C to improve system performance, automated financial reporting with Shell scripts, reducing processing time and improving data accuracy. Generated comprehensive financial reports using Oracle BI Publisher. Collaborated in Agile teams using JIRA for project coordination. Tech Stack: Oracle BRM, C, Shell Script, Oracle BI Publisher, Agile/Scrum."
     }
 };
 
