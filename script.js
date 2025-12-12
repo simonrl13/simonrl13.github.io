@@ -1,5 +1,5 @@
 // Typing Effect
-const words = ["Software Developer", "Python Expert", "Backend Engineer", "AI Enthusiast"];
+const words = ["Software Developer", "Python Expert", "AI Enthusiast", "Full-Stack Developer"];
 let i = 0;
 let timer;
 
@@ -126,6 +126,20 @@ prevButton.addEventListener('click', e => {
     updateDots(currentDot, prevDot);
 });
 
+// Dots Navigation
+dotsNav.addEventListener('click', e => {
+    const targetDot = e.target.closest('button');
+    if (!targetDot) return;
+
+    const currentSlide = track.querySelector('.current-slide');
+    const currentDot = dotsNav.querySelector('.current-slide');
+    const targetIndex = dots.findIndex(dot => dot === targetDot);
+    const targetSlide = slides[targetIndex];
+
+    moveToSlide(track, currentSlide, targetSlide);
+    updateDots(currentDot, targetDot);
+});
+
 // Modal Logic
 const modal = document.getElementById("project-modal");
 const btns = document.querySelectorAll(".details-btn");
@@ -133,19 +147,23 @@ const span = document.getElementsByClassName("close-modal")[0];
 const modalTitle = document.getElementById("modal-title");
 const modalDesc = document.getElementById("modal-desc");
 
-// Project Data
+// Project Data - UPDATED with all projects
 const projectData = {
     1: {
-        title: "AI Medical Records Automator",
-        desc: "A Python-based AI tool developed for the Brazilian public health system (PEC). It uses NLP to analyze medical notes and automatically recommends preventive exams, reducing administrative time by 40%. Tech Stack: Python, Pandas, Scikit-learn."
+        title: "MedHelp - AI Clinical Decision Support System",
+        desc: "A Python-based AI tool developed for the Brazilian public health system (PEC). Uses Natural Language Processing to analyze medical notes, adapt language for different audiences, and automatically recommend preventive exams based on patient demographics and medical history. Achieved 92% accuracy in terminological normalization with 100% recall rates. Tech Stack: Python, pandas, scikit-learn, NumPy, NLP, Healthcare APIs."
     },
     2: {
-        title: "Financial System Optimization",
-        desc: "Worked at Accenture to optimize high-volume transaction processing using C and Oracle BRM. Automated financial reporting with Shell scripts, improving data accuracy and reducing processing time by 15%."
+        title: "NutriQuest - Gamified Nutrition Tracker",
+        desc: "A cross-platform mobile application that transforms nutrition tracking into an engaging gamified experience. Built with React Native and Expo, featuring an interactive dashboard with real-time nutritional visualization, daily/weekly challenges, competitive leaderboards, comprehensive profile management, and full Portuguese localization for Brazilian users. Implements offline-first functionality with custom state management. Tech Stack: React Native, Expo, Mobile Development, i18n."
     },
     3: {
-        title: "Hybrid Mobile App",
-        desc: "A cross-platform mobile application built with Ionic and Vue.js. Features include real-time data sync, offline mode, and a custom UI system designed in Figma. Deployed to both iOS and Android environments."
+        title: "LABNOV Research Laboratory Website",
+        desc: "Comprehensive bilingual (Portuguese/English) website for UFCG's LABNOV research laboratory. Features automated publication synchronization from Brazil's Plataforma Lattes using custom API integration, content management through Sanity CMS for non-technical staff updates, dedicated sections for research projects and team members, responsive design optimized for all devices, and SEO optimization for academic discoverability. Successfully overcame CAPTCHA challenges through creative technical solutions. Tech Stack: React, Sanity CMS, API Integration, Bilingual Support."
+    },
+    4: {
+        title: "Financial System Optimization - Accenture",
+        desc: "Backend optimization project for a major financial system handling high-volume transaction processing. Worked with Oracle BRM and C to improve system performance, automated financial reporting with Shell scripts, reducing processing time by 15% and improving data accuracy. Generated comprehensive financial reports using Oracle BI Publisher. Collaborated in Agile teams using JIRA for project coordination. Tech Stack: Oracle BRM, C, Shell Script, Oracle BI Publisher, Agile/Scrum."
     }
 };
 
@@ -166,4 +184,23 @@ window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
+}
+
+// Hamburger Menu Toggle (for mobile)
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
+    });
 }
