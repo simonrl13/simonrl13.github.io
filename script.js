@@ -1,5 +1,5 @@
 // Typing Effect
-const words = ["Software Developer", "Python Expert", "Full Stack Dev", "AI Enthusiast"];
+const words = ["Software Developer", "Python Expert", "Backend Engineer", "AI Enthusiast"];
 let i = 0;
 let timer;
 
@@ -32,7 +32,7 @@ function erase() {
 
 document.addEventListener('DOMContentLoaded', typeWriter);
 
-// Scroll Animation
+// Scroll Animation (Fade In)
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -44,11 +44,36 @@ const observer = new IntersectionObserver((entries) => {
 const hiddenElements = document.querySelectorAll('.timeline-item');
 hiddenElements.forEach((el) => observer.observe(el));
 
+// Active Link Highlighter
+const sections = document.querySelectorAll('section');
+const navLi = document.querySelectorAll('nav ul li a');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLi.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href').includes(current)) {
+            a.classList.add('active');
+        }
+    });
+});
+
 // Carousel Logic
 const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 const nextButton = document.querySelector('.next-btn');
 const prevButton = document.querySelector('.prev-btn');
+const dotsNav = document.querySelector('.carousel-nav');
+const dots = Array.from(dotsNav.children);
 
 const slideWidth = slides[0].getBoundingClientRect().width;
 
@@ -64,16 +89,41 @@ const moveToSlide = (track, currentSlide, targetSlide) => {
     targetSlide.classList.add('current-slide');
 };
 
+const updateDots = (currentDot, targetDot) => {
+    currentDot.classList.remove('current-slide');
+    targetDot.classList.add('current-slide');
+};
+
+// Next Button
 nextButton.addEventListener('click', e => {
     const currentSlide = track.querySelector('.current-slide');
-    const nextSlide = currentSlide.nextElementSibling || slides[0]; // Loop back to start
+    let nextSlide = currentSlide.nextElementSibling;
+    const currentDot = dotsNav.querySelector('.current-slide');
+    let nextDot = currentDot.nextElementSibling;
+
+    if (!nextSlide) {
+        nextSlide = slides[0];
+        nextDot = dots[0];
+    }
+
     moveToSlide(track, currentSlide, nextSlide);
+    updateDots(currentDot, nextDot);
 });
 
+// Prev Button
 prevButton.addEventListener('click', e => {
     const currentSlide = track.querySelector('.current-slide');
-    const prevSlide = currentSlide.previousElementSibling || slides[slides.length - 1]; // Loop to end
+    let prevSlide = currentSlide.previousElementSibling;
+    const currentDot = dotsNav.querySelector('.current-slide');
+    let prevDot = currentDot.previousElementSibling;
+
+    if (!prevSlide) {
+        prevSlide = slides[slides.length - 1];
+        prevDot = dots[dots.length - 1];
+    }
+
     moveToSlide(track, currentSlide, prevSlide);
+    updateDots(currentDot, prevDot);
 });
 
 // Modal Logic
@@ -87,15 +137,15 @@ const modalDesc = document.getElementById("modal-desc");
 const projectData = {
     1: {
         title: "AI Medical Records Automator",
-        desc: "A Python-based AI tool developed for the Brazilian public health system (PEC). It uses NLP to analyze medical notes and automatically recommends preventive exams, reducing administrative time by 40%."
+        desc: "A Python-based AI tool developed for the Brazilian public health system (PEC). It uses NLP to analyze medical notes and automatically recommends preventive exams, reducing administrative time by 40%. Tech Stack: Python, Pandas, Scikit-learn."
     },
     2: {
         title: "Financial System Optimization",
-        desc: "Worked at Accenture to optimize high-volume transaction processing using C and Oracle BRM. Automated financial reporting with Shell scripts, improving data accuracy."
+        desc: "Worked at Accenture to optimize high-volume transaction processing using C and Oracle BRM. Automated financial reporting with Shell scripts, improving data accuracy and reducing processing time by 15%."
     },
     3: {
         title: "Hybrid Mobile App",
-        desc: "A cross-platform mobile application built with Ionic and Vue.js. Features include real-time data sync, offline mode, and a custom UI system designed in Figma."
+        desc: "A cross-platform mobile application built with Ionic and Vue.js. Features include real-time data sync, offline mode, and a custom UI system designed in Figma. Deployed to both iOS and Android environments."
     }
 };
 

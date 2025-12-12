@@ -13,7 +13,7 @@
     <nav id="navbar">
         <div class="logo">SL.</div>
         <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
+            <li><a href="#home" class="active">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
@@ -32,43 +32,52 @@
             <h1>Simon Laborde</h1>
             <h3 class="typing-text">I am a <span class="typewriter"></span></h3>
             <p>Versatile software developer bridging the gap between Backend Systems and AI.</p>
+            
             <div class="social-icons">
                 <a href="https://github.com/simonrl13" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/simon-laborde-2131861bb/" target="_blank"><i class="fab fa-linkedin"></i></a>
                 <a href="mailto:simonrl865@gmail.com"><i class="fas fa-envelope"></i></a>
             </div>
-            <a href="#contact" class="btn">Get In Touch</a>
+
+            <div class="hero-buttons">
+                <a href="#contact" class="btn btn-primary">Get In Touch</a>
+                <a href="assets/cv.pdf" download class="btn btn-secondary"><i class="fas fa-download"></i> Download CV</a>
+            </div>
         </div>
-        <div class="hero-blob"></div>
     </section>
 
     <section id="about">
         <h2 class="section-title">My Journey</h2>
         <div class="timeline">
+            
             <div class="timeline-item left">
                 <div class="content">
-                    <h3>2022 - 2023</h3>
+                    <span class="date">2020 - 2025</span>
+                    <h2>Bachelor in Info. Systems</h2>
+                    <h4>UNIFACISA</h4>
+                    <p><strong>Graduated.</strong> Specialized in AI integration with health systems.<br>
+                    <em>Thesis:</em> "AI-Based Tool for Automating Medical Records" (Successfully defended).</p>
+                </div>
+            </div>
+
+            <div class="timeline-item right">
+                <div class="content">
+                    <span class="date">2022 - 2023</span>
                     <h2>Software Developer</h2>
                     <h4>Accenture</h4>
                     <p>Optimized backend processes using Oracle BRM, Shell Script, and C. Generated financial reports with Oracle BI Publisher in an Agile environment.</p>
                 </div>
             </div>
-            <div class="timeline-item right">
-                <div class="content">
-                    <h3>2025 (Expected)</h3>
-                    <h2>Bachelor in Info. Systems</h2>
-                    <h4>UNIFACISA</h4>
-                    <p>Focusing on AI integration with health systems. Thesis: "AI-Based Tool for Automating Medical Records".</p>
-                </div>
-            </div>
+
             <div class="timeline-item left">
                 <div class="content">
-                    <h3>2018 - 2020</h3>
+                    <span class="date">2018 - 2020</span>
                     <h2>Game Development</h2>
                     <h4>UNIFACISA</h4>
-                    <p>Foundation in interactive software design and logic.</p>
+                    <p>Foundation in interactive software design, C# logic, and physics engines.</p>
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -76,33 +85,35 @@
         <h2 class="section-title">Technical Arsenal</h2>
         <div class="skills-container">
             <div class="skill-category">
-                <h3>Languages</h3>
+                <h3><i class="fas fa-code"></i> Languages</h3>
                 <div class="skill-tags">
-                    <span>Python (Adv)</span>
-                    <span>Java (Adv)</span>
-                    <span>PL/SQL</span>
-                    <span>C</span>
-                    <span>JavaScript</span>
+                    <span><i class="fab fa-python"></i> Python (Adv)</span>
+                    <span><i class="fab fa-java"></i> Java (Adv)</span>
+                    <span><i class="fas fa-database"></i> PL/SQL</span>
+                    <span><i class="fas fa-terminal"></i> C</span>
+                    <span><i class="fab fa-js"></i> JavaScript</span>
                 </div>
             </div>
+
             <div class="skill-category">
-                <h3>Web & Tools</h3>
+                <h3><i class="fas fa-laptop-code"></i> Web & Tools</h3>
                 <div class="skill-tags">
-                    <span>HTML/CSS</span>
-                    <span>Bootstrap</span>
-                    <span>Git</span>
-                    <span>Oracle BI</span>
-                    <span>Docker</span>
-                    <span>Figma</span>
+                    <span><i class="fab fa-html5"></i> HTML/CSS</span>
+                    <span><i class="fab fa-bootstrap"></i> Bootstrap</span>
+                    <span><i class="fab fa-git-alt"></i> Git</span>
+                    <span><i class="fas fa-server"></i> Oracle BI</span>
+                    <span><i class="fab fa-docker"></i> Docker</span>
+                    <span><i class="fab fa-figma"></i> Figma</span>
                 </div>
             </div>
+
             <div class="skill-category">
-                <h3>Spoken Languages</h3>
+                <h3><i class="fas fa-language"></i> Spoken</h3>
                 <div class="skill-tags">
-                    <span>Portuguese (C2)</span>
-                    <span>English (C1)</span>
-                    <span>French (C1)</span>
-                    <span>Spanish (B1)</span>
+                    <span>🇧🇷 Portuguese (C2)</span>
+                    <span>🇺🇸 English (C1)</span>
+                    <span>🇫🇷 French (C1)</span>
+                    <span>🇪🇸 Spanish (B1)</span>
                 </div>
             </div>
         </div>
@@ -154,7 +165,6 @@
             <span class="close-modal">&times;</span>
             <h2 id="modal-title">Project Title</h2>
             <p id="modal-desc">Project description goes here...</p>
-            <div class="modal-tags" id="modal-tech"></div>
         </div>
     </div>
 
@@ -165,7 +175,7 @@
                 <input type="text" placeholder="Your Name" required>
                 <input type="email" placeholder="Your Email" required>
                 <textarea rows="5" placeholder="Your Message" required></textarea>
-                <button type="submit" class="btn">Send Message</button>
+                <button type="submit" class="btn btn-primary">Send Message</button>
             </form>
         </div>
     </section>
