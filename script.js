@@ -1,206 +1,220 @@
-// Typing Effect
-const words = ["Software Developer", "Python Expert", "AI Enthusiast", "Full-Stack Developer"];
-let i = 0;
-let timer;
+/* =========================================================
+   Simon Laborde — schematic identity
+   One deliberate animated moment: the left rail trace draws
+   in on load, section nodes light in sequence on scroll.
+   ========================================================= */
 
-function typeWriter() {
-    const heading = document.querySelector(".typewriter");
-    const word = words[i];
-    let current = heading.textContent;
-    
-    if (current.length < word.length) {
-        heading.textContent = word.substring(0, current.length + 1);
-        timer = setTimeout(typeWriter, 100);
-    } else {
-        setTimeout(erase, 2000);
-    }
-}
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function erase() {
-    const heading = document.querySelector(".typewriter");
-    const word = words[i];
-    let current = heading.textContent;
-    
-    if (current.length > 0) {
-        heading.textContent = word.substring(0, current.length - 1);
-        timer = setTimeout(erase, 50);
-    } else {
-        i = (i + 1) % words.length;
-        typeWriter();
-    }
-}
+/* ---------- rail progress + node lighting + nav state ---------- */
 
-document.addEventListener('DOMContentLoaded', typeWriter);
+const trace       = document.querySelector('.rail__trace');
+const toplineFill = document.querySelector('.topline__fill');
+const railNodes = [...document.querySelectorAll('.rail__node')];
+const navLinks  = [...document.querySelectorAll('.nav__list a')];
+const sections  = [...document.querySelectorAll('main section[id]')];
 
-// Scroll Animation (Fade In)
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
+function onScroll() {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+
+    if (trace) trace.style.transform = `translateX(-50%) scaleY(${progress.toFixed(4)})`;
+    if (toplineFill) toplineFill.style.width = (progress * 100).toFixed(2) + '%';
+
+    const mid = window.innerHeight * 0.5;
+    let activeId = sections.length ? sections[0].id : null;
+
+    sections.forEach(sec => {
+        if (sec.getBoundingClientRect().top < mid) activeId = sec.id;
     });
-});
 
-const hiddenElements = document.querySelectorAll('.timeline-item');
-hiddenElements.forEach((el) => observer.observe(el));
+    railNodes.forEach(node => {
+        const target = node.dataset.target;
+        const sec = document.getElementById(target);
+        if (!sec) return;
+        node.classList.toggle('is-lit', sec.getBoundingClientRect().top < window.innerHeight * 0.66);
+    });
 
-// Active Link Highlighter
-const sections = document.querySelectorAll('section');
-const navLi = document.querySelectorAll('nav ul li a');
+    navLinks.forEach(a => {
+        a.classList.toggle('is-active', a.getAttribute('href') === '#' + activeId);
+    });
+}
 
+let ticking = false;
 window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-            current = section.getAttribute('id');
-        }
-    });
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { onScroll(); ticking = false; });
+}, { passive: true });
+window.addEventListener('resize', onScroll);
+onScroll();
 
-    navLi.forEach(a => {
-        a.classList.remove('active');
-        if (a.getAttribute('href').includes(current)) {
-            a.classList.add('active');
-        }
-    });
+/* ---------- mobile nav ---------- */
+
+const navToggle = document.querySelector('.nav__toggle');
+const navMobile = document.getElementById('nav-list-mobile');
+
+navToggle.addEventListener('click', () => {
+    const open = navToggle.getAttribute('aria-expanded') === 'true';
+    navToggle.setAttribute('aria-expanded', String(!open));
+    navToggle.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+    navMobile.hidden = open;
 });
+navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navToggle.setAttribute('aria-expanded', 'false');
+    navMobile.hidden = true;
+}));
 
-// Carousel Logic
-const track = document.querySelector('.carousel-track');
-const slides = Array.from(track.children);
-const nextButton = document.querySelector('.next-btn');
-const prevButton = document.querySelector('.prev-btn');
-const dotsNav = document.querySelector('.carousel-nav');
-const dots = Array.from(dotsNav.children);
+/* ---------- portfolio carousel: native snap-scroll ---------- */
 
-const slideWidth = slides[0].getBoundingClientRect().width;
+const track   = document.querySelector('.carousel__track');
+const cards    = [...track.querySelectorAll('.pcard')];
+const ctrlBtns = [...document.querySelectorAll('.carousel__btn')];
+const dots     = [...document.querySelectorAll('.carousel__dots li')];
 
-// Arrange slides next to one another
-const setSlidePosition = (slide, index) => {
-    slide.style.left = slideWidth * index + 'px';
-};
-slides.forEach(setSlidePosition);
-
-const moveToSlide = (track, currentSlide, targetSlide) => {
-    track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
-    currentSlide.classList.remove('current-slide');
-    targetSlide.classList.add('current-slide');
-};
-
-const updateDots = (currentDot, targetDot) => {
-    currentDot.classList.remove('current-slide');
-    targetDot.classList.add('current-slide');
-};
-
-// Next Button
-nextButton.addEventListener('click', e => {
-    const currentSlide = track.querySelector('.current-slide');
-    let nextSlide = currentSlide.nextElementSibling;
-    const currentDot = dotsNav.querySelector('.current-slide');
-    let nextDot = currentDot.nextElementSibling;
-
-    if (!nextSlide) {
-        nextSlide = slides[0];
-        nextDot = dots[0];
-    }
-
-    moveToSlide(track, currentSlide, nextSlide);
-    updateDots(currentDot, nextDot);
-});
-
-// Prev Button
-prevButton.addEventListener('click', e => {
-    const currentSlide = track.querySelector('.current-slide');
-    let prevSlide = currentSlide.previousElementSibling;
-    const currentDot = dotsNav.querySelector('.current-slide');
-    let prevDot = currentDot.previousElementSibling;
-
-    if (!prevSlide) {
-        prevSlide = slides[slides.length - 1];
-        prevDot = dots[dots.length - 1];
-    }
-
-    moveToSlide(track, currentSlide, prevSlide);
-    updateDots(currentDot, prevDot);
-});
-
-// Dots Navigation
-dotsNav.addEventListener('click', e => {
-    const targetDot = e.target.closest('button');
-    if (!targetDot) return;
-
-    const currentSlide = track.querySelector('.current-slide');
-    const currentDot = dotsNav.querySelector('.current-slide');
-    const targetIndex = dots.findIndex(dot => dot === targetDot);
-    const targetSlide = slides[targetIndex];
-
-    moveToSlide(track, currentSlide, targetSlide);
-    updateDots(currentDot, targetDot);
-});
-
-// Modal Logic
-const modal = document.getElementById("project-modal");
-const btns = document.querySelectorAll(".details-btn");
-const span = document.getElementsByClassName("close-modal")[0];
-const modalTitle = document.getElementById("modal-title");
-const modalDesc = document.getElementById("modal-desc");
-
-// Project Data - UPDATED with all projects
-const projectData = {
-    1: {
-        title: "MedHelp - AI Clinical Decision Support System",
-        desc: "A Python-based AI tool developed for the Brazilian public health system (PEC). Uses Natural Language Processing to analyze medical notes, adapt language for different audiences, and automatically recommend preventive exams based on patient demographics and medical history. Achieved 92% accuracy in terminological normalization with 100% recall rates. Tech Stack: Python, pandas, scikit-learn, NumPy, NLP, Healthcare APIs."
-    },
-    2: {
-        title: "NutriQuest - Gamified Nutrition Tracker",
-        desc: "A cross-platform mobile application that transforms nutrition tracking into an engaging gamified experience. Built with React Native and Expo, featuring an interactive dashboard with real-time nutritional visualization, daily/weekly challenges, competitive leaderboards, comprehensive profile management, and full Portuguese localization for Brazilian users. Implements offline-first functionality with custom state management. Tech Stack: React Native, Expo, Mobile Development, i18n."
-    },
-    3: {
-        title: "LABNOV Research Laboratory Website",
-        desc: "Comprehensive bilingual (Portuguese/English) website for UFCG's LABNOV research laboratory. Features automated publication synchronization from Brazil's Plataforma Lattes using custom API integration, content management through Sanity CMS for non-technical staff updates, dedicated sections for research projects and team members, responsive design optimized for all devices, and SEO optimization for academic discoverability. Successfully overcame CAPTCHA challenges through creative technical solutions. Tech Stack: React, Sanity CMS, API Integration, Bilingual Support."
-    },
-    4: {
-        title: "Financial System Optimization - Accenture",
-        desc: "Backend optimization project for a major financial system handling high-volume transaction processing. Worked with Oracle BRM and C to improve system performance, automated financial reporting with Shell scripts, reducing processing time and improving data accuracy. Generated comprehensive financial reports using Oracle BI Publisher. Collaborated in Agile teams using JIRA for project coordination. Tech Stack: Oracle BRM, C, Shell Script, Oracle BI Publisher, Agile/Scrum."
-    }
-};
-
-btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-project');
-        modalTitle.textContent = projectData[id].title;
-        modalDesc.textContent = projectData[id].desc;
-        modal.style.display = "block";
-    });
-});
-
-span.onclick = function() {
-    modal.style.display = "none";
+function cardStep() {
+    return cards.length > 1
+        ? cards[1].getBoundingClientRect().left - cards[0].getBoundingClientRect().left
+        : cards[0].getBoundingClientRect().width;
 }
 
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+function nearestCardIndex() {
+    const trackMid = track.getBoundingClientRect().left + track.clientWidth / 2;
+    let best = 0, bestDist = Infinity;
+    cards.forEach((card, i) => {
+        const cardMid = card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2;
+        const d = Math.abs(cardMid - trackMid);
+        if (d < bestDist) { bestDist = d; best = i; }
+    });
+    return best;
+}
+
+function syncCarousel() {
+    const i = nearestCardIndex();
+    dots.forEach((d, di) => d.classList.toggle('is-active', di === i));
+    const atStart = track.scrollLeft <= 2;
+    const atEnd   = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    ctrlBtns.forEach(b => {
+        const dir = Number(b.dataset.dir);
+        b.disabled = (dir < 0 && atStart) || (dir > 0 && atEnd);
+    });
+
+    // subtle parallax — active card only
+    if (!reduceMotion) {
+        const trackMid = track.getBoundingClientRect().left + track.clientWidth / 2;
+        cards.forEach((card, ci) => {
+            const inner = card.querySelector('.pcard__inner');
+            if (ci === i) {
+                const cardMid = card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2;
+                const shift = Math.max(-8, Math.min(8, (cardMid - trackMid) / 14));
+                inner.style.transform = `translateY(${shift.toFixed(1)}px)`;
+            } else {
+                inner.style.transform = '';
+            }
+        });
     }
 }
 
-// Hamburger Menu Toggle (for mobile)
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
+ctrlBtns.forEach(b => b.addEventListener('click', () => {
+    track.scrollBy({ left: Number(b.dataset.dir) * cardStep(), behavior: reduceMotion ? 'auto' : 'smooth' });
+}));
 
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    });
+let cTicking = false;
+track.addEventListener('scroll', () => {
+    if (cTicking) return;
+    cTicking = true;
+    requestAnimationFrame(() => { syncCarousel(); cTicking = false; });
+}, { passive: true });
+window.addEventListener('resize', syncCarousel);
+syncCarousel();
 
-    // Close menu when clicking on a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            hamburger.classList.remove('active');
+/* ---------- LABNOV: live PT / EN toggle on the card ---------- */
+
+const langSwitch = document.querySelector('.lang-switch');
+if (langSwitch) {
+    const card = langSwitch.closest('.pcard');
+    const buttons = [...langSwitch.querySelectorAll('button')];
+    langSwitch.addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const lang = btn.dataset.lang;
+        buttons.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+        card.querySelectorAll('[data-i18n]').forEach(el => {
+            el.innerHTML = el.dataset[lang];
         });
     });
 }
+
+/* ---------- project dialog ---------- */
+
+const projects = {
+    medhelp: {
+        tag: '01 · AI clinical decision support',
+        title: 'MedHelp',
+        body: 'A Python NLP tool built for Brazil’s public health record system (PEC). It reads free-text clinical notes, normalizes inconsistent terminology, rewrites explanations for the intended audience (clinician vs. patient), and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on generative AI in clinical decision support.',
+        role: 'Sole developer — research, modelling, implementation',
+        outcome: '92% accuracy on terminology normalization, 100% recall on the target exam-recommendation set',
+        stack: 'Python · pandas · scikit-learn · NumPy · NLP · healthcare data (PEC)'
+    },
+    nutriquest: {
+        tag: '02 · gamified nutrition tracker',
+        title: 'NutriQuest',
+        body: 'A cross-platform mobile app that reframes nutrition tracking as a game. Real-time nutritional dashboards, daily and weekly quests, streaks, a competitive leaderboard, and full profile management — all localized in Brazilian Portuguese. Built offline-first with custom state management so it stays usable without a connection.',
+        role: 'Mobile developer — architecture, UI, localization',
+        outcome: 'Shipped cross-platform from a single codebase with offline-first sync',
+        stack: 'React Native · Expo · i18n · custom state management'
+    },
+    labnov: {
+        tag: '03 · bilingual research platform',
+        title: 'LABNOV Research Lab',
+        body: 'A fully bilingual (PT / EN) website for UFCG’s LABNOV research laboratory. Publications sync automatically from Brazil’s Plataforma Lattes through a custom integration — including working around CAPTCHA protection — while non-technical staff edit everything else through Sanity CMS. Sections for projects, people, and publications, tuned for academic SEO.',
+        role: 'Full-stack developer — integration, CMS modelling, i18n',
+        outcome: 'Zero-maintenance publication list; staff update content without developer involvement',
+        stack: 'React · Sanity CMS · Lattes API integration · bilingual routing'
+    },
+    financial: {
+        tag: '04 · enterprise backend, Accenture',
+        title: 'Enterprise Billing Optimization — Accenture',
+        body: 'Backend performance and reporting-automation work on an enterprise billing platform. Profiled and tuned batch rating and billing processes on Oracle BRM with C, and replaced manual reporting steps with shell-scripted pipelines feeding Oracle BI Publisher, delivered inside an Agile team. The client, transaction volumes, and performance figures are covered by an NDA.',
+        role: 'Software developer — backend optimization & reporting automation',
+        outcome: 'Measurable reduction in batch processing time with improved data accuracy (specifics under NDA)',
+        stack: 'Oracle BRM · C · Shell · Oracle BI Publisher · Agile / JIRA'
+    }
+};
+
+const sheet = document.getElementById('sheet');
+const sheetEls = {
+    tag: document.getElementById('sheet-tag'),
+    title: document.getElementById('sheet-title'),
+    body: document.getElementById('sheet-body'),
+    role: document.getElementById('sheet-role'),
+    outcome: document.getElementById('sheet-outcome'),
+    stack: document.getElementById('sheet-stack')
+};
+let lastFocused = null;
+
+document.querySelectorAll('.pcard__more').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const p = projects[btn.dataset.project];
+        if (!p) return;
+        lastFocused = btn;
+        sheetEls.tag.textContent = p.tag;
+        sheetEls.title.textContent = p.title;
+        sheetEls.body.textContent = p.body;
+        sheetEls.role.textContent = p.role;
+        sheetEls.outcome.textContent = p.outcome;
+        sheetEls.stack.textContent = p.stack;
+        if (typeof sheet.showModal === 'function') sheet.showModal();
+        else sheet.setAttribute('open', '');
+    });
+});
+
+sheet.addEventListener('close', () => { if (lastFocused) lastFocused.focus(); });
+sheet.addEventListener('click', e => {
+    // click on the backdrop (outside the dialog box) closes it
+    const r = sheet.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
+        sheet.close();
+    }
+});

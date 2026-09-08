@@ -3,253 +3,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simon Laborde | Software Developer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Simon Laborde — Systems Engineer</title>
+    <meta name="description" content="Simon Laborde — backend and full-stack engineer with an AI/LLM focus and a game-development background. Portfolio, experience, and contact.">
+    <meta name="color-scheme" content="dark">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<a class="skip-link" href="#origin">Skip to content</a>
 
-    <nav id="navbar">
-        <div class="logo">SL.</div>
-        <ul class="nav-links">
-            <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#contact">Contact</a></li>
+<!-- ============ LEFT SCHEMATIC RAIL ============ -->
+<aside class="rail" aria-hidden="true">
+    <span class="rail__base"></span>
+    <span class="rail__trace"></span>
+    <ol class="rail__nodes">
+        <li class="rail__node" data-target="origin"    style="--at: 13%">
+            <span class="rail__ref">01</span><span class="rail__label">Origin</span>
+        </li>
+        <li class="rail__node" data-target="journey"   style="--at: 29%">
+            <span class="rail__ref">02</span><span class="rail__label">Journey</span>
+        </li>
+        <li class="rail__node" data-target="arsenal"   style="--at: 45%">
+            <span class="rail__ref">03</span><span class="rail__label">Arsenal</span>
+        </li>
+        <li class="rail__node" data-target="work"      style="--at: 61%">
+            <span class="rail__ref">04</span><span class="rail__label">Work</span>
+        </li>
+        <li class="rail__node" data-target="languages" style="--at: 77%">
+            <span class="rail__ref">05</span><span class="rail__label">Languages</span>
+        </li>
+        <li class="rail__node" data-target="contact"   style="--at: 92%">
+            <span class="rail__ref">06</span><span class="rail__label">Contact</span>
+        </li>
+    </ol>
+</aside>
+
+<!-- mobile: rail collapses to a top progress line -->
+<div class="topline" aria-hidden="true"><span class="topline__fill"></span></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" aria-label="Section index">
+    <a class="nav__mark" href="#origin">S<span>·</span>L</a>
+    <ul class="nav__list">
+        <li><a href="#journey">Journey</a></li>
+        <li><a href="#arsenal">Arsenal</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#languages">Languages</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-list-mobile" aria-label="Open menu">
+        <span></span><span></span>
+    </button>
+</nav>
+<ul class="nav__mobile" id="nav-list-mobile" hidden>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#arsenal">Arsenal</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#languages">Languages</a></li>
+    <li><a href="#contact">Contact</a></li>
+</ul>
+
+<main>
+
+<!-- ============ ORIGIN / HERO ============ -->
+<section id="origin" class="origin" aria-labelledby="origin-name">
+    <div class="origin__frame">
+        <p class="origin__eyebrow">
+            <span class="mono">DRAWING&nbsp;SL&#8209;2026</span>
+            <span class="origin__stamp-role">Systems &amp; full-stack engineering</span>
+        </p>
+
+        <h1 id="origin-name">Simon Laborde</h1>
+
+        <p class="origin__role">
+            Backend &amp; full-stack engineer with an <strong>AI / LLM</strong> focus,
+            built on a foundation in game development and physics engines.
+        </p>
+
+        <p class="origin__thesis">
+            I bridge the gap between complex systems and the people who depend on them &mdash;
+            currently building LLM-backed tools, taking freelance and contract work across Europe,
+            and applying to master&rsquo;s programs.
+        </p>
+
+        <div class="origin__actions">
+            <a class="btn btn--solid" href="#contact">Start a conversation</a>
+            <a class="btn btn--ghost" href="assets/cv.pdf" download>Download CV <span class="mono">(PDF)</span></a>
+        </div>
+
+        <!-- blueprint corner stamp / title block -->
+        <dl class="titleblock" aria-label="Drawing title block">
+            <div><dt>Drawn by</dt><dd>S. Laborde</dd></div>
+            <div><dt>Origin</dt><dd class="mono">07°13′S 35°53′W</dd></div>
+            <div><dt>Bearing</dt><dd>Brazil → Europe</dd></div>
+            <div><dt>Revision</dt><dd class="mono">2026.3</dd></div>
+            <div><dt>Sheet</dt><dd class="mono">1 / 1</dd></div>
+            <div><dt>Scale</dt><dd class="mono">1:1</dd></div>
+        </dl>
+
+        <ul class="origin__legend" aria-label="Spoken languages">
+            <li><span class="origin__lg-code mono">PT</span> Portuguese &mdash; native</li>
+            <li><span class="origin__lg-code mono">EN</span> English &mdash; C2</li>
+            <li><span class="origin__lg-code mono">FR</span> French &mdash; C1</li>
+            <li><span class="origin__lg-code mono">ES</span> Spanish &mdash; B1</li>
         </ul>
-        <div class="hamburger">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-        </div>
-    </nav>
+    </div>
+</section>
 
-    <section id="home">
-        <div class="hero-content">
-            <h3>Hello, I'm</h3>
-            <h1>Simon Laborde</h1>
-            <h3 class="typing-text">I am a <span class="typewriter"></span></h3>
-            <p>Versatile software developer bridging the gap between Systems and your needs.</p>
-            
-            <div class="social-icons">
-                <a href="https://github.com/simonrl13" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/simon-laborde-2131861bb/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="mailto:simonrl865@gmail.com"><i class="fas fa-envelope"></i></a>
+<!-- ============ JOURNEY ============ -->
+<section id="journey" class="journey" aria-labelledby="journey-title">
+    <header class="sec-head">
+        <h2 id="journey-title">Journey</h2>
+        <p>Three phases, one throughline: learning how systems behave, then making them serve real needs.</p>
+    </header>
+
+    <ol class="journey__list">
+        <li class="jitem">
+            <p class="jitem__when mono">2020 — 2025</p>
+            <div class="jitem__body">
+                <h3>B.Sc. Information Systems</h3>
+                <p class="jitem__org">UNIFACISA &mdash; Campina Grande</p>
+                <p>Graduated with highest honors. Thesis &mdash; <em>&ldquo;Applications of Generative
+                AI in Clinical Decision Support&rdquo;</em> &mdash; defended with distinction, and the seed
+                of the MedHelp project.</p>
             </div>
-
-            <div class="hero-buttons">
-                <a href="#contact" class="btn btn-primary">Get In Touch</a>
-                <a href="assets/cv.pdf" download class="btn btn-secondary"><i class="fas fa-download"></i> Download CV</a>
+        </li>
+        <li class="jitem">
+            <p class="jitem__when mono">2022 — 2023</p>
+            <div class="jitem__body">
+                <h3>Software Developer</h3>
+                <p class="jitem__org">Accenture</p>
+                <p>Optimized billing and backend processes on Oracle BRM with C and shell scripting;
+                automated financial reporting through Oracle BI Publisher inside an Agile delivery team.</p>
             </div>
-        </div>
-    </section>
-
-    <section id="about">
-        <h2 class="section-title">My Journey</h2>
-        <div class="timeline">
-            
-            <div class="timeline-item left">
-                <div class="content">
-                    <span class="date">2020 - 2025</span>
-                    <h2>Bachelor in Info. Systems</h2>
-                    <h4>UNIFACISA</h4>
-                    <p><strong>Graduated.</strong>
-                    <em>Thesis:</em> "Applications of Generative AI in Clinical Decision Support" — Successfully defended with highest honors</p>
-                </div>
+        </li>
+        <li class="jitem">
+            <p class="jitem__when mono">2018 — 2020</p>
+            <div class="jitem__body">
+                <h3>Game development foundation</h3>
+                <p class="jitem__org">UNIFACISA</p>
+                <p>Interactive systems design, C# gameplay logic, and physics-engine work &mdash;
+                where the instinct for how systems move and break first took hold.</p>
             </div>
+        </li>
+    </ol>
+</section>
 
-            <div class="timeline-item right">
-                <div class="content">
-                    <span class="date">2022 - 2023</span>
-                    <h2>Software Developer</h2>
-                    <h4>Accenture</h4>
-                    <p>Optimized backend processes using Oracle BRM, Shell Script, and C. Generated financial reports with Oracle BI Publisher in an Agile environment.</p>
-                </div>
-            </div>
+<!-- ============ ARSENAL ============ -->
+<section id="arsenal" class="arsenal" aria-labelledby="arsenal-title">
+    <header class="sec-head">
+        <h2 id="arsenal-title">Technical arsenal</h2>
+        <p>Read as a legend, not a tag cloud &mdash; grouped by the layer of the system each part touches.</p>
+    </header>
 
-            <div class="timeline-item left">
-                <div class="content">
-                    <span class="date">2018 - 2020</span>
-                    <h2>Game Development</h2>
-                    <h4>UNIFACISA</h4>
-                    <p>Foundation in interactive software design, C# logic, and physics engines.</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="skills">
-        <h2 class="section-title">Technical Arsenal</h2>
-        <div class="skills-container">
-            
-            <!-- Programming Languages -->
-            <div class="skill-category">
-                <h3><i class="fas fa-code"></i> Languages</h3>
-                <div class="skill-tags">
-                    <span><i class="fab fa-python"></i> Python (Adv)</span>
-                    <span><i class="fab fa-java"></i> Java (Adv)</span>
-                    <span><i class="fas fa-database"></i> PL/SQL</span>
-                    <span><i class="fas fa-terminal"></i> C</span>
-                    <span><i class="fab fa-js"></i> TypeScript</span>
-                    <span><i class="fab fa-js"></i> JavaScript</span>
-                </div>
-            </div>
-
-            <!-- AI & Machine Learning -->
-            <div class="skill-category">
-                <h3><i class="fas fa-brain"></i> AI & ML</h3>
-                <div class="skill-tags">
-                    <span><i class="fa-solid fa-head-side-gear"></i>Machine Learning</span>
-                    <span><i class="fa-solid fa-hexagon-nodes"></i>NLP</span>
-                    <span>scikit-learn</span>
-                    <span>pandas</span>
-                    <span>NumPy</span>
-                </div>
-            </div>
-
-            <!-- Frontend & Mobile -->
-            <div class="skill-category">
-                <h3><i class="fas fa-mobile-alt"></i> Frontend & Mobile</h3>
-                <div class="skill-tags">
-                    <span><i class="fab fa-react"></i> React</span>
-                    <span><i class="fab fa-react"></i> React Native</span>
-                    <span><i class="fab fa-vuejs"></i> Vue.js</span>
-                    <span>Expo</span>
-                    <span><i class="fab fa-html5"></i> HTML/CSS</span>
-                    <span><i class="fab fa-bootstrap"></i> Bootstrap</span>
-                </div>
-            </div>
-
-            <!-- Backend & Databases -->
-            <div class="skill-category">
-                <h3><i class="fas fa-server"></i> Backend & Data</h3>
-                <div class="skill-tags">
-                    <span><i class="fa-solid fa-database"></i>MySQL</span>
-                    <span><i class="fa-solid fa-database"></i>PostgreSQL</span>
-                    <span>RESTful APIs</span>
-                </div>
-            </div>
-
-            <!-- Tools & Cloud -->
-            <div class="skill-category">
-                <h3><i class="fas fa-tools"></i> Tools & Cloud</h3>
-                <div class="skill-tags">
-                    <span><i class="fab fa-git-alt"></i> Git</span>
-                    <span><i class="fab fa-docker"></i> Docker</span>
-                    <span><i class="fab fa-aws"></i> AWS EC2</span>
-                    <span><i class="fab fa-figma"></i> Figma</span>
-                    <span>Sanity CMS</span>
-                    <span><i class="fa-brands fa-jira"></i>JIRA</span>
-                    <span>Oracle BI</span>
-                </div>
-            </div>
-
-            <!-- Testing -->
-            <div class="skill-category">
-                <h3><i class="fas fa-check-circle"></i> Testing</h3>
-                <div class="skill-tags">
-                    <span>pytest</span>
-                    <span>JMeter</span>
-                </div>
-            </div>
-
-            <!-- Spoken Languages -->
-            <div class="skill-category">
-                <h3><i class="fas fa-language"></i> Spoken</h3>
-                <div class="skill-tags">
-                    <span>🇧🇷 Portuguese (C2)</span>
-                    <span>🇺🇸 English (C1)</span>
-                    <span>🇫🇷 French (C1)</span>
-                    <span>🇪🇸 Spanish (B1)</span>
-                </div>
+    <div class="legend">
+        <div class="legend__row">
+            <span class="legend__key" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M8 12h8M12 8v8"/></svg>
+            </span>
+            <div class="legend__def">
+                <h3>Languages &amp; runtimes</h3>
+                <p>Python · Java · C · C# · TypeScript · JavaScript · PL/SQL</p>
             </div>
         </div>
-    </section>
-
-    <section id="portfolio">
-        <h2 class="section-title">Portfolio</h2>
-        <div class="carousel-container">
-            <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
-            <div class="carousel-track-container">
-                <ul class="carousel-track">
-                    <!-- Project 1: AI Medical Records -->
-                    <li class="carousel-slide current-slide">
-                        <div class="project-card">
-                            <div class="card-icon"><i class="fas fa-brain"></i></div>
-                            <h3>MedHelp - AI Clinical Decision Support</h3>
-                            <p>AI tool integrating with Brazil's PEC system to automate medical records and recommend preventive exams. Achieved 92% accuracy.</p>
-                            <button class="details-btn" data-project="1">View Details</button>
-                        </div>
-                    </li>
-                    
-                    <!-- Project 2: NutriQuest -->
-                    <li class="carousel-slide">
-                        <div class="project-card">
-                            <div class="card-icon"><i class="fas fa-gamepad"></i></div>
-                            <h3>NutriQuest</h3>
-                            <p>Gamified nutrition tracking mobile app with React Native and Expo. Features challenges, leaderboards, and Portuguese localization.</p>
-                            <button class="details-btn" data-project="2">View Details</button>
-                        </div>
-                    </li>
-                    
-                    <!-- Project 3: LABNOV Website -->
-                    <li class="carousel-slide">
-                        <div class="project-card">
-                            <div class="card-icon"><i class="fas fa-flask"></i></div>
-                            <h3>LABNOV Research Lab Website</h3>
-                            <p>Bilingual academic platform with automated publication sync from Plataforma Lattes using React and Sanity CMS.</p>
-                            <button class="details-btn" data-project="3">View Details</button>
-                        </div>
-                    </li>
-                    
-                    <!-- Project 4: Financial System -->
-                    <li class="carousel-slide">
-                        <div class="project-card">
-                            <div class="card-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                            <h3>Financial System Optimization</h3>
-                            <p>Backend optimization for major financial system at Accenture using Oracle BRM and Shell Scripting.</p>
-                            <button class="details-btn" data-project="4">View Details</button>
-                        </div>
-                    </li>
-                </ul>
+        <div class="legend__row">
+            <span class="legend__key" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 7l3 3m4 0l3-3M7 17l3-3m4 0l3 3"/></svg>
+            </span>
+            <div class="legend__def">
+                <h3>AI / ML</h3>
+                <p>LLM integration &amp; prompt systems · NLP · scikit&#8209;learn · pandas · NumPy</p>
             </div>
-            <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="carousel-nav">
-            <button class="carousel-indicator current-slide"></button>
-            <button class="carousel-indicator"></button>
-            <button class="carousel-indicator"></button>
-            <button class="carousel-indicator"></button>
+        <div class="legend__row">
+            <span class="legend__key" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>
+            </span>
+            <div class="legend__def">
+                <h3>Backend &amp; data</h3>
+                <p>RESTful APIs · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher</p>
+            </div>
         </div>
-    </section>
-
-    <div id="project-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 id="modal-title">Project Title</h2>
-            <p id="modal-desc">Project description goes here...</p>
+        <div class="legend__row">
+            <span class="legend__key" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="1"/><path d="M2 9h20M6 22h12"/></svg>
+            </span>
+            <div class="legend__def">
+                <h3>Frontend &amp; mobile</h3>
+                <p>React · React Native · Vue · Expo · semantic HTML/CSS</p>
+            </div>
+        </div>
+        <div class="legend__row">
+            <span class="legend__key" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/><path d="M12 2v18M4 6.5l8 4.5 8-4.5"/></svg>
+            </span>
+            <div class="legend__def">
+                <h3>Infrastructure &amp; tooling</h3>
+                <p>Docker · AWS EC2 · Git · JIRA · Sanity CMS · Figma</p>
+            </div>
+        </div>
+        <div class="legend__row">
+            <span class="legend__key" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>
+            </span>
+            <div class="legend__def">
+                <h3>Testing &amp; load</h3>
+                <p>pytest · JMeter</p>
+            </div>
         </div>
     </div>
+</section>
 
-    <section id="contact">
-        <h2 class="section-title">Let's Connect</h2>
-        <div class="contact-container">
-            <form class="contact-form" action="mailto:simonrl865@gmail.com" method="post" enctype="text/plain">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea rows="5" placeholder="Your Message" required></textarea>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </form>
+<!-- ============ WORK / PORTFOLIO ============ -->
+<section id="work" class="work" aria-labelledby="work-title">
+    <header class="sec-head">
+        <h2 id="work-title">Selected work</h2>
+        <p>Four projects, four problems. Each drawing is styled after what the thing actually is.
+        <span class="work__hint mono">scroll →</span></p>
+    </header>
+
+    <div class="carousel">
+        <ul class="carousel__track" tabindex="0" aria-label="Project carousel, scrollable">
+
+            <!-- MedHelp — clinical dashboard -->
+            <li class="pcard pcard--clinical" id="proj-medhelp">
+                <div class="pcard__inner">
+                    <p class="pcard__tag mono">01 · AI clinical decision support</p>
+                    <h3>MedHelp</h3>
+                    <p class="pcard__lead">An NLP tool for Brazil&rsquo;s public health record system (PEC):
+                    it normalizes clinical notes, adapts language per audience, and flags preventive exams
+                    from patient demographics and history.</p>
+                    <dl class="vitals">
+                        <div><dt>Terminology accuracy</dt><dd>92<span>%</span></dd></div>
+                        <div><dt>Recall</dt><dd>100<span>%</span></dd></div>
+                        <div><dt>Model surface</dt><dd>NLP<span></span></dd></div>
+                    </dl>
+                    <svg class="ecg" viewBox="0 0 320 40" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M0 20 H120 l6 -14 l6 28 l6 -20 l5 6 H180 l8 -22 l7 34 l6 -12 H320" />
+                    </svg>
+                    <button class="pcard__more" data-project="medhelp">Read the full drawing</button>
+                </div>
+            </li>
+
+            <!-- NutriQuest — game UI -->
+            <li class="pcard pcard--game" id="proj-nutriquest">
+                <div class="pcard__inner">
+                    <p class="pcard__tag mono">02 · gamified nutrition tracker</p>
+                    <h3>NutriQuest</h3>
+                    <p class="pcard__lead">A cross-platform mobile app that turns nutrition tracking into a
+                    game &mdash; daily quests, streaks, and a competitive leaderboard, fully localized for
+                    Brazilian users.</p>
+
+                    <div class="xp">
+                        <div class="xp__meta"><span>Level 7 · Nutritionist-in-training</span><span class="mono">1,840 / 2,400 XP</span></div>
+                        <div class="xp__bar"><span style="width:76%"></span></div>
+                    </div>
+                    <ol class="board">
+                        <li><span class="board__pos mono">1</span><span>ana.map</span><span class="board__pts mono">3,120</span></li>
+                        <li class="board__you"><span class="board__pos mono">2</span><span>you</span><span class="board__pts mono">1,840</span></li>
+                        <li><span class="board__pos mono">3</span><span>tiago.rn</span><span class="board__pts mono">1,610</span></li>
+                    </ol>
+                    <button class="pcard__more" data-project="nutriquest">Read the full drawing</button>
+                </div>
+            </li>
+
+            <!-- LABNOV — live PT/EN toggle -->
+            <li class="pcard pcard--lab" id="proj-labnov">
+                <div class="pcard__inner">
+                    <p class="pcard__tag mono">03 · bilingual research platform</p>
+                    <h3>LABNOV</h3>
+                    <div class="lang-switch" role="group" aria-label="Card language">
+                        <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+                        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+                    </div>
+                    <p class="pcard__lead" data-i18n
+                       data-pt="Site bilíngue para o laboratório de pesquisa LABNOV, com sincronização automática de publicações a partir da Plataforma Lattes e edição de conteúdo via Sanity CMS para a equipe não-técnica."
+                       data-en="Bilingual site for the LABNOV research lab, with automatic publication sync from Brazil&rsquo;s Plataforma Lattes and content editing through Sanity CMS for non-technical staff.">
+                       Site bilíngue para o laboratório de pesquisa LABNOV, com sincronização automática de publicações a partir da Plataforma Lattes e edição de conteúdo via Sanity CMS para a equipe não-técnica.</p>
+                    <p class="pcard__note" data-i18n
+                       data-pt="O toggle acima é o mesmo componente do site real."
+                       data-en="The toggle above is the same component that ships on the real site.">
+                       O toggle acima é o mesmo componente do site real.</p>
+                    <button class="pcard__more" data-project="labnov">Read the full drawing</button>
+                </div>
+            </li>
+
+            <!-- Financial — terminal -->
+            <li class="pcard pcard--term" id="proj-financial">
+                <div class="pcard__inner">
+                    <p class="pcard__tag mono">04 · enterprise backend, Accenture</p>
+                    <h3>Enterprise Billing Optimization</h3>
+                    <p class="pcard__lead">Backend performance and reporting-automation work on an
+                    enterprise billing platform &mdash; profiling and tuning batch processes and
+                    replacing manual reporting steps with scripted pipelines.</p>
+                    <pre class="termlog mono" aria-hidden="true"><code>$ ./run_billing_cycle
+[ok]   batch loaded
+[ok]   rating pipeline tuned
+[ok]   report job automated
+[ ]    client + figures under NDA
+</code></pre>
+                    <button class="pcard__more" data-project="financial">Read the full drawing</button>
+                </div>
+            </li>
+        </ul>
+
+        <div class="carousel__ctrl">
+            <button class="carousel__btn" data-dir="-1" aria-label="Previous project">&larr;</button>
+            <ol class="carousel__dots" aria-hidden="true">
+                <li></li><li></li><li></li><li></li>
+            </ol>
+            <button class="carousel__btn" data-dir="1" aria-label="Next project">&rarr;</button>
         </div>
-    </section>
+    </div>
+</section>
 
-    <footer>
-        <p>&copy; 2025 Simon Laborde. Built with code & coffee.</p>
-    </footer>
+<!-- ============ LANGUAGES ============ -->
+<section id="languages" class="languages" aria-labelledby="lang-title">
+    <header class="sec-head">
+        <h2 id="lang-title">Languages</h2>
+        <p>Multilingual and Europe-bound &mdash; measured on the CEFR scale, read like a signal meter.</p>
+    </header>
 
-    <script src="script.js"></script>
+    <ul class="meter">
+        <li>
+            <p class="meter__name">Portuguese <span class="mono">native</span></p>
+            <span class="meter__bar" data-level="5" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        </li>
+        <li>
+            <p class="meter__name">English <span class="mono">C2</span></p>
+            <span class="meter__bar" data-level="5" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        </li>
+        <li>
+            <p class="meter__name">French <span class="mono">C1</span></p>
+            <span class="meter__bar" data-level="4" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        </li>
+        <li>
+            <p class="meter__name">Spanish <span class="mono">B1</span></p>
+            <span class="meter__bar" data-level="2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        </li>
+    </ul>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="contact" aria-labelledby="contact-title">
+    <header class="sec-head">
+        <h2 id="contact-title">Contact</h2>
+        <p>Open to master&rsquo;s program conversations, freelance, and contract work in Europe.</p>
+    </header>
+
+    <ul class="contact__list">
+        <li>
+            <span class="contact__k mono">EMAIL</span>
+            <a href="mailto:simonrl865@gmail.com">simonrl865@gmail.com</a>
+        </li>
+        <li>
+            <span class="contact__k mono">GITHUB</span>
+            <a href="https://github.com/simonrl13" target="_blank" rel="noopener">github.com/simonrl13</a>
+        </li>
+        <li>
+            <span class="contact__k mono">LINKEDIN</span>
+            <a href="https://www.linkedin.com/in/simon-laborde-2131861bb/" target="_blank" rel="noopener">in/simon-laborde</a>
+        </li>
+        <li>
+            <span class="contact__k mono">CV</span>
+            <a href="assets/cv.pdf" download>Simon_Laborde_CV.pdf</a>
+        </li>
+    </ul>
+</section>
+
+</main>
+
+<footer class="foot">
+    <p><span class="mono">SL&#8209;2026 · rev. 2026.3</span> &mdash; built by hand with vanilla HTML, CSS &amp; JavaScript.</p>
+</footer>
+
+<!-- ============ PROJECT DIALOG ============ -->
+<dialog class="sheet" id="sheet">
+    <form method="dialog">
+        <button class="sheet__close" aria-label="Close" value="close">&times;</button>
+    </form>
+    <p class="sheet__tag mono" id="sheet-tag"></p>
+    <h2 id="sheet-title"></h2>
+    <p id="sheet-body"></p>
+    <dl class="sheet__meta">
+        <div><dt>Role</dt><dd id="sheet-role"></dd></div>
+        <div><dt>Outcome</dt><dd id="sheet-outcome"></dd></div>
+    </dl>
+    <p class="sheet__stack mono" id="sheet-stack"></p>
+</dialog>
+
+<script src="script.js"></script>
 </body>
 </html>
