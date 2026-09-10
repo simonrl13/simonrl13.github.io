@@ -11,21 +11,31 @@ function Skin({ skin }: { skin: Project["skin"] }) {
       return (
         <>
           <dl className="vitals">
-            {skin.vitals.map((v) => (
-              <div key={v.dt}>
-                <dt>{v.dt}</dt>
-                <dd>
-                  {v.value}
-                  <span>{v.unit ?? ""}</span>
-                </dd>
-              </div>
-            ))}
+            {skin.vitals.map((v) => {
+              const numeric = !Number.isNaN(Number(v.value));
+              return (
+                <div
+                  key={v.dt}
+                  data-reveal
+                  {...(numeric ? { "data-count": "" } : {})}
+                >
+                  <dt>{v.dt}</dt>
+                  <dd>
+                    <span className="vitals__n" data-count={v.value}>
+                      {v.value}
+                    </span>
+                    <span>{v.unit ?? ""}</span>
+                  </dd>
+                </div>
+              );
+            })}
           </dl>
           <svg
             className="ecg"
             viewBox="0 0 320 40"
             preserveAspectRatio="none"
             aria-hidden="true"
+            data-reveal
           >
             <path d={skin.ecgPath} />
           </svg>
@@ -39,7 +49,7 @@ function Skin({ skin }: { skin: Project["skin"] }) {
               <span>{skin.xpMeta}</span>
               <span className="mono">{skin.xpAmount}</span>
             </div>
-            <div className="xp__bar">
+            <div className="xp__bar" data-reveal>
               <span style={{ width: `${skin.xpPercent}%` }} />
             </div>
           </div>
