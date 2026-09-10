@@ -865,6 +865,8 @@ main { padding-left: var(--rail-w); }
    ========================================================= */
 
 .sheet {
+    /* restore the modal centering the global `* { margin: 0 }` reset removes */
+    margin: auto;
     width: min(620px, 92vw);
     max-height: 86vh;
     overflow-y: auto;
