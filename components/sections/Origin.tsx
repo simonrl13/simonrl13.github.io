@@ -4,6 +4,9 @@ export default function Origin() {
   return (
     <section id="origin" className="section origin" aria-labelledby="origin-name">
       <div className="origin__frame">
+        <span className="origin__dim origin__dim--top" aria-hidden="true" />
+        <span className="origin__dim origin__dim--left" aria-hidden="true" />
+
         <p className="origin__eyebrow">
           <span className="mono">DRAWING&nbsp;SL&#8209;2026</span>
           <span className="origin__stamp-role">{site.role}</span>
@@ -40,7 +43,10 @@ export default function Origin() {
 
         <dl className="titleblock" aria-label="Drawing title block">
           {site.titleBlock.map((row) => (
-            <div key={row.dt}>
+            <div
+              key={row.dt}
+              className={row.dt === "Revision" ? "titleblock__stamp-host" : undefined}
+            >
               <dt>{row.dt}</dt>
               <dd className={row.mono ? "mono" : undefined}>{row.dd}</dd>
             </div>
