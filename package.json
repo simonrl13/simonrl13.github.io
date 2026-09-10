@@ -1,0 +1,30 @@
+{
+  "name": "simonrl13-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Simon Laborde — portfolio. Next.js port of the schematic/systems-diagram identity.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "gen:assets": "node scripts/gen-assets.mjs",
+    "serve": "node scripts/serve.mjs out 4321",
+    "shots": "node scripts/shots.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "puppeteer-core": "^25.10.0",
+    "typescript": "^5"
+  }
+}
