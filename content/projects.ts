@@ -41,6 +41,9 @@ export type Project = {
   skin: SkinClinical | SkinGame | SkinLab | SkinTerm;
   skinClass: "pcard--clinical" | "pcard--game" | "pcard--lab" | "pcard--term";
   accentTitle?: boolean; // colour the <h3> with the skin accent (NutriQuest)
+  // three system layers, top (what the user touches) → bottom (foundation);
+  // rendered as an exploded isometric stack
+  layers: [string, string, string];
   links?: { label: string; href: string }[];
   detail: {
     body: string;
@@ -57,6 +60,7 @@ export const projects: Project[] = [
     title: "MedHelp",
     lead: "An NLP tool for Brazil’s public health record system (PEC): it normalizes clinical notes, adapts language per audience, and flags preventive exams from patient demographics and history.",
     skinClass: "pcard--clinical",
+    layers: ["Exam-recommendation output", "NLP normalisation layer", "PEC clinical-note input"],
     skin: {
       kind: "clinical",
       vitals: [
@@ -82,6 +86,7 @@ export const projects: Project[] = [
     accentTitle: true,
     lead: "A cross-platform mobile app that turns nutrition tracking into a game — daily quests, streaks, and a competitive leaderboard, fully localized for Brazilian users.",
     skinClass: "pcard--game",
+    layers: ["Mobile UI · quests, streaks, XP", "Offline-first local store", "Background sync engine"],
     skin: {
       kind: "game",
       xpMeta: "Level 7 · Nutritionist-in-training",
@@ -108,6 +113,7 @@ export const projects: Project[] = [
     dialogTitle: "LABNOV Research Lab",
     lead: "Bilingual site for UFCG’s LABNOV research lab, with automatic publication sync from Brazil’s Plataforma Lattes and content editing through Sanity CMS for non-technical staff.",
     skinClass: "pcard--lab",
+    layers: ["Bilingual Next.js site", "Sanity CMS content model", "Automated Lattes sync"],
     skin: {
       kind: "lab",
       leadPt:
@@ -134,6 +140,7 @@ export const projects: Project[] = [
     dialogTitle: "Enterprise Billing Optimization — Accenture",
     lead: "Backend performance and reporting-automation work on an enterprise billing platform — profiling and tuning batch processes and replacing manual reporting steps with scripted pipelines.",
     skinClass: "pcard--term",
+    layers: ["BI Publisher reporting", "Batch rating & billing (C)", "Oracle BRM platform"],
     skin: {
       kind: "term",
       log: "$ ./run_billing_cycle\n[ok]   batch loaded\n[ok]   rating pipeline tuned\n[ok]   report job automated\n[ ]    client + figures under NDA\n",
