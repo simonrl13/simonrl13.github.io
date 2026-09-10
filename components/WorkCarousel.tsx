@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { projects, type Project } from "@/content/projects";
+import IsoStack from "@/components/IsoStack";
 
 /* ---------- per-project skin widgets ---------- */
 
@@ -154,6 +155,9 @@ function ProjectDialog({
         <>
           <p className="sheet__tag mono">{project.tag}</p>
           <h2>{project.dialogTitle ?? project.title}</h2>
+          <div className="sheet__iso">
+            <IsoStack layers={project.layers} className="iso--lg" />
+          </div>
           <p className="sheet__body">{project.detail.body}</p>
           <dl className="sheet__meta">
             <div>
@@ -301,6 +305,10 @@ export default function WorkCarousel() {
             <div className="pcard__inner">
               <p className="pcard__tag mono">{p.tag}</p>
               <h3>{p.title}</h3>
+
+              <div className="pcard__iso">
+                <IsoStack layers={p.layers} />
+              </div>
 
               {p.skin.kind === "lab" ? (
                 <LabBody skin={p.skin} />

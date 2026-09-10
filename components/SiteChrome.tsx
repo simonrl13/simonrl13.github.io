@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const RAIL_NODES = [
   { target: "origin", ref: "01", label: "Origin", at: "11%" },
@@ -133,30 +134,33 @@ export default function SiteChrome() {
         <a className="nav__mark" href="#origin">
           S<span>·</span>L
         </a>
-        <ul className="nav__list">
-          {NAV_LINKS.map((link, i) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                ref={(el) => {
-                  navLinkRefs.current[i] = el;
-                }}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <button
-          className="nav__toggle"
-          aria-expanded={menuOpen}
-          aria-controls="nav-list-mobile"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span />
-          <span />
-        </button>
+        <div className="nav__right">
+          <ul className="nav__list">
+            {NAV_LINKS.map((link, i) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  ref={(el) => {
+                    navLinkRefs.current[i] = el;
+                  }}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <ThemeToggle />
+          <button
+            className="nav__toggle"
+            aria-expanded={menuOpen}
+            aria-controls="nav-list-mobile"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span />
+            <span />
+          </button>
+        </div>
       </nav>
       <ul className="nav__mobile" id="nav-list-mobile" hidden={!menuOpen}>
         {NAV_LINKS.map((link) => (

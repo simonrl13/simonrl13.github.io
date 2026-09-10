@@ -28,7 +28,7 @@ export default function Page() {
 
       <footer className="foot">
         <p>
-          <span className="mono">SL&#8209;2026 · rev. 2026.4</span> — built by
+          <span className="mono">SL&#8209;2026 · rev. 2026.5</span> — built by
           hand with Next.js, TypeScript &amp; plain CSS, on the schematic identity
           from the vanilla original.
         </p>

@@ -31,7 +31,7 @@ export const site = {
     { dt: "Drawn by", dd: "S. Laborde", mono: false },
     { dt: "Origin", dd: "07°13′S 35°53′W", mono: true },
     { dt: "Bearing", dd: "Brazil → Europe", mono: false },
-    { dt: "Revision", dd: "2026.4", mono: true },
+    { dt: "Revision", dd: "2026.5", mono: true },
     { dt: "Sheet", dd: "1 / 1", mono: true },
     { dt: "Scale", dd: "1:1", mono: true },
   ],
