@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 
 const RAIL_NODES = [
-  { target: "origin", ref: "01", label: "Origin", at: "13%" },
-  { target: "journey", ref: "02", label: "Journey", at: "29%" },
-  { target: "arsenal", ref: "03", label: "Arsenal", at: "45%" },
-  { target: "work", ref: "04", label: "Work", at: "61%" },
-  { target: "languages", ref: "05", label: "Languages", at: "77%" },
+  { target: "origin", ref: "01", label: "Origin", at: "11%" },
+  { target: "journey", ref: "02", label: "Journey", at: "24%" },
+  { target: "arsenal", ref: "03", label: "Arsenal", at: "38%" },
+  { target: "work", ref: "04", label: "Work", at: "52%" },
+  { target: "pipeline", ref: "04.1", label: "Detail", at: "65%" },
+  { target: "languages", ref: "05", label: "Languages", at: "79%" },
   { target: "contact", ref: "06", label: "Contact", at: "92%" },
 ];
 

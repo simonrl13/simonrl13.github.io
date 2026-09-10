@@ -5,6 +5,7 @@ import Origin from "@/components/sections/Origin";
 import Journey from "@/components/sections/Journey";
 import Arsenal from "@/components/sections/Arsenal";
 import Work from "@/components/sections/Work";
+import Pipeline from "@/components/sections/Pipeline";
 import Languages from "@/components/sections/Languages";
 import Contact from "@/components/sections/Contact";
 
@@ -20,6 +21,7 @@ export default function Page() {
         <Journey />
         <Arsenal />
         <Work />
+        <Pipeline />
         <Languages />
         <Contact />
       </main>
