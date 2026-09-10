@@ -24,6 +24,7 @@ export default function Languages() {
             <span
               className="meter__bar"
               data-level={lang.bars}
+              data-reveal
               aria-hidden="true"
             >
               <i />

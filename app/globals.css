@@ -40,16 +40,20 @@ body {
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    /* faint blueprint grid, drawn on the ground itself */
+    /* faint drafting-vellum grain over a blueprint grid, on the ground itself */
     background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
         linear-gradient(var(--line-soft) 1px, transparent 1px),
         linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-    background-size: 64px 64px;
-    background-position: calc(var(--rail-w)) 0;
+    background-size: 160px 160px, 64px 64px, 64px 64px;
+    background-position: 0 0, calc(var(--rail-w)) 0, calc(var(--rail-w)) 0;
 }
 
 @media (max-width: 900px) {
-    body { background-position: 0 0; background-size: 44px 44px; }
+    body {
+        background-size: 160px 160px, 44px 44px, 44px 44px;
+        background-position: 0 0, 0 0, 0 0;
+    }
 }
 
 .mono { font-family: var(--font-mono); font-size: .82em; letter-spacing: .01em; }
@@ -923,6 +927,210 @@ main { padding-left: var(--rail-w); }
 @media (max-width: 480px) { .sheet__meta { grid-template-columns: 1fr; } }
 
 /* =========================================================
+   STAGE 1.5 — the site behaves like an engineering drawing
+   ========================================================= */
+
+/* ---- drawing-sheet plate: fixed frame, ticks, margin index ---- */
+
+.sheet-frame {
+    position: fixed;
+    inset: 0;
+    z-index: 82;
+    pointer-events: none;
+}
+.sheet-frame__plate {
+    position: absolute;
+    inset: 11px;
+    border: 1px solid var(--line-soft);
+}
+@media (min-width: 901px) { .sheet-frame__plate { left: calc(var(--rail-w) + 11px); } }
+
+.sheet-frame__corner {
+    position: absolute;
+    width: 11px; height: 11px;
+    border: 1.5px solid var(--brass);
+    opacity: .6;
+}
+.sheet-frame__corner--tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.sheet-frame__corner--tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+.sheet-frame__corner--bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+.sheet-frame__corner--br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.sheet-frame__index {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--paper-dim);
+    opacity: .38;
+}
+.sheet-frame__index--bottom { left: 6%; right: 6%; bottom: -1px; height: 11px; flex-direction: row; }
+.sheet-frame__index--left,
+.sheet-frame__index--right { top: 12%; bottom: 12%; width: 11px; flex-direction: column; }
+.sheet-frame__index--left { left: -1px; }
+.sheet-frame__index--right { right: -1px; }
+
+/* the top edge tucks under the fixed nav — no room for an index there */
+.sheet-frame__index--top { display: none; }
+
+@media (max-width: 640px) {
+    .sheet-frame__index--bottom { display: none; }
+}
+
+/* ---- hero: the drawing dimensions itself on load ---- */
+
+.origin__frame { --draw-ease: cubic-bezier(.22, 1, .36, 1); }
+
+.origin__dim {
+    position: absolute;
+    pointer-events: none;
+    color: var(--brass);
+}
+/* top overall-width dimension line, just outside the frame */
+.origin__dim--top {
+    top: -18px; left: 0; right: 0;
+    height: 10px;
+    border-left: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: dimGrow 1s var(--draw-ease) .35s forwards;
+}
+.origin__dim--top::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px;
+    background: currentColor;
+}
+.origin__dim--top::after {
+    content: "SHEET 1 / 1 — SCALE 1:1";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 8px;
+    background: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .12em;
+    color: var(--paper-dim);
+    opacity: 0;
+    animation: dimLabel .4s var(--draw-ease) 1.15s forwards;
+}
+/* left height dimension line */
+.origin__dim--left {
+    top: 0; bottom: 0; left: -16px;
+    width: 8px;
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    transform: scaleY(0);
+    transform-origin: top center;
+    animation: dimGrowY 1s var(--draw-ease) .55s forwards;
+}
+.origin__dim--left::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 1px;
+    background: currentColor;
+}
+@keyframes dimGrow  { to { transform: scaleX(1); } }
+@keyframes dimGrowY { to { transform: scaleY(1); } }
+@keyframes dimLabel { to { opacity: 1; } }
+
+@media (max-width: 720px) {
+    .origin__dim--top::after { content: "1:1"; }
+    .origin__dim--left { display: none; }
+}
+
+/* ---- instruments come online when scrolled into view ---- */
+/* `.anim-ready` is added by RevealController only when motion is allowed;
+   without it every instrument renders in its final state. */
+
+.anim-ready .meter__bar i {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .55s var(--ease), background-color .3s var(--ease),
+                border-color .3s var(--ease);
+}
+.anim-ready .meter__bar.is-revealed i { transform: scaleX(1); }
+.anim-ready .meter__bar.is-revealed i:nth-child(2) { transition-delay: .06s; }
+.anim-ready .meter__bar.is-revealed i:nth-child(3) { transition-delay: .12s; }
+.anim-ready .meter__bar.is-revealed i:nth-child(4) { transition-delay: .18s; }
+.anim-ready .meter__bar.is-revealed i:nth-child(5) { transition-delay: .24s; }
+
+.anim-ready .ecg path {
+    stroke-dasharray: 700;
+    stroke-dashoffset: 700;
+}
+.anim-ready .ecg.is-revealed path {
+    transition: stroke-dashoffset 1.15s var(--ease);
+    stroke-dashoffset: 0;
+}
+
+.anim-ready .xp__bar span {
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+.anim-ready .xp__bar.is-revealed span {
+    transition: transform .9s var(--ease);
+    transform: scaleX(1);
+}
+
+.anim-ready .vitals dd .vitals__n { transition: none; }
+
+/* ---- rail lit-node tick + section-head connector ---- */
+
+.rail__node.is-lit::after {
+    content: "";
+    position: absolute;
+    left: calc(100% + 2px);
+    width: 12px;
+    height: 1px;
+    background: var(--brass);
+    opacity: .7;
+}
+
+.sec-head h2 { position: relative; }
+.sec-head h2::before {
+    content: "";
+    position: absolute;
+    top: .55em;
+    right: calc(100% + 14px);
+    width: 0;
+    height: 1px;
+    background: var(--brass);
+    transition: width .5s var(--ease);
+}
+.sec-head.is-revealed h2::before { width: clamp(18px, 4vw, 46px); }
+@media (max-width: 720px) { .sec-head h2::before { display: none; } }
+
+/* ---- title-block stamp on hover ---- */
+
+.titleblock__stamp-host { position: relative; overflow: hidden; }
+.titleblock__stamp-host::after {
+    content: "AS-BUILT";
+    position: absolute;
+    inset: 4px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: .66rem;
+    letter-spacing: .16em;
+    color: var(--brass);
+    background: rgba(15,26,43,.82);
+    border: 1.5px solid var(--brass);
+    transform: rotate(-5deg);
+    opacity: 0;
+    transition: opacity .16s var(--ease);
+    pointer-events: none;
+}
+.titleblock__stamp-host:hover::after,
+.titleblock__stamp-host:focus-within::after { opacity: .9; }
+
+/* =========================================================
    REDUCED MOTION — show the schematic at rest, no theatre
    ========================================================= */
 
@@ -937,4 +1145,9 @@ main { padding-left: var(--rail-w); }
     .rail__node::before { opacity: 1; }
     .rail__node.is-lit .rail__ref,
     .rail__node.is-lit .rail__label { transform: none; }
+
+    /* Stage 1.5 elements: show at their finished state, no drafting theatre */
+    .origin__dim--top { transform: scaleX(1); }
+    .origin__dim--left { transform: scaleY(1); }
+    .origin__dim--top::after { opacity: 1; }
 }
