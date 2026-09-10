@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#0F1A2B"/>
+  <path d="M6 6h10M6 6v10M58 58H48M58 58V48" fill="none" stroke="#B8763E" stroke-width="2"/>
+  <rect x="6" y="6" width="52" height="52" fill="none" stroke="#26344B" stroke-width="1"/>
+  <text x="32" y="43" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#EDE6D6" letter-spacing="1">S<tspan fill="#B8763E">L</tspan></text>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#1C2C46" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0F1A2B"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- registration corner ticks -->
+  <path d="M40 40h40M40 40v40M1160 590h-40M1160 590v-40" fill="none" stroke="#B8763E" stroke-width="3"/>
+  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#35435C" stroke-width="1"/>
+
+  <text x="80" y="150" font-family="'JetBrains Mono', 'Courier New', monospace" font-size="20" letter-spacing="2" fill="#B8763E">DRAWING SL-2026 &#8212; SHEET 1 / 1</text>
+
+  <text x="76" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="104" font-weight="700" fill="#EDE6D6">Simon Laborde</text>
+
+  <text x="80" y="370" font-family="Arial, 'Segoe UI', sans-serif" font-size="34" fill="#A6B2C2">Backend &amp; full-stack engineer &#8212; <tspan fill="#B8763E">AI / LLM</tspan> focus</text>
+
+  <!-- title block strip -->
+  <g font-family="Arial, 'Segoe UI', sans-serif">
+    <line x1="80" y1="470" x2="1120" y2="470" stroke="#35435C" stroke-width="1"/>
+    <line x1="340" y1="470" x2="340" y2="540" stroke="#35435C" stroke-width="1"/>
+    <line x1="640" y1="470" x2="640" y2="540" stroke="#35435C" stroke-width="1"/>
+    <line x1="900" y1="470" x2="900" y2="540" stroke="#35435C" stroke-width="1"/>
+
+    <text x="80" y="500" font-size="15" letter-spacing="2" fill="#A6B2C2">ORIGIN</text>
+    <text x="80" y="528" font-size="20" fill="#EDE6D6" font-family="'JetBrains Mono','Courier New',monospace">07&#176;13&#8242;S 35&#176;53&#8242;W</text>
+
+    <text x="360" y="500" font-size="15" letter-spacing="2" fill="#A6B2C2">BEARING</text>
+    <text x="360" y="528" font-size="20" fill="#EDE6D6">Brazil &#8594; Europe</text>
+
+    <text x="660" y="500" font-size="15" letter-spacing="2" fill="#A6B2C2">REVISION</text>
+    <text x="660" y="528" font-size="20" fill="#EDE6D6" font-family="'JetBrains Mono','Courier New',monospace">2026.4</text>
+
+    <text x="920" y="500" font-size="15" letter-spacing="2" fill="#A6B2C2">SCALE</text>
+    <text x="920" y="528" font-size="20" fill="#EDE6D6" font-family="'JetBrains Mono','Courier New',monospace">1:1</text>
+  </g>
+</svg>
