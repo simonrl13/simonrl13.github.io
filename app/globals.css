@@ -1160,6 +1160,14 @@ main { padding-left: var(--rail-w); }
    ========================================================= */
 
 .sheet {
+    /* Don't rely solely on the UA's top-layer promotion for an open modal
+       <dialog> — some browsers paint it in normal document flow instead,
+       where our other fixed-position chrome (rail, nav, sheet-frame) can
+       end up stacking over it. Pin position and z-index explicitly so it's
+       always on top regardless. */
+    position: fixed;
+    inset: 0;
+    z-index: 300;
     /* restore the modal centering the global `* { margin: 0 }` reset removes */
     margin: auto;
     width: min(620px, 92vw);
@@ -1252,7 +1260,14 @@ main { padding-left: var(--rail-w); }
     flex: none;
 }
 
-.sheet--chat {
+/* scoped to [open]: an unconditional `display: flex` here is an author
+   rule and — unlike specificity — author origin beats the UA stylesheet's
+   `dialog:not([open]) { display: none }` regardless of selector weight, so
+   without this the closed dialog would still render (this was the actual
+   cause of the console "floating behind the page" bug — not a top-layer
+   quirk after all, though the explicit position/z-index above is still
+   worth keeping as a defensive belt-and-suspenders for the open state). */
+.sheet--chat[open] {
     display: flex;
     flex-direction: column;
     width: min(560px, 92vw);
