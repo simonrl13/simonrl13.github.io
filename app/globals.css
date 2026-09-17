@@ -581,7 +581,7 @@ main { padding-left: var(--rail-w); }
 .jitem::before {
     content: "";
     position: absolute;
-    left: -18px; top: 38px;
+    left: -18px; top: 45px;
     width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--ink);
@@ -591,7 +591,7 @@ main { padding-left: var(--rail-w); }
 .jitem::after {
     content: "";
     position: absolute;
-    left: -18px; top: 42px;
+    left: -18px; top: 49px;
     width: 14px; height: 1px;
     background: var(--line);
 }
