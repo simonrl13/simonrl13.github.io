@@ -1,6 +1,7 @@
 import SiteChrome from "@/components/SiteChrome";
 import SheetFrame from "@/components/SheetFrame";
 import RevealController from "@/components/RevealController";
+import ChatConsole from "@/components/ChatConsole";
 import Origin from "@/components/sections/Origin";
 import Journey from "@/components/sections/Journey";
 import Arsenal from "@/components/sections/Arsenal";
@@ -15,6 +16,7 @@ export default function Page() {
       <SiteChrome />
       <SheetFrame />
       <RevealController />
+      <ChatConsole />
 
       <main>
         <Origin />
