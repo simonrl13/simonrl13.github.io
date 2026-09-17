@@ -53,12 +53,12 @@ export const site = {
     cvName: "Simon_Laborde_CV.pdf",
   },
 
-  // TODO(simon): confirm names, and which are completed vs in progress.
   credentials: [
-    "Anthropic — Model Context Protocol (MCP)",
-    "Anthropic — Claude Platform",
-    "Anthropic — Agent Skills",
-    "Anthropic — Subagents",
+    "Anthropic — AI Fluency: Framework & Foundations",
+    "Anthropic — Building with the Claude API",
+    "Anthropic — Introduction to Model Context Protocol",
+    "Anthropic — Model Context Protocol: Advanced Topics",
+    "Anthropic — Claude Code in Action",
   ],
 } as const;
 
