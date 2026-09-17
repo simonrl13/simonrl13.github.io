@@ -69,14 +69,12 @@ export type JourneyItem = {
   body: string; // may contain <em>…</em>
 };
 
-// TODO(simon): reconcile the academic timeline — add current UFCG / LABNOV
-// affiliation if you are enrolled/researching there now.
 export const journey: JourneyItem[] = [
   {
     when: "2024 — present",
-    title: "Researcher — LABNOV, UFCG",
-    org: "Universidade Federal de Campina Grande",
-    body: "Engineering the LABNOV materials-research lab's digital platform: a bilingual site, a Sanity CMS content model for non-technical staff, and an automated publication pipeline off Brazil's Plataforma Lattes. TODO(simon): confirm role title, dates, and whether this is tied to a graduate program.",
+    title: "LABNOV digital platform",
+    org: "Independent build for a UFCG materials-research lab",
+    body: "Designed and built the lab's bilingual site from scratch — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes — as an independent build, not an academic or employment role.",
   },
   {
     when: "2020 — 2025",
