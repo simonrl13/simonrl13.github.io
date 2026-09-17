@@ -80,7 +80,7 @@ export const journey: JourneyItem[] = [
     when: "2020 — 2025",
     title: "B.Sc. Information Systems",
     org: "UNIFACISA — Campina Grande",
-    body: "Graduated with highest honors. Thesis — <em>&ldquo;Applications of Generative AI in Clinical Decision Support&rdquo;</em> — defended with distinction, and the seed of the MedHelp project.",
+    body: "Thesis — <em>&ldquo;Applications of Generative AI in Clinical Decision Support&rdquo;</em> — defended with distinction, and the seed of the MedHelp project.",
   },
   {
     when: "2022 — 2023",
