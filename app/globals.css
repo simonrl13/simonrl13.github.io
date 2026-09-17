@@ -165,7 +165,7 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
 /* draw-in: the base line strokes itself down the page on load */
 .rail__base {
     background: var(--line);
-    animation: drawRail 2.4s var(--ease) .2s forwards;
+    animation: drawRail 2.4s var(--ease) .6s forwards;
 }
 @keyframes drawRail { to { transform: translateX(-50%) scaleY(1); } }
 /* the trace fills to match scroll progress — JS sets scaleY live */
@@ -197,13 +197,13 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
     opacity: 0;
     animation: popNode .5s var(--ease) forwards;
 }
-.rail__node:nth-child(1)::before { animation-delay: .7s; }
-.rail__node:nth-child(2)::before { animation-delay: 1.0s; }
-.rail__node:nth-child(3)::before { animation-delay: 1.3s; }
-.rail__node:nth-child(4)::before { animation-delay: 1.6s; }
-.rail__node:nth-child(5)::before { animation-delay: 1.9s; }
-.rail__node:nth-child(6)::before { animation-delay: 2.2s; }
-.rail__node:nth-child(7)::before { animation-delay: 2.5s; }
+.rail__node:nth-child(1)::before { animation-delay: 1.1s; }
+.rail__node:nth-child(2)::before { animation-delay: 1.4s; }
+.rail__node:nth-child(3)::before { animation-delay: 1.7s; }
+.rail__node:nth-child(4)::before { animation-delay: 2.0s; }
+.rail__node:nth-child(5)::before { animation-delay: 2.3s; }
+.rail__node:nth-child(6)::before { animation-delay: 2.6s; }
+.rail__node:nth-child(7)::before { animation-delay: 2.9s; }
 @keyframes popNode { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: scale(1); } }
 
 .rail__node.is-lit::before {
@@ -1422,7 +1422,7 @@ main { padding-left: var(--rail-w); }
     border-right: 1px solid currentColor;
     transform: scaleX(0);
     transform-origin: left center;
-    animation: dimGrow 1.7s var(--draw-ease) .6s forwards;
+    animation: dimGrow 1.7s var(--draw-ease) 1.0s forwards;
 }
 .origin__dim--top::before {
     content: "";
@@ -1443,7 +1443,7 @@ main { padding-left: var(--rail-w); }
     letter-spacing: .12em;
     color: var(--paper-dim);
     opacity: 0;
-    animation: dimLabel .6s var(--draw-ease) 2s forwards;
+    animation: dimLabel .6s var(--draw-ease) 2.4s forwards;
 }
 /* left height dimension line */
 .origin__dim--left {
@@ -1453,7 +1453,7 @@ main { padding-left: var(--rail-w); }
     border-bottom: 1px solid currentColor;
     transform: scaleY(0);
     transform-origin: top center;
-    animation: dimGrowY 1.7s var(--draw-ease) .9s forwards;
+    animation: dimGrowY 1.7s var(--draw-ease) 1.3s forwards;
 }
 .origin__dim--left::before {
     content: "";
