@@ -30,7 +30,12 @@ jobs:
       # Regenerate OG image / icons from their SVG sources.
       - run: node scripts/gen-assets.mjs
 
-      - run: npm run build
+      # GitHub Pages is static-only and can't run the /api/chat route (that
+      # only exists on Vercel) — strip it before the export build so Next
+      # never tries to statically render a dynamic POST handler.
+      - run: rm -rf app/api
+
+      - run: npm run build:static
 
       # GitHub Pages' modern Actions deploy does not run Jekyll, but keep the
       # guard so the _next/ directory is never stripped.
