@@ -14,11 +14,11 @@ export const site = {
 
   title: "Simon Laborde — Backend & AI/LLM Engineer",
   description:
-    "Simon Laborde — backend and full-stack engineer with an AI/LLM focus and a game-development foundation. Portfolio, experience, and contact.",
+    "Simon Laborde — backend and full-stack engineer with an AI/LLM focus, built on a foundation in enterprise backend systems. Portfolio, experience, and contact.",
 
   // Hero copy
   roleLine:
-    "Backend & full-stack engineer with an <strong>AI / LLM</strong> focus, built on a foundation in game development and physics engines.",
+    "Backend & full-stack engineer with an <strong>AI / LLM</strong> focus, built on a foundation in enterprise backend systems and full-stack development.",
   thesis:
     "I bridge the gap between complex systems and the people who depend on them — currently building LLM-backed tools, taking freelance and contract work across Europe, and applying to master&rsquo;s programs.",
 
@@ -74,9 +74,9 @@ export type JourneyItem = {
 export const journey: JourneyItem[] = [
   {
     when: "2024 — present",
-    title: "LABNOV digital platform",
-    org: "Independent build for a UFCG materials-research lab",
-    body: "Designed and built the lab's bilingual site from scratch — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes — as an independent build, not an academic or employment role.",
+    title: "Freelance Software Development",
+    org: "Independent — remote",
+    body: "Built LABNOV's bilingual site for a UFCG materials-research lab — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes — and NutriQuest, a gamified nutrition-tracking app. Additional client work under NDA.",
   },
   {
     when: "2020 — 2025",
