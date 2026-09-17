@@ -6,9 +6,11 @@
 export const site = {
   name: "Simon Laborde",
   role: "Systems & full-stack engineering",
-  url: "https://simonrl13.github.io",
-  // Swap to the Vercel/custom domain once cutover happens (Stage 4).
-  canonical: "https://simonrl13.github.io",
+  url: "https://www.simonlaborde.com",
+  // simonlaborde.com is the canonical public domain (Stage 4 cutover,
+  // Sept 2026); simonrl13.github.io keeps serving the same build as a
+  // secondary/archival host.
+  canonical: "https://www.simonlaborde.com",
 
   title: "Simon Laborde — Backend & AI/LLM Engineer",
   description:
