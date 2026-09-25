@@ -28,6 +28,13 @@ export const site = {
     detail: "Applying for Fall 2026 master&rsquo;s — MoSIG, Sorbonne, PSL, TUM, RWTH",
   },
 
+  // Chat launcher label — the short form shows on phones, where the full
+  // label won't fit beside the content.
+  chatLauncher: { full: "ASK ABOUT MY WORK", short: "ASK" },
+
+  // Browser/status-bar colour per theme — must match --ink in globals.css.
+  themeColor: { dark: "#0F1A2B", light: "#ECE4D3" },
+
   // Blueprint title block
   titleBlock: [
     { dt: "Drawn by", dd: "S. Laborde", mono: false },

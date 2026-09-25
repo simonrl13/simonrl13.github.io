@@ -103,10 +103,11 @@ export default function RootLayout({
     >
       <head>
         <meta name="color-scheme" content="dark light" />
+        {/* must precede the script below, which retints it for whiteprint */}
+        <meta name="theme-color" content={site.themeColor.dark} />
         <script
           dangerouslySetInnerHTML={{
-            __html:
-              "try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}",
+            __html: `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name=theme-color]');if(m&&t==='light')m.content='${site.themeColor.light}'}catch(e){}`,
           }}
         />
         <script

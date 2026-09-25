@@ -1288,6 +1288,7 @@ main { padding-left: var(--rail-w); }
 @media (hover: hover) and (pointer: fine) {
     .chat-launcher:hover { background: var(--surface-2); transform: translateY(-1px); }
 }
+.chat-launcher__short { display: none; }
 .chat-launcher__dot {
     width: 7px; height: 7px;
     border-radius: 50%;
@@ -1358,9 +1359,21 @@ main { padding-left: var(--rail-w); }
     30% { opacity: 1; transform: translateY(-2px); }
 }
 
+/* block cursor on the streaming answer — a stepped blink, like a terminal */
+.chat__cursor {
+    display: inline-block;
+    width: .5em; height: 1.05em;
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    background: var(--brass);
+    animation: chatCursor 1s step-end infinite;
+}
+@keyframes chatCursor { 50% { opacity: 0; } }
+
 .chat__form { display: flex; gap: 10px; }
 .chat__input {
     flex: 1;
+    min-width: 0; /* let it shrink below its 16px intrinsic width on phones */
     background: var(--ink);
     border: 1px solid var(--line);
     color: var(--paper);
@@ -1387,9 +1400,11 @@ main { padding-left: var(--rail-w); }
 .chat__note { margin-top: 10px; font-size: .74rem; color: var(--paper-dim); }
 
 @media (max-width: 560px) {
-    .chat-launcher .mono { display: none; }
-    /* 44px touch target (the label comes back in the chat-on-touch PR) */
-    .chat-launcher { padding: 13px; min-width: 44px; min-height: 44px; justify-content: center; }
+    /* the full label won't fit beside content on a phone — a short one
+       keeps the launcher discoverable instead of a bare dot */
+    .chat-launcher__full { display: none; }
+    .chat-launcher__short { display: inline; }
+    .chat-launcher { padding: 12px 14px; min-height: 44px; }
 }
 
 /* =========================================================
@@ -1607,6 +1622,9 @@ main { padding-left: var(--rail-w); }
         animation-delay: 0ms !important;
         transition-duration: .001ms !important;
     }
+    /* infinite loops at .001ms would strobe at a random phase each frame —
+       stop them outright: static dots, steady cursor */
+    .chat__typing i, .chat__cursor { animation: none; }
     .rail__base { transform: translateX(-50%) scaleY(1); }
     .rail__node::before { opacity: 1; }
     .rail__node.is-lit .rail__ref,
