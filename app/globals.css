@@ -82,7 +82,27 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+    /* reserve the scrollbar's space so locking scroll under a dialog
+       (below) doesn't shift the page sideways on classic scrollbars */
+    scrollbar-gutter: stable;
+    /* no grey/blue flash on tap — every control has its own :active state */
+    -webkit-tap-highlight-color: transparent;
+}
+/* an open modal owns scrolling; the page behind it stays put */
+html:has(dialog[open]) { overflow: hidden; }
+
+/* touch: fire clicks immediately (no double-tap-zoom wait) */
+button, a { touch-action: manipulation; }
+
+/* press feedback — a drafting plate seating 1px, not an app-style shrink.
+   `translate` (not `transform`) so it never fights hover/animation transforms. */
+:is(.btn, .pcard__more, .carousel__btn, .chat-launcher, .chat__send,
+    .chat__suggestions button, .lang-switch button, .theme-toggle,
+    .nav__toggle, .sheet__close):active:not(:disabled) {
+    translate: 0 1px;
+}
 
 body {
     background: var(--ink);
@@ -324,8 +344,11 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
     background: transparent;
     border: 1px solid var(--line);
     cursor: pointer;
-    transition: border-color .18s var(--ease);
+    position: relative;
+    transition: border-color .18s var(--ease), translate .12s var(--ease);
 }
+/* 34px visual, 44px touch target */
+.theme-toggle::after { content: ""; position: absolute; inset: -5px; }
 .theme-toggle:hover { border-color: var(--brass); }
 .theme-toggle svg {
     width: 18px; height: 18px;
@@ -511,7 +534,7 @@ main { padding-left: var(--rail-w); }
     font-weight: 600;
     border: 1px solid var(--brass);
     cursor: pointer;
-    transition: background .18s var(--ease), color .18s var(--ease), transform .18s var(--ease);
+    transition: background .18s var(--ease), color .18s var(--ease), translate .12s var(--ease);
 }
 .btn--solid { background: var(--brass); color: var(--ink); }
 .btn--solid:hover { background: var(--gold); border-color: var(--gold); }
@@ -768,14 +791,14 @@ main { padding-left: var(--rail-w); }
 }
 
 .iso__layer { transition: transform .45s var(--ease); }
-.pcard:hover .iso__layer[data-layer="0"],
-.iso:hover .iso__layer[data-layer="0"],
 .iso:focus-visible .iso__layer[data-layer="0"] { transform: translate(-9px, -15px); }
-.pcard:hover .iso__layer[data-layer="2"],
-.iso:hover .iso__layer[data-layer="2"],
 .iso:focus-visible .iso__layer[data-layer="2"] { transform: translate(9px, 15px); }
-.pcard:hover .iso__links,
-.iso:hover .iso__links { opacity: 0; }
+/* hover only where hover is real — a tap would leave it stuck open */
+@media (hover: hover) and (pointer: fine) {
+    .pcard:hover .iso__layer[data-layer="0"] { transform: translate(-9px, -15px); }
+    .pcard:hover .iso__layer[data-layer="2"] { transform: translate(9px, 15px); }
+    .pcard:hover .iso__links { opacity: 0; }
+}
 
 .sheet__iso {
     border: 1px solid var(--line);
@@ -789,7 +812,7 @@ main { padding-left: var(--rail-w); }
 .sheet__iso .iso__links { opacity: 0; }
 
 /* touch screens have no hover — show the card stacks already pulled apart */
-@media (max-width: 900px) {
+@media (max-width: 900px), (hover: none) {
     .pcard__iso .iso__layer[data-layer="0"] { transform: translate(-9px, -13px); }
     .pcard__iso .iso__layer[data-layer="2"] { transform: translate(9px, 13px); }
     .pcard__iso .iso__links { opacity: 0; }
@@ -823,7 +846,7 @@ main { padding-left: var(--rail-w); }
     font-size: .84rem;
     font-weight: 600;
     cursor: pointer;
-    transition: border-color .18s var(--ease), background .18s var(--ease);
+    transition: border-color .18s var(--ease), background .18s var(--ease), translate .12s var(--ease);
 }
 .pcard__more:hover { border-color: var(--brass); background: rgba(var(--brass-rgb),.1); }
 
@@ -915,8 +938,11 @@ main { padding-left: var(--rail-w); }
     font-size: .8rem;
     padding: 8px 14px;
     cursor: pointer;
-    transition: background .15s var(--ease), color .15s var(--ease);
+    position: relative;
+    transition: background .15s var(--ease), color .15s var(--ease), translate .12s var(--ease);
 }
+/* 33px visual, 45px touch target (vertical only, so the pair don't overlap) */
+.lang-switch button::after { content: ""; position: absolute; inset: -6px 0; }
 .lang-switch button:first-child { border-left: 0; }
 .lang-switch button[aria-pressed="true"] { background: var(--brass); color: var(--ink); }
 
@@ -946,7 +972,7 @@ main { padding-left: var(--rail-w); }
     color: var(--paper);
     font-size: 1rem;
     cursor: pointer;
-    transition: border-color .18s var(--ease), background .18s var(--ease);
+    transition: border-color .18s var(--ease), background .18s var(--ease), translate .12s var(--ease);
 }
 .carousel__btn:hover:not(:disabled) { border-color: var(--brass); background: rgba(var(--brass-rgb),.1); }
 .carousel__btn:disabled { opacity: .32; cursor: default; }
@@ -1172,7 +1198,10 @@ main { padding-left: var(--rail-w); }
     margin: auto;
     width: min(620px, 92vw);
     max-height: 86vh;
+    /* dvh tracks the phone's visible area as the URL bar shows/hides */
+    max-height: 86dvh;
     overflow-y: auto;
+    overscroll-behavior: contain;
     border: 1px solid var(--brass);
     background: var(--surface);
     color: var(--paper-dim);
@@ -1185,12 +1214,17 @@ main { padding-left: var(--rail-w); }
 }
 .sheet__close {
     position: absolute;
-    top: 10px; right: 14px;
+    /* 44px touch target, glyph centred where it always sat */
+    top: 1px; right: 2px;
+    width: 44px; height: 44px;
+    display: grid;
+    place-items: center;
     background: transparent; border: 0;
     color: var(--paper-dim);
     font-size: 1.6rem;
     line-height: 1;
     cursor: pointer;
+    transition: color .18s var(--ease), translate .12s var(--ease);
 }
 .sheet__close:hover { color: var(--paper); }
 .sheet__tag { color: var(--brass); margin-bottom: 10px; }
@@ -1249,9 +1283,11 @@ main { padding-left: var(--rail-w); }
     letter-spacing: .04em;
     cursor: pointer;
     box-shadow: 0 4px 18px rgba(var(--ink-rgb), .45);
-    transition: background .18s var(--ease), transform .18s var(--ease);
+    transition: background .18s var(--ease), transform .18s var(--ease), translate .12s var(--ease);
 }
-.chat-launcher:hover { background: var(--surface-2); transform: translateY(-1px); }
+@media (hover: hover) and (pointer: fine) {
+    .chat-launcher:hover { background: var(--surface-2); transform: translateY(-1px); }
+}
 .chat-launcher__dot {
     width: 7px; height: 7px;
     border-radius: 50%;
@@ -1272,6 +1308,7 @@ main { padding-left: var(--rail-w); }
     flex-direction: column;
     width: min(560px, 92vw);
     max-height: 82vh;
+    max-height: 82dvh;
 }
 .chat__intro { font-size: .86rem; margin-bottom: 16px; }
 
@@ -1279,6 +1316,7 @@ main { padding-left: var(--rail-w); }
     flex: 1;
     min-height: 220px;
     overflow-y: auto;
+    overscroll-behavior: contain;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
     padding: 14px 2px;
@@ -1295,7 +1333,7 @@ main { padding-left: var(--rail-w); }
     font-family: var(--font-body);
     font-size: .86rem;
     cursor: pointer;
-    transition: border-color .18s var(--ease), color .18s var(--ease);
+    transition: border-color .18s var(--ease), color .18s var(--ease), translate .12s var(--ease);
 }
 .chat__suggestions button:hover:not(:disabled) { border-color: var(--brass); color: var(--paper); }
 .chat__suggestions button:disabled { opacity: .5; cursor: default; }
@@ -1328,7 +1366,8 @@ main { padding-left: var(--rail-w); }
     color: var(--paper);
     padding: 11px 12px;
     font-family: var(--font-body);
-    font-size: .92rem;
+    /* 16px minimum — anything smaller makes iOS Safari zoom the page on focus */
+    font-size: 16px;
 }
 .chat__input:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
 .chat__send {
@@ -1340,7 +1379,7 @@ main { padding-left: var(--rail-w); }
     font-weight: 600;
     font-size: .88rem;
     cursor: pointer;
-    transition: background .18s var(--ease);
+    transition: background .18s var(--ease), translate .12s var(--ease);
 }
 .chat__send:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); }
 .chat__send:disabled { opacity: .4; cursor: default; }
@@ -1349,7 +1388,8 @@ main { padding-left: var(--rail-w); }
 
 @media (max-width: 560px) {
     .chat-launcher .mono { display: none; }
-    .chat-launcher { padding: 13px; }
+    /* 44px touch target (the label comes back in the chat-on-touch PR) */
+    .chat-launcher { padding: 13px; min-width: 44px; min-height: 44px; justify-content: center; }
 }
 
 /* =========================================================
