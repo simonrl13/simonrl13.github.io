@@ -44,7 +44,11 @@ export default function ChatConsole() {
 
   const openConsole = () => {
     dialogRef.current?.showModal();
-    setTimeout(() => inputRef.current?.focus(), 50);
+    // only jump to the input with a mouse — on a phone that pops the keyboard
+    // over the suggested questions; showModal already focuses the close button
+    if (window.matchMedia("(pointer: fine)").matches) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
   };
 
   const handleBackdrop = (e: React.MouseEvent<HTMLDialogElement>) => {
@@ -126,9 +130,13 @@ export default function ChatConsole() {
         ref={launcherRef}
         onClick={openConsole}
         aria-haspopup="dialog"
+        aria-label={site.chatLauncher.full.toLowerCase()}
       >
         <span className="chat-launcher__dot" aria-hidden="true" />
-        <span className="mono">ASK ABOUT MY WORK</span>
+        <span className="mono chat-launcher__full">{site.chatLauncher.full}</span>
+        <span className="mono chat-launcher__short" aria-hidden="true">
+          {site.chatLauncher.short}
+        </span>
       </button>
 
       <dialog
@@ -170,6 +178,10 @@ export default function ChatConsole() {
                     <i />
                   </span>
                 )}
+                {/* terminal cursor while the answer is still streaming in */}
+                {busy && m.content && i === messages.length - 1 && (
+                  <span className="chat__cursor" aria-hidden="true" />
+                )}
               </p>
             </div>
           ))}
@@ -190,6 +202,8 @@ export default function ChatConsole() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. What's his strongest project?"
             maxLength={300}
+            enterKeyHint="send"
+            autoComplete="off"
             disabled={busy}
             aria-label="Your question"
           />
