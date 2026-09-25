@@ -1212,6 +1212,29 @@ main { padding-left: var(--rail-w); }
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
+
+/* enter / exit — the sheet settles up into place (240ms) and leaves faster
+   (160ms). `display` + `overlay` transition discretely so the closing sheet
+   stays painted until the fade ends; browsers without `overlay` still keep
+   it on top thanks to the fixed/z-index above. Modal, so it stays centred. */
+.sheet,
+.sheet::backdrop {
+    transition:
+        opacity .24s var(--ease),
+        transform .24s var(--ease),
+        overlay .24s var(--ease) allow-discrete,
+        display .24s var(--ease) allow-discrete;
+}
+.sheet:not([open]) {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+    transition-duration: .16s;
+}
+.sheet:not([open])::backdrop { opacity: 0; transition-duration: .16s; }
+@starting-style {
+    .sheet[open] { opacity: 0; transform: translateY(8px) scale(.98); }
+    .sheet[open]::backdrop { opacity: 0; }
+}
 .sheet__close {
     position: absolute;
     /* 44px touch target, glyph centred where it always sat */
@@ -1625,6 +1648,9 @@ main { padding-left: var(--rail-w); }
     /* infinite loops at .001ms would strobe at a random phase each frame —
        stop them outright: static dots, steady cursor */
     .chat__typing i, .chat__cursor { animation: none; }
+    /* sheets keep a short fade (it aids comprehension) but no movement */
+    .sheet { transform: none !important; }
+    .sheet, .sheet::backdrop { transition-duration: .15s !important; }
     .rail__base { transform: translateX(-50%) scaleY(1); }
     .rail__node::before { opacity: 1; }
     .rail__node.is-lit .rail__ref,

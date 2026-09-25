@@ -110,9 +110,11 @@ function LabBody({ skin }: { skin: Extract<Project["skin"], { kind: "lab" }> }) 
 
 function ProjectDialog({
   project,
+  open,
   onClose,
 }: {
   project: Project | null;
+  open: boolean;
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -120,9 +122,9 @@ function ProjectDialog({
   useEffect(() => {
     const dlg = ref.current;
     if (!dlg) return;
-    if (project && !dlg.open) dlg.showModal();
-    if (!project && dlg.open) dlg.close();
-  }, [project]);
+    if (open && !dlg.open) dlg.showModal();
+    if (!open && dlg.open) dlg.close();
+  }, [open]);
 
   const handleBackdrop = (e: React.MouseEvent<HTMLDialogElement>) => {
     const dlg = ref.current;
@@ -200,7 +202,10 @@ export default function WorkCarousel() {
   const nextRef = useRef<HTMLButtonElement>(null);
   const lastFocused = useRef<HTMLButtonElement | null>(null);
 
+  // `active` outlives the dialog closing, so the sheet keeps its content
+  // while it animates out; `open` alone drives showModal/close.
   const [active, setActive] = useState<Project | null>(null);
+  const [open, setOpen] = useState(false);
 
   const reduceMotion =
     typeof window !== "undefined" &&
@@ -278,10 +283,11 @@ export default function WorkCarousel() {
   const openDialog = (project: Project, e: React.MouseEvent<HTMLButtonElement>) => {
     lastFocused.current = e.currentTarget;
     setActive(project);
+    setOpen(true);
   };
 
   const closeDialog = () => {
-    setActive(null);
+    setOpen(false);
     lastFocused.current?.focus();
   };
 
@@ -375,7 +381,7 @@ export default function WorkCarousel() {
         </button>
       </div>
 
-      <ProjectDialog project={active} onClose={closeDialog} />
+      <ProjectDialog project={active} open={open} onClose={closeDialog} />
     </div>
   );
 }
