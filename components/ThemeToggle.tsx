@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { site } from "@/content/site";
 
 type Theme = "dark" | "light";
 
@@ -17,6 +18,10 @@ function getSnapshot(): Theme {
 
 function setTheme(next: Theme) {
   document.documentElement.dataset.theme = next;
+  // keep the phone's status bar / browser chrome on the sheet's colour
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", site.themeColor[next]);
   try {
     localStorage.setItem("theme", next);
   } catch {
