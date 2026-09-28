@@ -17,6 +17,16 @@ function getSnapshot(): Theme {
 }
 
 function setTheme(next: Theme) {
+  // "diazo exposure": the new print wipes across the old one (CSS in
+  // globals.css). Browsers without view transitions just switch instantly.
+  if (document.startViewTransition) {
+    document.startViewTransition(() => applyTheme(next));
+  } else {
+    applyTheme(next);
+  }
+}
+
+function applyTheme(next: Theme) {
   document.documentElement.dataset.theme = next;
   // keep the phone's status bar / browser chrome on the sheet's colour
   document
