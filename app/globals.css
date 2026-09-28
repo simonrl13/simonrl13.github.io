@@ -358,7 +358,32 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
     stroke: var(--paper);
     stroke-width: 1.5;
 }
-.theme-toggle__fill { fill: var(--brass); stroke: none; }
+.theme-toggle__fill {
+    fill: var(--brass);
+    stroke: none;
+    /* the filled half flips sides with the theme, so the icon shows state */
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transition: transform .2s var(--ease);
+}
+:root[data-theme="light"] .theme-toggle__fill { transform: rotate(180deg); }
+
+/* theme switch = a diazo print exposing: the new sheet wipes in left→right
+   over the old one (view transition started in ThemeToggle.tsx) */
+/* (the page isn't hit-tested during a view transition, so a second tap
+   inside the 450ms wipe is ignored — accepted for a rare, deliberate action) */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+    animation: diazoWipe .45s cubic-bezier(.77, 0, .175, 1);
+}
+@keyframes diazoWipe {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+}
 
 .nav__mobile {
     position: fixed; top: 62px; left: 0; right: 0;
@@ -1646,6 +1671,9 @@ main { padding-left: var(--rail-w); }
 .titleblock__stamp-host:hover::after,
 .titleblock__stamp-host:focus-within::after { opacity: .9; }
 
+@keyframes vtFadeOut { to { opacity: 0; } }
+@keyframes vtFadeIn { from { opacity: 0; } }
+
 /* =========================================================
    REDUCED MOTION — show the schematic at rest, no theatre
    ========================================================= */
@@ -1663,6 +1691,9 @@ main { padding-left: var(--rail-w); }
     /* sheets keep a short fade (it aids comprehension) but no movement */
     .sheet { transform: none !important; }
     .sheet, .sheet::backdrop { transition-duration: .15s !important; }
+    /* theme switch: a short crossfade instead of the wipe (no brightness jump) */
+    ::view-transition-old(root) { animation: vtFadeOut .15s ease both; }
+    ::view-transition-new(root) { animation: vtFadeIn .15s ease both; }
     .rail__base { transform: translateX(-50%) scaleY(1); }
     .rail__node::before { opacity: 1; }
     .rail__node.is-lit .rail__ref,
