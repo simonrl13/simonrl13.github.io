@@ -107,7 +107,9 @@ export default function RootLayout({
         <meta name="theme-color" content={site.themeColor.dark} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name=theme-color]');if(m&&t==='light')m.content='${site.themeColor.light}'}catch(e){}`,
+            // theme (no flash) + the load draw-in plays once per tab session:
+            // later loads in the same tab get data-drawn and render finished
+            __html: `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name=theme-color]');if(m&&t==='light')m.content='${site.themeColor.light}'}catch(e){}try{if(sessionStorage.getItem('drawn'))document.documentElement.dataset.drawn='';else sessionStorage.setItem('drawn','1')}catch(e){}`,
           }}
         />
         <script
