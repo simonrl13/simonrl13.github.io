@@ -31,6 +31,14 @@ type SkinTerm = {
   log: string;
 };
 
+type SkinGallery = {
+  kind: "gallery";
+  // a framed "plate" with drawing-style dimension lines; the painter's own
+  // colour lives only inside the artwork, the card chrome stays blueprint
+  placeholder: string; // shown in the mat until real artwork is supplied
+  caption: string;
+};
+
 export type Project = {
   id: string;
   tag: string;
@@ -38,12 +46,17 @@ export type Project = {
   /** dialog title, if different from the card title */
   dialogTitle?: string;
   lead: string;
-  skin: SkinClinical | SkinGame | SkinLab | SkinTerm;
-  skinClass: "pcard--clinical" | "pcard--game" | "pcard--lab" | "pcard--term";
+  skin: SkinClinical | SkinGame | SkinLab | SkinTerm | SkinGallery;
+  skinClass:
+    | "pcard--clinical"
+    | "pcard--game"
+    | "pcard--lab"
+    | "pcard--term"
+    | "pcard--gallery";
   accentTitle?: boolean; // colour the <h3> with the skin accent (NutriQuest)
-  // three system layers, top (what the user touches) → bottom (foundation);
-  // rendered as an exploded isometric stack
-  layers: [string, string, string];
+  // system layers, top (what the user touches) → bottom (foundation);
+  // rendered as an exploded isometric stack. Keep labels ≤ ~26 chars.
+  layers: string[];
   links?: { label: string; href: string }[];
   detail: {
     body: string;
@@ -80,8 +93,37 @@ export const projects: Project[] = [
     },
   },
   {
+    id: "rogerio",
+    tag: "02 · artist website & shop",
+    title: "Rogério Freire",
+    dialogTitle: "Rogério Freire — artist website",
+    lead: "Website for Rogério Freire, a pop-art painter: a gallery of his original paintings, a catalog of products made from his work, and purchase by WhatsApp or email.",
+    skinClass: "pcard--gallery",
+    layers: [
+      "Originals gallery",
+      "Derived-products catalog",
+      "WhatsApp / email purchase",
+      "Next.js+Tailwind on Vercel",
+    ],
+    skin: {
+      kind: "gallery",
+      // TODO(simon): swap for real artwork when the images arrive.
+      placeholder: "PLACEHOLDER — artwork pending",
+      caption: "PLATE 01 — original painting · details to follow",
+    },
+    // TODO(simon): add the live site URL.
+    links: [],
+    detail: {
+      body: "A website for Rogério Freire, a pop-art painter. It presents his original paintings in a gallery alongside a catalog of products derived from his work — mugs, pillows, notebooks and t-shirts — with enquiries and purchases handled directly over WhatsApp and email.",
+      role: "Client project for an independent artist",
+      outcome:
+        "One place to show the originals and sell the derived products, with purchase kept to a direct conversation over WhatsApp or email",
+      stack: "Next.js · Tailwind CSS · Vercel · WhatsApp / email purchase flow",
+    },
+  },
+  {
     id: "nutriquest",
-    tag: "02 · gamified nutrition tracker",
+    tag: "03 · gamified nutrition tracker",
     title: "NutriQuest",
     accentTitle: true,
     lead: "A cross-platform mobile app that turns nutrition tracking into a game — daily quests, streaks, and a competitive leaderboard, fully localized for Brazilian users.",
@@ -108,7 +150,7 @@ export const projects: Project[] = [
   },
   {
     id: "labnov",
-    tag: "03 · bilingual research platform",
+    tag: "04 · bilingual research platform",
     title: "LABNOV",
     dialogTitle: "LABNOV Research Lab",
     lead: "Bilingual site for UFCG’s LABNOV research lab, with automatic publication sync from Brazil’s Plataforma Lattes and content editing through Sanity CMS for non-technical staff.",
@@ -135,7 +177,7 @@ export const projects: Project[] = [
   },
   {
     id: "financial",
-    tag: "04 · enterprise backend, Accenture",
+    tag: "05 · enterprise backend, Accenture",
     title: "Enterprise Billing Optimization",
     dialogTitle: "Enterprise Billing Optimization — Accenture",
     lead: "Backend performance and reporting-automation work on an enterprise billing platform — profiling and tuning batch processes and replacing manual reporting steps with scripted pipelines.",
