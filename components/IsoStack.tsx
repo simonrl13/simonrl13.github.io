@@ -1,34 +1,39 @@
-/* Exploded isometric view of a project's system layers — three extruded
-   slabs. Static stack by default; the slabs pull apart on card hover / focus. */
+/* Exploded isometric view of a project's system layers — extruded slabs,
+   top (what the user touches) to bottom (foundation). Static stack by
+   default; the slabs pull apart on card hover / focus. Each slab's --k is
+   its distance from the middle of the stack, so the CSS spreads any number
+   of layers symmetrically. */
 
 const CX = 74;
 const HW = 56;
 const HH = 21;
 const D = 6; // slab thickness
-const BASE_Y = [22, 60, 98] as const;
+const TOP_Y = 22;
+const STEP = 38;
 
 export default function IsoStack({
   layers,
   className,
 }: {
-  layers: readonly [string, string, string];
+  layers: readonly string[];
   className?: string;
 }) {
+  const baseY = layers.map((_, i) => TOP_Y + i * STEP);
   return (
     <svg
       className={`iso${className ? ` ${className}` : ""}`}
-      viewBox="0 -16 300 158"
+      viewBox={`0 -16 300 ${44 + layers.length * STEP}`}
       role="img"
       aria-label={`System layers, top to bottom: ${layers.join("; ")}`}
     >
       <g className="iso__links" aria-hidden="true">
-        {BASE_Y.slice(0, -1).map((y, i) => (
-          <line key={i} x1={CX} y1={y + HH + D} x2={CX} y2={BASE_Y[i + 1] - HH} />
+        {baseY.slice(0, -1).map((y, i) => (
+          <line key={i} x1={CX} y1={y + HH + D} x2={CX} y2={baseY[i + 1] - HH} />
         ))}
       </g>
 
       {layers.map((label, i) => {
-        const y = BASE_Y[i];
+        const y = baseY[i];
         const top = `${CX},${y - HH} ${CX + HW},${y} ${CX},${y + HH} ${
           CX - HW
         },${y}`;
@@ -39,7 +44,12 @@ export default function IsoStack({
           CX
         },${y + HH + D}`;
         return (
-          <g className="iso__layer" data-layer={i} key={label}>
+          <g
+            className="iso__layer"
+            data-layer={i}
+            key={label}
+            style={{ ["--k" as string]: i - (layers.length - 1) / 2 }}
+          >
             <polygon className="iso__face" points={leftFace} />
             <polygon className="iso__face iso__face--r" points={rightFace} />
             <polygon className="iso__top" points={top} />

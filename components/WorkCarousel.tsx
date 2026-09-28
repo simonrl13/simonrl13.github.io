@@ -71,6 +71,19 @@ function Skin({ skin }: { skin: Project["skin"] }) {
           <code>{skin.log}</code>
         </pre>
       );
+    case "gallery":
+      return (
+        <figure className="plate">
+          <div className="plate__frame">
+            <span className="plate__dim plate__dim--top" aria-hidden="true" />
+            <span className="plate__dim plate__dim--left" aria-hidden="true" />
+            <div className="plate__mat">
+              <p className="plate__placeholder mono">{skin.placeholder}</p>
+            </div>
+          </div>
+          <figcaption className="plate__caption mono">{skin.caption}</figcaption>
+        </figure>
+      );
     case "lab":
       return null;
   }
