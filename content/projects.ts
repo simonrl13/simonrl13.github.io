@@ -142,7 +142,8 @@ export const projects: Project[] = [
     },
     detail: {
       body: "A cross-platform mobile app that reframes nutrition tracking as a game. Real-time nutritional dashboards, daily and weekly quests, streaks, a competitive leaderboard, food search with macro calculation, photo upload, and full profile management — all localized in Brazilian Portuguese. Built offline-first with custom state management so it stays usable without a connection.",
-      role: "Mobile developer — architecture, UI, localization",
+      // personal project — not freelance/client work; keep it that way
+      role: "Personal project — architecture, UI, localization",
       outcome:
         "Shipped cross-platform from a single codebase with offline-first sync",
       stack: "React Native · Expo · i18n · custom state management",

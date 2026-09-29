@@ -12,7 +12,8 @@
     "gen:assets": "node scripts/gen-assets.mjs",
     "serve": "node scripts/serve.mjs out 4321",
     "shots": "node scripts/shots.mjs",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "cv": "node scripts/render-cv.mjs scripts/cv-source.html public/assets/cv.pdf"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",
