@@ -46,11 +46,6 @@ jobs:
           for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3000 && break; sleep 1; done
           npm run smoke
 
-      - name: Static export build (GitHub Pages)
-        run: |
-          rm -rf app/api
-          npm run build:static
-
   secret-scan:
     name: secret-scan
     runs-on: ubuntu-latest

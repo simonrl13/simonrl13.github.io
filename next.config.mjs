@@ -1,5 +1,4 @@
-/* Security headers (Vercel / `next start` only — a static export can't send
-   headers). 'unsafe-inline' for scripts is a known, accepted limitation:
+/* Security headers on every route. 'unsafe-inline' for scripts is a known, accepted limitation:
    statically rendered Next.js pages carry inline bootstrap scripts, and
    nonces would force every page to render per request. See SECURITY.md. */
 const isDev = process.env.NODE_ENV === "development";
@@ -32,24 +31,14 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
-const staticExport = process.env.STATIC_EXPORT === "true";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Vercel (canonical, hosts /api/chat) gets a normal Next.js build.
-  // GitHub Pages is static-only and can't run the API route, so its CI job
-  // sets STATIC_EXPORT=true (after stripping app/api — see the workflow) to
-  // produce a pure export. Same source, two build shapes.
-  ...(staticExport
-    ? { output: "export" }
-    : { headers: async () => [{ source: "/:path*", headers: securityHeaders }] }),
+  headers: async () => [{ source: "/:path*", headers: securityHeaders }],
   poweredByHeader: false,
-  // Static export cannot use the Next image optimizer; screenshots are
-  // pre-sized and compressed by hand instead. Kept off on both builds so
-  // the two stay visually identical.
+  // images are pre-sized and compressed by hand; no optimizer needed
   images: { unoptimized: true },
-  // GitHub Pages serves from a subpath-free apex (simonrl13.github.io) but
-  // is happier with trailing-slash directory URLs; harmless on Vercel too.
+  // kept from the static-export days so existing URLs don't change; the chat
+  // client fetches /api/chat/ to avoid a 308 hop
   trailingSlash: true,
   reactStrictMode: true,
 };
