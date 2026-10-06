@@ -211,10 +211,8 @@ export default function ChatConsole() {
             Send
           </button>
         </form>
-        <p className="chat__note">
-          Answers are AI-generated from this site&rsquo;s content — verify anything important with
-          Simon directly.
-        </p>
+        <p className="chat__note">{site.chatNotice.accuracy}</p>
+        <p className="chat__note chat__note--privacy">{site.chatNotice.privacy}</p>
       </dialog>
     </>
   );
