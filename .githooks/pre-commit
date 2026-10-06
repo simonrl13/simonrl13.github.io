@@ -1,0 +1,16 @@
+#!/bin/sh
+# Secret scan of the staged changes before every commit (gitleaks).
+# Enable once per clone:   git config core.hooksPath .githooks
+# Install gitleaks (v8.19+): winget install gitleaks   (or scoop / brew)
+# CI scans the full history on every PR regardless (.github/workflows/ci.yml).
+
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks git --pre-commit --staged --redact --no-banner; then
+    echo "pre-commit: gitleaks found a possible secret in the staged changes — commit blocked." >&2
+    echo "            Remove it (and rotate it if it was real) before committing." >&2
+    exit 1
+  fi
+else
+  echo "pre-commit: gitleaks is not installed — local secret scan skipped (CI still runs it)." >&2
+  echo "            Install: winget install gitleaks" >&2
+fi
