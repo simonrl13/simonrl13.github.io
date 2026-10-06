@@ -31,17 +31,25 @@ if (full) {
   mkdirSync("cv-private", { recursive: true });
 } else {
   html = html.replace(/<span class="private-phone">[\s\S]*?<\/span>/, "");
-  // belt and braces: the public CV must not carry a phone number
-  const body = html.replace(/<style>[\s\S]*?<\/style>|<!--[\s\S]*?-->/g, "");
-  if (body.includes("{{PHONE}}") || /\+?\d[\d\s().-]{8,}\d/.test(body.replace(/\d{4}\s*[–-]\s*(\d{4}|present)/gi, ""))) {
-    console.error("Refusing to render: the public CV still contains a phone placeholder or number.");
-    process.exit(1);
-  }
 }
 
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ["--no-sandbox"] });
 const page = await browser.newPage();
 await page.setContent(html, { waitUntil: "networkidle0" });
+
+if (!full) {
+  // belt and braces, checked on what actually renders: the public CV must
+  // not carry a phone number or the placeholder (year ranges are fine)
+  const text = await page.evaluate(() => document.body.innerText);
+  // only whole 19xx/20xx year ranges — a looser \d{4}-\d{4} would also eat
+  // the "1234-5678" tail of a phone number and hide it from the check
+  const withoutYears = text.replace(/\b(?:19|20)\d{2}\s*[–-]\s*(?:(?:19|20)\d{2}|present)\b/gi, "");
+  if (text.includes("{{PHONE}}") || /\+?\d[\d\s().-]{8,}\d/.test(withoutYears)) {
+    await browser.close();
+    console.error("Refusing to render: the public CV still contains a phone placeholder or number.");
+    process.exit(1);
+  }
+}
 await page.pdf({
   path: OUT,
   format: "A4",
