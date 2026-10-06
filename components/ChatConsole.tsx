@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 type ChatMsg = { role: "user" | "assistant"; content: string };
 
 
-const FALLBACK_MESSAGE = `This assistant only runs on the live deployment — you're viewing a copy that can't reach it. Ask on the main site, or email ${site.links.email} directly.`;
+const FALLBACK_MESSAGE = `Couldn't reach the assistant just now — check your connection and try again, or email ${site.links.email} directly.`;
 
 /** A short plain-text error body actually read from our own /api/chat
  * response (rate limited, misconfigured, etc.) — distinct from a generic
