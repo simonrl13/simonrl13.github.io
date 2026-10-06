@@ -1495,6 +1495,7 @@ main { padding-left: var(--rail-w); }
 .chat__send:disabled { opacity: .4; cursor: default; }
 
 .chat__note { margin-top: 10px; font-size: .74rem; color: var(--paper-dim); }
+.chat__note--privacy { margin-top: 4px; opacity: .85; }
 
 @media (max-width: 560px) {
     /* the full label won't fit beside content on a phone — a short one
