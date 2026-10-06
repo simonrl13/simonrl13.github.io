@@ -1,27 +1,41 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { site } from "@/content/site";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  axes: ["opsz"],
+/* Fonts are self-hosted from app/fonts (SIL OFL 1.1, licenses alongside):
+   the latin subset of each variable font, as Google Fonts serves it, so
+   builds never reach out to a third party. Latin covers EN/FR/PT; any other
+   glyph falls back to the system stack. Next requires font-loader options
+   to be literals, hence the repeated latin unicode-range below. */
+const fraunces = localFont({
+  src: "./fonts/fraunces-latin.woff2", // opsz 9–144 + wght axes
+  weight: "100 900",
+  style: "normal",
   variable: "--font-fraunces",
   display: "swap",
+  declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
+  adjustFontFallback: "Times New Roman",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const inter = localFont({
+  src: "./fonts/inter-latin.woff2",
+  weight: "400 600",
+  style: "normal",
   variable: "--font-inter",
   display: "swap",
+  declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
+  adjustFontFallback: "Arial",
 });
 
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const jetbrains = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
+  weight: "400 500",
+  style: "normal",
   variable: "--font-jetbrains",
   display: "swap",
+  declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
+  adjustFontFallback: false, // monospace: keep the plain fallback stack
 });
 
 export const metadata: Metadata = {
