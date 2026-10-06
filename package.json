@@ -13,8 +13,9 @@
     "serve": "node scripts/serve.mjs out 4321",
     "shots": "node scripts/shots.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "cv": "node scripts/render-cv.mjs scripts/cv-source.html public/assets/cv.pdf",
-    "redteam": "node scripts/redteam.mjs"
+    "cv": "node scripts/render-cv.mjs",
+    "redteam": "node scripts/redteam.mjs",
+    "cv:full": "node --env-file-if-exists=.env.local scripts/render-cv.mjs --full"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",

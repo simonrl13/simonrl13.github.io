@@ -189,7 +189,7 @@ export const projects: Project[] = [
     },
     detail: {
       body: "Backend performance and reporting-automation work on an enterprise billing platform. Profiled and tuned batch rating and billing processes on Oracle BRM with C, and replaced manual reporting steps with shell-scripted pipelines feeding Oracle BI Publisher, delivered inside an Agile team. The client, transaction volumes, and performance figures are covered by an NDA.",
-      role: "Software developer — backend optimization & reporting automation",
+      role: "Custom Software Engineer — backend optimization & reporting automation",
       outcome:
         "Measurable reduction in batch processing time with improved data accuracy (specifics under NDA)",
       stack: "Oracle BRM · C · Shell · Oracle BI Publisher · Agile / JIRA",

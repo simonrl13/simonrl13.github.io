@@ -3,8 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <title>Simon Laborde — CV</title>
+<!--
+  Single source of truth for the CV. `npm run cv` renders the public PDF
+  (public/assets/cv.pdf) with the phone segment removed; `npm run cv:full`
+  renders a private copy with the phone filled in from CV_PHONE into the
+  gitignored cv-private/ folder. Never type the phone number into this file.
+-->
 <style>
-  @page { size: A4; margin: 20mm 18mm; }
+  @page { size: A4; margin: 18mm 16mm; }
   * { box-sizing: border-box; }
   body {
     font-family: Arial, Helvetica, "Segoe UI", sans-serif;
@@ -26,6 +32,12 @@
     margin-bottom: 2px;
   }
   .contact a { color: #333; text-decoration: none; }
+  .workrights {
+    font-size: 9.3pt;
+    font-weight: 700;
+    color: #1B2A42;
+    margin-top: 2px;
+  }
   .rule {
     border: 0;
     border-top: 1.6px solid #B8763E;
@@ -39,11 +51,19 @@
     border-bottom: 0.75px solid #ccc;
     padding-bottom: 3px;
     margin: 16px 0 8px;
+    break-after: avoid;
   }
   h2:first-of-type { margin-top: 0; }
+  h3.subhead {
+    font-size: 9.6pt;
+    font-weight: 700;
+    color: #1B2A42;
+    margin: 8px 0 4px;
+    break-after: avoid;
+  }
+  h3.subhead:first-of-type { margin-top: 0; }
   p { margin: 0 0 8px; }
   .entry { margin-bottom: 10px; break-inside: avoid; }
-  h2 { break-after: avoid; }
   .entry:last-child { margin-bottom: 0; }
   .entry-head {
     display: flex;
@@ -70,19 +90,20 @@
 <body>
 
   <h1>Simon Rodrigues Laborde</h1>
-  <div class="contact">Campina Grande, Paraíba — Brazil &nbsp;|&nbsp; [phone removed] &nbsp;|&nbsp; simonrl865@gmail.com</div>
+  <div class="contact">Campina Grande, Paraíba — Brazil<span class="private-phone"> &nbsp;|&nbsp; {{PHONE}}</span> &nbsp;|&nbsp; simonrl865@gmail.com</div>
   <div class="contact"><a href="https://simonlaborde.com">simonlaborde.com</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/simon-laborde-2131861bb/">linkedin.com/in/simon-laborde-2131861bb</a> &nbsp;|&nbsp; <a href="https://github.com/simonrl13">github.com/simonrl13</a></div>
+  <div class="workrights">French citizen — full right to work in the EU, no visa sponsorship needed</div>
   <hr class="rule" />
 
   <h2>Professional Summary</h2>
-  <p>Backend and full-stack software engineer with a growing focus on AI/LLM engineering — agent design, the Model Context Protocol (MCP), and Claude/Anthropic APIs — built on a foundation in enterprise backend systems and full-stack web development. Based in Brazil and pursuing master&rsquo;s programs in Europe (MoSIG Grenoble, Sorbonne, PSL, TUM, RWTH Aachen); open to relocation for full-time, contract, or freelance work.</p>
+  <p>Backend and full-stack software engineer with a growing focus on AI/LLM engineering — agent design, the Model Context Protocol (MCP), and Claude/Anthropic APIs — built on a foundation in enterprise backend systems and full-stack web development. Open to AI and software engineering roles, remote or on-site in the EU, for full-time, contract, or freelance work.</p>
 
   <h2>Technical Skills</h2>
   <div class="skills-row"><b>Languages:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
   <div class="skills-row"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP), agent &amp; subagent design, Claude / Anthropic APIs, Machine Learning, NLP, scikit-learn, pandas, NumPy</div>
-  <div class="skills-row"><b>Web &amp; Mobile:</b> Next.js, React, React Native, Vue.js, Node.js, Flask, Expo, HTML/CSS, Bootstrap</div>
+  <div class="skills-row"><b>Web &amp; Mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
   <div class="skills-row"><b>Backend &amp; Data:</b> REST APIs, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
-  <div class="skills-row"><b>DevOps &amp; Cloud:</b> Docker, Kubernetes, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
+  <div class="skills-row"><b>DevOps &amp; Cloud:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
   <div class="skills-row"><b>Tools:</b> Git, JIRA, Figma, Sanity CMS</div>
   <div class="skills-row"><b>Methodologies:</b> Agile / Scrum</div>
 
@@ -102,7 +123,7 @@
 
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">Software Engineer — Accenture</span>
+      <span class="entry-title">Custom Software Engineer — Accenture</span>
       <span class="entry-meta">Jun 2022 – Jun 2023</span>
     </div>
     <div class="entry-org">Campina Grande, Brazil</div>
@@ -143,16 +164,17 @@
     </div>
     <ul>
       <li>Python NLP tool built for Brazil&rsquo;s public health record system (PEC): normalizes clinical notes, adapts explanations by audience, and recommends preventive exams from patient history</li>
-      <li>92% accuracy on terminology normalization, 100% recall on the target exam-recommendation set</li>
+      <li>92% accuracy on clinical terminology normalization</li>
       <li>Grew out of undergraduate thesis, &ldquo;Applications of Generative AI in Clinical Decision Support,&rdquo; defended with distinction</li>
     </ul>
   </div>
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">NutriQuest — Personal Project</span>
+      <span class="entry-title">NutriQuest — Gamified Nutrition Tracking App</span>
     </div>
     <ul>
-      <li>Cross-platform mobile app (React Native / Expo) that gamifies nutrition tracking with quests, streaks, and a leaderboard, fully localized for Brazilian users</li>
+      <li>Cross-platform mobile app (React Native / Expo) that gamifies nutrition tracking with quests, streaks, and a leaderboard</li>
+      <li>Fully localized for Brazilian users</li>
     </ul>
   </div>
 
@@ -165,16 +187,18 @@
     <div class="entry-org">Campina Grande, Brazil</div>
   </div>
 
-  <h2>Certifications</h2>
-  <div class="cert-line">Anthropic — AI Fluency: Framework &amp; Foundations (Mar 2026)</div>
-  <div class="cert-line">Anthropic — Building with the Claude API (Jul 2026)</div>
-  <div class="cert-line">Anthropic — Introduction to Model Context Protocol (Aug 2026)</div>
-  <div class="cert-line">Anthropic — Model Context Protocol: Advanced Topics (Aug 2026)</div>
-  <div class="cert-line">Anthropic — Claude Code in Action (Mar 2026)</div>
+  <h2>Certifications &amp; Training</h2>
+  <h3 class="subhead">Certifications</h3>
   <div class="cert-line">AI-900: Microsoft Azure AI Fundamentals — Microsoft</div>
   <div class="cert-line">Scrum Fundamentals Certified (SFC)</div>
-  <div class="cert-line">Accenture Academy — Oracle BRM</div>
   <div class="cert-line">EF SET English Certificate (C2, 77/100)</div>
+  <h3 class="subhead">Training</h3>
+  <div class="cert-line">Anthropic Academy — AI Fluency: Framework &amp; Foundations (Mar 2026)</div>
+  <div class="cert-line">Anthropic Academy — Claude Code in Action (Mar 2026)</div>
+  <div class="cert-line">Anthropic Academy — Building with the Claude API (Jul 2026)</div>
+  <div class="cert-line">Anthropic Academy — Introduction to Model Context Protocol (Aug 2026)</div>
+  <div class="cert-line">Anthropic Academy — Model Context Protocol: Advanced Topics (Aug 2026)</div>
+  <div class="cert-line">Accenture Academy — Oracle BRM</div>
 
 </body>
 </html>

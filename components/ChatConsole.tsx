@@ -5,12 +5,6 @@ import { site } from "@/content/site";
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
 
-const SUGGESTIONS = [
-  "What's his experience with LLMs and agents?",
-  "Tell me about the Lattes pipeline.",
-  "Has he shipped anything to production?",
-  "Is he open to freelance work in Europe?",
-];
 
 const FALLBACK_MESSAGE = `This assistant only runs on the live deployment — you're viewing a copy that can't reach it. Ask on the main site, or email ${site.links.email} directly.`;
 
@@ -160,7 +154,7 @@ export default function ChatConsole() {
         <div className="chat__log" ref={logRef} role="log" aria-live="polite">
           {messages.length === 0 && (
             <div className="chat__suggestions">
-              {SUGGESTIONS.map((s) => (
+              {site.chatSuggestions.map((s) => (
                 <button key={s} type="button" onClick={() => send(s)} disabled={busy}>
                   {s}
                 </button>
