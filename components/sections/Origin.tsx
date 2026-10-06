@@ -32,6 +32,8 @@ export default function Origin() {
           />
         </p>
 
+        <p className="origin__rights">{site.workRights}</p>
+
         <div className="origin__actions">
           <a className="btn btn--solid" href="#contact">
             Start a conversation

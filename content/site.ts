@@ -1,15 +1,14 @@
 /* =========================================================
    Single source of truth for profile-level facts and copy.
-   Items marked TODO(simon) need confirmation before launch.
+   TODO(simon) notes live in code comments only — never in rendered
+   strings (the smoke test fails if one reaches the page).
    ========================================================= */
 
 export const site = {
   name: "Simon Laborde",
   role: "Systems & full-stack engineering",
   url: "https://www.simonlaborde.com",
-  // simonlaborde.com is the canonical public domain (Stage 4 cutover,
-  // Sept 2026); simonrl13.github.io keeps serving the same build as a
-  // secondary/archival host.
+  // simonlaborde.com is the canonical public domain.
   canonical: "https://www.simonlaborde.com",
 
   title: "Simon Laborde — Backend & AI/LLM Engineer",
@@ -20,17 +19,31 @@ export const site = {
   roleLine:
     "Backend & full-stack engineer with an <strong>AI / LLM</strong> focus, built on a foundation in enterprise backend systems and full-stack development.",
   thesis:
-    "I bridge the gap between complex systems and the people who depend on them — currently building LLM-backed tools, taking freelance and contract work across Europe, and applying to master&rsquo;s programs.",
+    "I bridge the gap between complex systems and the people who depend on them — currently building LLM-backed tools.",
 
-  // TODO(simon): confirm exact wording + date. Shown as the live "now" line.
+  // The live "now" line in the hero.
   status: {
-    label: "Available for contract & freelance",
-    detail: "Applying for Fall 2026 master&rsquo;s — MoSIG, Sorbonne, PSL, TUM, RWTH",
+    label: "Open to AI & software engineering roles",
+    detail: "Remote or on-site in the EU — full-time, contract or freelance",
   },
+
+  // Right to work — hero and Contact. Matches the CV header line.
+  workRights:
+    "French citizen with full right to work in the EU — no visa sponsorship needed. Based in Brazil; open to remote work and relocation.",
+
+  contactIntro:
+    "Open to AI and software engineering roles — remote or on-site in the EU — plus freelance and contract work.",
 
   // Chat launcher label — the short form shows on phones, where the full
   // label won't fit beside the content.
   chatLauncher: { full: "ASK ABOUT MY WORK", short: "ASK" },
+
+  chatSuggestions: [
+    "What's his experience with LLMs and agents?",
+    "Tell me about the Lattes pipeline.",
+    "Has he shipped anything to production?",
+    "Can he work in the EU?",
+  ],
 
   // Shown under the chat input. Keep the privacy line true to the code:
   // app/api/chat never logs messages; the per-IP rate-limit key expires
@@ -68,16 +81,24 @@ export const site = {
     githubHandle: "github.com/simonrl13",
     linkedin: "https://www.linkedin.com/in/simon-laborde-2131861bb/",
     linkedinHandle: "in/simon-laborde",
-    cv: "/assets/cv.pdf", // TODO(simon): add the real PDF to public/assets/
+    cv: "/assets/cv.pdf", // rendered from scripts/cv-source.html (npm run cv)
     cvName: "Simon_Laborde_CV.pdf",
   },
 
-  credentials: [
-    "Anthropic — AI Fluency: Framework & Foundations",
-    "Anthropic — Building with the Claude API",
-    "Anthropic — Introduction to Model Context Protocol",
-    "Anthropic — Model Context Protocol: Advanced Topics",
-    "Anthropic — Claude Code in Action",
+  // Exam-based certifications vs. course completions — kept apart on
+  // purpose, same split and wording as the CV.
+  certifications: [
+    "AI-900: Microsoft Azure AI Fundamentals — Microsoft",
+    "Scrum Fundamentals Certified (SFC)",
+    "EF SET English Certificate (C2, 77/100)",
+  ],
+  training: [
+    "Anthropic Academy — AI Fluency: Framework & Foundations (Mar 2026)",
+    "Anthropic Academy — Claude Code in Action (Mar 2026)",
+    "Anthropic Academy — Building with the Claude API (Jul 2026)",
+    "Anthropic Academy — Introduction to Model Context Protocol (Aug 2026)",
+    "Anthropic Academy — Model Context Protocol: Advanced Topics (Aug 2026)",
+    "Accenture Academy — Oracle BRM",
   ],
 } as const;
 
@@ -103,7 +124,7 @@ export const journey: JourneyItem[] = [
   },
   {
     when: "2022 — 2023",
-    title: "Software Developer",
+    title: "Custom Software Engineer",
     org: "Accenture",
     body: "Optimized billing and backend processes on Oracle BRM with C and shell scripting; automated financial reporting through Oracle BI Publisher inside an Agile delivery team.",
   },
@@ -141,7 +162,7 @@ export const arsenal: ArsenalRow[] = [
   {
     icon: "frontend",
     title: "Frontend & mobile",
-    items: "Next.js · React · React Native · Vue · Expo · Tailwind · semantic HTML/CSS",
+    items: "Next.js · React · React Native · Expo · Tailwind · semantic HTML/CSS",
   },
   {
     icon: "infra",
@@ -150,7 +171,7 @@ export const arsenal: ArsenalRow[] = [
   },
   {
     icon: "test",
-    title: "Testing & load",
-    items: "pytest · JMeter",
+    title: "Testing",
+    items: "pytest",
   },
 ];

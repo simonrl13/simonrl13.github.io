@@ -9,11 +9,10 @@ export default function Contact() {
     >
       <header className="sec-head">
         <h2 id="contact-title">Contact</h2>
-        <p>
-          Open to master&rsquo;s program conversations, freelance, and contract
-          work in Europe.
-        </p>
+        <p>{site.contactIntro}</p>
       </header>
+
+      <p className="contact__rights">{site.workRights}</p>
 
       <ul className="contact__list">
         <li>
