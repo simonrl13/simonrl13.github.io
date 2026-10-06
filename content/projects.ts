@@ -77,8 +77,7 @@ export const projects: Project[] = [
     skin: {
       kind: "clinical",
       vitals: [
-        { dt: "Terminology accuracy", value: "92", unit: "%" },
-        { dt: "Recall", value: "100", unit: "%" },
+        { dt: "Clinical terminology accuracy", value: "92", unit: "%" },
         { dt: "Model surface", value: "NLP" },
       ],
       ecgPath:
@@ -88,7 +87,7 @@ export const projects: Project[] = [
       body: "A Python NLP tool built for Brazil’s public health record system (PEC). It reads free-text clinical notes, normalizes inconsistent terminology, rewrites explanations for the intended audience (clinician vs. patient), and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on generative AI in clinical decision support.",
       role: "Sole developer — research, modelling, implementation",
       outcome:
-        "92% accuracy on terminology normalization and 100% recall on the target exam-recommendation set, measured on the thesis evaluation set. TODO(simon): confirm sample size / current status.",
+        "92% accuracy on clinical terminology normalization",
       stack: "Python · pandas · scikit-learn · NumPy · NLP · healthcare data (PEC)",
     },
   },

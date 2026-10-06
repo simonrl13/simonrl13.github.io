@@ -877,10 +877,19 @@ main { padding-left: var(--rail-w); }
 .pcard--clinical { border-top: 2px solid var(--green); }
 .vitals {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* one equal column per reading, however many there are */
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
     border: 1px solid var(--line);
 }
-.vitals > div { padding: 12px 14px; border-left: 1px solid var(--line); }
+.vitals > div {
+    padding: 12px 14px;
+    border-left: 1px solid var(--line);
+    /* readings sit on one baseline even when a label wraps */
+    display: flex;
+    flex-direction: column;
+}
+.vitals dd { margin-top: auto; }
 .vitals > div:first-child { border-left: 0; }
 .vitals dt {
     font-size: .72rem;
