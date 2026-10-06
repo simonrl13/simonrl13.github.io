@@ -38,6 +38,17 @@ await page.waitForFunction(() => !document.querySelector("dialog.sheet[open]"), 
   timeout: 2000,
 });
 
+// 1b. no rendered dialog or card leaks an internal TODO note
+for (const id of await page.$eval(".pcard", (cs) => Array.from(cs, (c) => c.id))) {
+  await page.click(`#${id} .pcard__more`);
+  await page.waitForSelector("dialog.sheet[open]", { timeout: 2000 });
+  const txt = await page.$eval("dialog.sheet[open]", (el) => el.textContent);
+  if (/TODO/i.test(txt)) fails.push(`${id} dialog shows a TODO note`);
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => !document.querySelector("dialog.sheet[open]"), { timeout: 2000 });
+}
+if (/TODO/i.test(await page.$eval("main", (el) => el.textContent))) fails.push("page body shows a TODO note");
+
 // 2. LABNOV PT/EN toggle
 const ptText = await page.$eval("#proj-labnov .pcard__lead", (el) => el.textContent);
 await page.click('#proj-labnov .lang-switch button[aria-pressed="false"]');
