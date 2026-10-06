@@ -87,8 +87,9 @@ OWASP Top 10 (2021):
   every page to render on demand. Accepted.
 - **The Vercel preview toolbar** (vercel.live) is blocked by the CSP on
   preview deployments.
-- **GitHub Pages mirror** (simonrl13.github.io) can't send custom security
-  headers (only HSTS) and serves the static export without the chat.
+- **simonrl13.github.io** (GitHub Pages) can't send custom headers or a
+  server-side 301. It now serves only a static redirect page to
+  www.simonlaborde.com (path preserved); no site content is hosted there.
 - **IP-based limits** can be spread across many IPs. The global daily cap and
   the Console spend limit bound the cost.
 - **If the Upstash environment variables are missing**, the endpoint falls back

@@ -4,8 +4,7 @@ import puppeteer from "puppeteer-core";
 import { mkdirSync } from "node:fs";
 
 // Default targets `next start` (npm run build && npm run start) — the
-// dynamic app, which is what both Vercel and local dev actually run. Pass
-// an explicit URL to point at the static export instead (npm run serve).
+// same build Vercel runs. Pass an explicit URL to point elsewhere.
 const BASE = process.argv[2] || "http://localhost:3000";
 const OUT = process.argv[3] || "scripts/.shots";
 const CHROME =
