@@ -35,3 +35,6 @@ next-env.d.ts
 
 # local verification artifacts
 /scripts/.shots
+
+# private CV with phone number (npm run cv:full) — never published
+/cv-private/

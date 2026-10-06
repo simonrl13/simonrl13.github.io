@@ -538,6 +538,14 @@ main { padding-left: var(--rail-w); }
 .origin__status-detail { color: var(--green); }
 .origin__status-detail::before { content: "— "; }
 
+/* right to work — a plain note under the status line */
+.origin__rights {
+    margin-top: 10px;
+    max-width: 62ch;
+    font-size: .88rem;
+    color: var(--paper);
+}
+
 @media (max-width: 600px) {
     .origin__status { align-items: flex-start; }
     .origin__status-detail { flex-basis: 100%; }
@@ -706,6 +714,14 @@ main { padding-left: var(--rail-w); }
 }
 .legend__def p { font-size: .9rem; line-height: 1.55; }
 .legend__def .mono { color: var(--paper-dim); }
+.legend__def p + p { margin-top: 8px; }
+.legend__sub {
+    display: block;
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
 
 .legend--credentials {
     grid-template-columns: 1fr;
@@ -1223,6 +1239,11 @@ main { padding-left: var(--rail-w); }
    CONTACT
    ========================================================= */
 
+.contact__rights {
+    max-width: 62ch;
+    margin-bottom: 20px;
+    color: var(--paper);
+}
 .contact__list { list-style: none; border: 1px solid var(--line); }
 .contact__list li {
     display: grid;

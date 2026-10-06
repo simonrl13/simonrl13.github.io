@@ -75,8 +75,15 @@ export default function Arsenal() {
             </svg>
           </span>
           <div className="legend__def">
-            <h3>Credentials</h3>
-            <p>{site.credentials.join(" · ")}</p>
+            <h3>Certifications &amp; Training</h3>
+            <p>
+              <span className="legend__sub mono">Certifications</span>
+              {site.certifications.join(" · ")}
+            </p>
+            <p>
+              <span className="legend__sub mono">Training</span>
+              {site.training.join(" · ")}
+            </p>
           </div>
         </div>
       </div>
