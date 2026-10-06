@@ -19,11 +19,14 @@ const ENTITIES: Record<string, string> = {
   "&#8209;": "‑",
 };
 
-/** Strips HTML tags, decodes the small set of entities the content files
- * use, and drops any TODO(simon) placeholder notes — those are for Simon,
- * not for a visitor asking the assistant a question. */
+/** Turns repo-authored copy into plain prompt text: removes the only inline
+ * markup the content files use (<strong>, <em>) and drops any other angle
+ * bracket outright, so no tag can survive in any form (no general-purpose
+ * HTML regex); decodes the small set of entities the content uses; drops
+ * TODO(simon) notes — those are for Simon, not for a visitor asking the
+ * assistant a question. */
 function plain(text: string): string {
-  let out = text.replace(/<[^>]+>/g, "");
+  let out = text.replace(/<\/?(?:strong|em)>/g, "").replace(/[<>]/g, "");
   for (const [entity, char] of Object.entries(ENTITIES)) {
     out = out.split(entity).join(char);
   }
