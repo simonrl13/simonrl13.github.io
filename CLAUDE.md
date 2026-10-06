@@ -2,10 +2,10 @@
 
 ## Stack & hosting
 - Next.js 16 App Router, React 19, TS, plain CSS (`app/globals.css`), `next/font`.
-- **Vercel** = canonical (`www.simonlaborde.com`, apex → www). Runs `/api/chat`.
-- **GitHub Pages** = `simonrl13.github.io`, static export via `.github/workflows/deploy.yml`
-  (strips `app/api`, runs `npm run build:static` → `STATIC_EXPORT=true` → `output: "export"`).
-- Both deploy automatically on push to `main`.
+- **Vercel** is the only host (`www.simonlaborde.com`, apex → www); deploys on push to `main`.
+- `simonrl13.github.io` is **retired**: GitHub Pages serves only `pages-redirect/`
+  (`.github/workflows/deploy.yml`), which forwards visitors — and their path — to
+  www.simonlaborde.com. No static export exists any more.
 
 ## Security rules (every change)
 - **No secrets** in code, logs, commits, prompts or fixtures. Keys live only in Vercel env
