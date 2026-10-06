@@ -11,7 +11,9 @@ The pre-migration vanilla HTML/CSS/JS version is preserved at the git tag
 
 - **Next.js 16** (App Router) + **React 19**, TypeScript
 - Plain CSS (`app/globals.css`) — no CSS framework
-- `next/font` self-hosts Fraunces / Inter / JetBrains Mono
+- Fonts self-hosted from `app/fonts` via `next/font/local` (Fraunces / Inter /
+  JetBrains Mono, latin subsets, SIL OFL — licenses alongside): no Google
+  Fonts request at build or runtime
 - Chat: `@anthropic-ai/sdk` (Claude Haiku 4.5) with rate limits in Upstash Redis
 
 ## Hosting

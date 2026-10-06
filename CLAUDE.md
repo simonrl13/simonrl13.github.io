@@ -1,7 +1,9 @@
 # Simon Laborde — portfolio (simonlaborde.com)
 
 ## Stack & hosting
-- Next.js 16 App Router, React 19, TS, plain CSS (`app/globals.css`), `next/font`.
+- Next.js 16 App Router, React 19, TS, plain CSS (`app/globals.css`).
+- Fonts: `next/font/local` from `app/fonts` (latin subsets, OFL). Don't reintroduce
+  `next/font/google` — builds must not depend on Google Fonts.
 - **Vercel** is the only host (`www.simonlaborde.com`, apex → www); deploys on push to `main`.
 - `simonrl13.github.io` is **retired**: GitHub Pages serves only `pages-redirect/`
   (`.github/workflows/deploy.yml`), which forwards visitors — and their path — to
