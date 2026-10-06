@@ -32,6 +32,16 @@ export const site = {
   // label won't fit beside the content.
   chatLauncher: { full: "ASK ABOUT MY WORK", short: "ASK" },
 
+  // Shown under the chat input. Keep the privacy line true to the code:
+  // app/api/chat never logs messages; the per-IP rate-limit key expires
+  // with its 10-minute window (app/api/chat/rate-limit.ts).
+  chatNotice: {
+    accuracy:
+      "Answers are AI-generated from this site’s content — verify anything important with Simon directly.",
+    privacy:
+      "Privacy: your questions are sent to Anthropic’s Claude API to generate answers. This site doesn’t save conversations; your IP address is held for up to 10 minutes for rate limiting.",
+  },
+
   // Browser/status-bar colour per theme — must match --ink in globals.css.
   themeColor: { dark: "#0F1A2B", light: "#ECE4D3" },
 

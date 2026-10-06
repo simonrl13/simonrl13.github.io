@@ -13,10 +13,13 @@
     "serve": "node scripts/serve.mjs out 4321",
     "shots": "node scripts/shots.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "cv": "node scripts/render-cv.mjs scripts/cv-source.html public/assets/cv.pdf"
+    "cv": "node scripts/render-cv.mjs scripts/cv-source.html public/assets/cv.pdf",
+    "redteam": "node scripts/redteam.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.39.0",
     "next": "16.3.4",
     "react": "19.3.0",
     "react-dom": "19.3.0"
