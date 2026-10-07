@@ -770,6 +770,8 @@ main { padding-left: var(--rail-w); }
     width: 100%;
 }
 .pcard__tag { color: var(--paper-dim); }
+/* tag + optional status label wrap as a row, not with a stray indent */
+.pcard__tag, .sheet__tag { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .pcard h3 {
     font-family: var(--font-display);
     font-weight: 600;
@@ -921,7 +923,8 @@ main { padding-left: var(--rail-w); }
     color: var(--green);
     line-height: 1;
 }
-.vitals dd span { font-size: .8rem; color: var(--paper-dim); margin-left: 1px; }
+/* the unit after a reading — not the reading itself, which is also a span */
+.vitals dd span:not(.vitals__n) { font-size: .8rem; color: var(--paper-dim); margin-left: 1px; }
 .ecg { width: 100%; height: 34px; }
 .ecg path { fill: none; stroke: var(--green); stroke-width: 1.4; }
 
@@ -993,6 +996,22 @@ main { padding-left: var(--rail-w); }
 .lang-switch button::after { content: ""; position: absolute; inset: -6px 0; }
 .lang-switch button:first-child { border-left: 0; }
 .lang-switch button[aria-pressed="true"] { background: var(--brass); color: var(--ink); }
+
+/* -- Scout: a drawing still being drafted — dashed top edge (construction
+      line) and an "in progress" label; readings reuse the vitals grid -- */
+.pcard--data { border-top: 2px dashed var(--brass); }
+.pcard--data .vitals dd { color: var(--brass); }
+
+.status-label {
+    display: inline-block;
+    padding: 1px 7px;
+    border: 1px dashed var(--brass);
+    color: var(--brass);
+    font-size: .68rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+}
 
 /* -- Rogério Freire: a framed plate, dimensioned like the hero drawing.
       The painter's colour belongs inside the artwork only; the frame,

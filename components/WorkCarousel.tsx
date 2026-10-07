@@ -6,31 +6,36 @@ import IsoStack from "@/components/IsoStack";
 
 /* ---------- per-project skin widgets ---------- */
 
+/** A row of headline readings; plain integers count up when revealed. */
+function Readings({ items }: { items: { dt: string; value: string; unit?: string }[] }) {
+  return (
+    <dl className="vitals">
+      {items.map((v) => {
+        const numeric = !Number.isNaN(Number(v.value));
+        return (
+          <div key={v.dt} data-reveal {...(numeric ? { "data-count": "" } : {})}>
+            <dt>{v.dt}</dt>
+            <dd>
+              <span className="vitals__n" data-count={v.value}>
+                {v.value}
+              </span>
+              <span>{v.unit ?? ""}</span>
+            </dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
+}
+
 function Skin({ skin }: { skin: Project["skin"] }) {
   switch (skin.kind) {
+    case "metrics":
+      return <Readings items={skin.readings} />;
     case "clinical":
       return (
         <>
-          <dl className="vitals">
-            {skin.vitals.map((v) => {
-              const numeric = !Number.isNaN(Number(v.value));
-              return (
-                <div
-                  key={v.dt}
-                  data-reveal
-                  {...(numeric ? { "data-count": "" } : {})}
-                >
-                  <dt>{v.dt}</dt>
-                  <dd>
-                    <span className="vitals__n" data-count={v.value}>
-                      {v.value}
-                    </span>
-                    <span>{v.unit ?? ""}</span>
-                  </dd>
-                </div>
-              );
-            })}
-          </dl>
+          <Readings items={skin.vitals} />
           <svg
             className="ecg"
             viewBox="0 0 320 40"
@@ -168,7 +173,10 @@ function ProjectDialog({
       </form>
       {project && (
         <>
-          <p className="sheet__tag mono">{project.tag}</p>
+          <p className="sheet__tag mono">
+            {project.tag}
+            {project.status && <span className="status-label">{project.status}</span>}
+          </p>
           <h2>{project.dialogTitle ?? project.title}</h2>
           <div className="sheet__iso">
             <IsoStack layers={project.layers} className="iso--lg" />
@@ -322,7 +330,10 @@ export default function WorkCarousel() {
             }}
           >
             <div className="pcard__inner">
-              <p className="pcard__tag mono">{p.tag}</p>
+              <p className="pcard__tag mono">
+                {p.tag}
+                {p.status && <span className="status-label">{p.status}</span>}
+              </p>
               <h3>{p.title}</h3>
 
               <div className="pcard__iso">
