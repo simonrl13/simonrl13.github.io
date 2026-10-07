@@ -6,7 +6,7 @@ export default function Work() {
       <header className="sec-head">
         <h2 id="work-title">Selected work</h2>
         <p>
-          Five projects, five problems. Each drawing is styled after what the
+          Six projects, six problems. Each drawing is styled after what the
           thing actually is. <span className="work__hint mono">scroll →</span>
         </p>
       </header>
