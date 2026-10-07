@@ -25,8 +25,9 @@ dependency, data flow, header or limit does.
 | `POST /api/chat` | Prompt injection (direct, and instructions embedded in pasted text) | Rules before data; profile wrapped in `<profile>` as reference data; visitor text cannot change rules/persona/format; no tools, no retrieval, no actions — worst case is off-topic text | `npm run redteam` — 6/6 passed against production on 2026-10-06 |
 | `POST /api/chat` | System-prompt extraction | The prompt contains only public site content and the public contact email — nothing secret to leak | `npm run redteam` (extraction probe) |
 | Chat output in the browser | XSS via model output | Answers rendered as React text nodes; never HTML or Markdown | Code review; CodeQL |
+| `POST /api/chat` from another website | Cross-origin abuse from a visitor's browser | Explicit origin allow-list (`www.simonlaborde.com`, `simonlaborde.com`; localhost outside production): a foreign `Origin` gets **403** on preflight and POST, before the body is read, with no CORS headers; allowed origins get their own origin echoed back, never `*` | Local curl matrix (foreign / own / localhost / no Origin) in the CORS PR |
 | Static pages | XSS, clickjacking, MIME sniffing | React escaping; `dangerouslySetInnerHTML` only on repo-authored strings in `content/`; CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff` | Headless browser check: no CSP violations (PR #28); `curl -I` |
-| Build and dependencies | Vulnerable or malicious package; compromised action | Lockfile; runtime `npm audit` gate in CI; Dependabot; actions pinned to commit SHAs; packages vetted before install (age, downloads, maintainers) | CI `verify` job |
+| Build and dependencies | Vulnerable or malicious package; compromised action; third-party outage or tampering at build time | Lockfile; runtime `npm audit` gate in CI; Dependabot; actions pinned to commit SHAs; packages vetted before install (age, downloads, maintainers); fonts self-hosted from `app/fonts` (`next/font/local`, SIL OFL), so neither builds nor visitors contact Google Fonts | CI `verify` job; build succeeds with Google Fonts unreachable (PR below) |
 | Repository | Committed secret | gitleaks pre-commit hook + full-history gitleaks in CI; GitHub secret scanning | CI `secret-scan` job |
 | Public CV (`/assets/cv.pdf`) | Personal data exposure | `npm run cv` strips the phone segment and **refuses to render** if a phone number or placeholder survives; the full CV is generated only into the gitignored `cv-private/` | Renderer guard |
 | AI coding assistant (Claude Code) | Reading secrets, unreviewed installs or network calls | `.claude/settings.json`: deny reading `.env*`, keys and `cv-private/`; ask before installs, `curl`/`wget`, `git push`, web fetches | — |
@@ -47,7 +48,10 @@ OWASP Top 10 for LLM Applications (2025):
 
 OWASP Top 10 (2021):
 - **A03 Injection** — React escaping, CSP.
-- **A05 Security Misconfiguration** — security headers on every route.
+- **A05 Security Misconfiguration** — security headers on every route
+  ([securityheaders.com](https://securityheaders.com/?q=www.simonlaborde.com):
+  grade **A** on 2026-10-07, capped only by the documented `'unsafe-inline'`);
+  explicit CORS allow-list on the chat API.
 - **A06 Vulnerable and Outdated Components** — runtime audit gate, Dependabot.
 - **A08 Software and Data Integrity Failures** — SHA-pinned actions,
   lockfile, CodeQL (JavaScript/TypeScript and GitHub Actions).
@@ -74,6 +78,8 @@ OWASP Top 10 (2021):
   Upstash analytics are off.
 - **Hosting logs**: Vercel keeps its own platform request logs under its
   retention policy; this project doesn't add to them.
+- **Fonts and third parties**: all fonts are served from this site; pages make
+  no third-party requests (enforced by the CSP).
 - **Browser storage**: `localStorage.theme` (the chosen theme) and
   `sessionStorage.drawn` (skip the draw-in animation on reloads). No cookies,
   no analytics, so no consent banner is needed.
@@ -81,6 +87,13 @@ OWASP Top 10 (2021):
   go to Anthropic's Claude API, and how long the IP is held.
 
 ## Known limitations
+
+- **Static pages and files carry `Access-Control-Allow-Origin: *`.** Vercel's
+  CDN adds it to static and prerendered responses (the same build served
+  locally sends none; the app never sets it). It only lets other sites *read*
+  public content; `*` never allows credentialed requests and the site has no
+  cookies or sessions. The chat API, the only dynamic endpoint, does not get
+  it and uses its own allow-list. Accepted.
 
 - **CSP allows `'unsafe-inline'` for scripts and styles.** Statically rendered
   Next.js pages carry inline bootstrap scripts; per-request nonces would force
@@ -100,8 +113,6 @@ OWASP Top 10 (2021):
   manual review of every answer.
 - **Dev-only advisory:** `braces` (via the ESLint tooling) has no non-breaking
   fix upstream. It isn't shipped to the site; CI reports it without blocking.
-- **Google Fonts at build time:** `next/font/google` downloads the fonts while
-  building (they are then self-hosted); a Google outage can fail a build.
 - **Git history:** the phone number appears in earlier commits of the CV and
   its source (public before this hardening). History was not rewritten.
 
