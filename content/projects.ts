@@ -31,6 +31,12 @@ type SkinTerm = {
   log: string;
 };
 
+type SkinMetrics = {
+  kind: "metrics";
+  // headline readings only (no live-data widget); reuses the vitals grid
+  readings: { dt: string; value: string; unit?: string }[];
+};
+
 type SkinGallery = {
   kind: "gallery";
   // a framed "plate" with drawing-style dimension lines; the painter's own
@@ -46,13 +52,16 @@ export type Project = {
   /** dialog title, if different from the card title */
   dialogTitle?: string;
   lead: string;
-  skin: SkinClinical | SkinGame | SkinLab | SkinTerm | SkinGallery;
+  skin: SkinClinical | SkinGame | SkinLab | SkinTerm | SkinGallery | SkinMetrics;
   skinClass:
     | "pcard--clinical"
     | "pcard--game"
     | "pcard--lab"
     | "pcard--term"
-    | "pcard--gallery";
+    | "pcard--gallery"
+    | "pcard--data";
+  /** shown as a label on the card and in the dialog, e.g. "In progress" */
+  status?: string;
   accentTitle?: boolean; // colour the <h3> with the skin accent (NutriQuest)
   // system layers, top (what the user touches) → bottom (foundation);
   // rendered as an exploded isometric stack. Keep labels ≤ ~26 chars.
@@ -68,8 +77,43 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    // Numbers checked against the Scout repo (README, reports/m3_sources.md,
+    // docs/TEST_LOG.md, 2026-10-07): 8,190 distinct players; test MAE 0.357 vs
+    // 0.410 no-change (−12.9%); 80% intervals at 82.2% coverage on 2023–24.
+    // The agent (M4) and MCP server (M5) are planned, not started.
+    id: "scout",
+    tag: "01 · ML forecasting + LLM extraction",
+    title: "Scout",
+    dialogTitle: "Scout — player market-value forecasting",
+    status: "In progress",
+    lead: "Forecasts 12-month changes in Transfermarkt market value for ~8,200 players across 7 European leagues (2013–2024) — point-in-time, leakage-tested, with a sealed, logged test set.",
+    skinClass: "pcard--data",
+    layers: [
+      "80% prediction intervals",
+      "LightGBM · MLflow runs",
+      "Point-in-time features",
+      "Postgres · leakage tests",
+    ],
+    skin: {
+      kind: "metrics",
+      readings: [
+        { dt: "Players", value: "~8,200" },
+        { dt: "Interval coverage", value: "82", unit: "%" },
+        { dt: "Error vs no-change", value: "−13", unit: "%" },
+      ],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/simonrl13/footballscout" }],
+    detail: {
+      body: "Forecasts how a player’s Transfermarkt market value — a crowd-sourced estimate, not a transfer fee — will change over the next 12 months, for ~8,200 players across 7 European leagues from 2013 to 2024. Every feature is built point-in-time and checked by automated leakage tests, and the 2023–24 test set is reachable only through one gated, logged path. LightGBM with split-conformal 80% prediction intervals reaches 82% empirical coverage and cuts error by ~13% against a no-change baseline on the held-out seasons. In progress: LLM extraction of injury and contract events from point-in-time Wikipedia revisions, with verbatim-quote verification. Next: a tool-using agent and an MCP server. A full case study is coming.",
+      role: "Independent project — in progress",
+      outcome:
+        "82% coverage for 80% prediction intervals and ~13% lower error than a no-change baseline on held-out 2023–24 seasons; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",
+      stack: "Python · pandas · LightGBM · scikit-learn · MLflow · FastAPI · PostgreSQL · Docker · pytest · Claude API",
+    },
+  },
+  {
     id: "medhelp",
-    tag: "01 · AI clinical decision support",
+    tag: "02 · AI clinical decision support",
     title: "MedHelp",
     lead: "An NLP tool for Brazil’s public health record system (PEC): it normalizes clinical notes, adapts language per audience, and flags preventive exams from patient demographics and history.",
     skinClass: "pcard--clinical",
@@ -85,7 +129,7 @@ export const projects: Project[] = [
     },
     detail: {
       body: "A Python NLP tool built for Brazil’s public health record system (PEC). It reads free-text clinical notes, normalizes inconsistent terminology, rewrites explanations for the intended audience (clinician vs. patient), and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on generative AI in clinical decision support.",
-      role: "Sole developer — research, modelling, implementation",
+      role: "Undergraduate thesis project",
       outcome:
         "92% accuracy on clinical terminology normalization",
       stack: "Python · pandas · scikit-learn · NumPy · NLP · healthcare data (PEC)",
@@ -93,7 +137,7 @@ export const projects: Project[] = [
   },
   {
     id: "rogerio",
-    tag: "02 · artist website & shop",
+    tag: "03 · artist website & shop",
     title: "Rogério Freire",
     dialogTitle: "Rogério Freire — artist website",
     lead: "Website for Rogério Freire, a pop-art painter: a gallery of his original paintings, a catalog of products made from his work, and purchase by WhatsApp or email.",
@@ -122,7 +166,7 @@ export const projects: Project[] = [
   },
   {
     id: "nutriquest",
-    tag: "03 · gamified nutrition tracker",
+    tag: "04 · gamified nutrition tracker",
     title: "NutriQuest",
     accentTitle: true,
     lead: "A cross-platform mobile app that turns nutrition tracking into a game — daily quests, streaks, and a competitive leaderboard, fully localized for Brazilian users.",
@@ -150,7 +194,7 @@ export const projects: Project[] = [
   },
   {
     id: "labnov",
-    tag: "04 · bilingual research platform",
+    tag: "05 · bilingual research platform",
     title: "LABNOV",
     dialogTitle: "LABNOV Research Lab",
     lead: "Bilingual site for UFCG’s LABNOV research lab, with automatic publication sync from Brazil’s Plataforma Lattes and content editing through Sanity CMS for non-technical staff.",
@@ -177,7 +221,7 @@ export const projects: Project[] = [
   },
   {
     id: "financial",
-    tag: "05 · enterprise backend, Accenture",
+    tag: "06 · enterprise backend, Accenture",
     title: "Enterprise Billing Optimization",
     dialogTitle: "Enterprise Billing Optimization — Accenture",
     lead: "Backend performance and reporting-automation work on an enterprise billing platform — profiling and tuning batch processes and replacing manual reporting steps with scripted pipelines.",
@@ -191,7 +235,7 @@ export const projects: Project[] = [
       body: "Backend performance and reporting-automation work on an enterprise billing platform. Profiled and tuned batch rating and billing processes on Oracle BRM with C, and replaced manual reporting steps with shell-scripted pipelines feeding Oracle BI Publisher, delivered inside an Agile team. The client, transaction volumes, and performance figures are covered by an NDA.",
       role: "Custom Software Engineer — backend optimization & reporting automation",
       outcome:
-        "Measurable reduction in batch processing time with improved data accuracy (specifics under NDA)",
+        "Measurable reduction in batch processing time (specifics under NDA)",
       stack: "Oracle BRM · C · Shell · Oracle BI Publisher · Agile / JIRA",
     },
   },

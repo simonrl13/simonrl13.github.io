@@ -79,8 +79,8 @@ export const site = {
     email: "simonrl865@gmail.com",
     github: "https://github.com/simonrl13",
     githubHandle: "github.com/simonrl13",
-    linkedin: "https://www.linkedin.com/in/simon-laborde-2131861bb/",
-    linkedinHandle: "in/simon-laborde",
+    linkedin: "https://www.linkedin.com/in/simonrodrigueslaborde",
+    linkedinHandle: "in/simonrodrigueslaborde",
     cv: "/assets/cv.pdf", // rendered from scripts/cv-source.html (npm run cv)
     cvName: "Simon_Laborde_CV.pdf",
   },
@@ -114,7 +114,7 @@ export const journey: JourneyItem[] = [
     when: "2024 — present",
     title: "Freelance Software Development",
     org: "Independent — remote",
-    body: "Built LABNOV's bilingual site for a UFCG materials-research lab — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes. Additional client work under NDA.",
+    body: "Built LABNOV's bilingual site for a UFCG materials-research lab — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes — and a website for pop-art painter Rogério Freire. Additional client work under NDA.",
   },
   {
     when: "2020 — 2025",
@@ -152,7 +152,7 @@ export const arsenal: ArsenalRow[] = [
     icon: "ai",
     title: "AI / LLM",
     items:
-      "LLM integration & prompt systems · Model Context Protocol (MCP) · agent & subagent design · Claude / Anthropic APIs · NLP · scikit-learn · pandas · NumPy",
+      "LLM integration & prompt systems · Model Context Protocol (MCP) · agent & subagent design · Claude / Anthropic APIs · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
   },
   {
     icon: "data",

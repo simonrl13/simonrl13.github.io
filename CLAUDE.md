@@ -63,6 +63,15 @@ SEO/OG/JSON-LD · CV download.
 - LABNOV = a site Simon built as independent/freelance work — **not** a research role.
 - NutriQuest = a **personal project** — never list it as freelance or client work.
 - MedHelp: only "92% accuracy on clinical terminology normalization". No recall claim.
+  Role line: "Undergraduate thesis project".
+- Accenture: no "improved data accuracy" claim.
+- LinkedIn: linkedin.com/in/simonrodrigueslaborde (the old -2131861bb URL is obsolete).
+- Rogério Freire site = client work (CV freelance section + Journey). Game-dev 2018–2020
+  entry: site Journey only, never on the CV. Certifications are listed without dates.
+- Scout (github.com/simonrl13/footballscout, read-only source at C:\Projetos\Scout) is
+  first in Selected Projects and the Work carousel, labelled "In progress". Check every
+  number against its README/reports before changing copy (8,190 players, 82.2% interval
+  coverage, MAE 0.357 vs 0.410 no-change). Agent (M4) and MCP (M5) are *next*, not in progress.
 - No "graduated with highest honors". Thesis defended with distinction is fine.
 - Certifications (exam-based): AI-900, SFC, EF SET C2 (77/100). Training (courses):
   5 × Anthropic Academy, Accenture Academy (Oracle BRM). Never call training a certification.
@@ -101,6 +110,6 @@ SEO/OG/JSON-LD · CV download.
 - NDA freelance project details → CV + journey (Simon to send).
 - Rogério Freire card has a placeholder — needs the artwork images (centred in the 5:2
   mat, `object-fit: contain`) and the live URL. LABNOV live URL missing.
-- Scout project case study (backs Docker, pytest, AWS).
+- Scout full case study (card + CV entry live; backs Docker, pytest, AWS, LightGBM, MLflow).
 - Animation pass: chunks 4 and 7 held for Simon's call.
 - Language switcher (EN/FR/PT) — planned for later (see docs/audits/2026-09-30-audit.md).

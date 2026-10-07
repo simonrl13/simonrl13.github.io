@@ -73,6 +73,7 @@
   }
   .entry-title { font-weight: 700; font-size: 10.3pt; }
   .entry-meta { font-size: 9.2pt; color: #444; white-space: nowrap; }
+  .entry-meta a { color: #444; text-decoration: none; }
   .entry-org { font-size: 9.6pt; color: #444; margin-bottom: 3px; }
   ul { margin: 3px 0 0; padding-left: 15px; }
   li { margin-bottom: 2px; }
@@ -91,7 +92,7 @@
 
   <h1>Simon Rodrigues Laborde</h1>
   <div class="contact">Campina Grande, Paraíba — Brazil<span class="private-phone"> &nbsp;|&nbsp; {{PHONE}}</span> &nbsp;|&nbsp; simonrl865@gmail.com</div>
-  <div class="contact"><a href="https://simonlaborde.com">simonlaborde.com</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/simon-laborde-2131861bb/">linkedin.com/in/simon-laborde-2131861bb</a> &nbsp;|&nbsp; <a href="https://github.com/simonrl13">github.com/simonrl13</a></div>
+  <div class="contact"><a href="https://simonlaborde.com">simonlaborde.com</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/simonrodrigueslaborde">linkedin.com/in/simonrodrigueslaborde</a> &nbsp;|&nbsp; <a href="https://github.com/simonrl13">github.com/simonrl13</a></div>
   <div class="workrights">French citizen — full right to work in the EU, no visa sponsorship needed</div>
   <hr class="rule" />
 
@@ -100,11 +101,11 @@
 
   <h2>Technical Skills</h2>
   <div class="skills-row"><b>Languages:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
-  <div class="skills-row"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP), agent &amp; subagent design, Claude / Anthropic APIs, Machine Learning, NLP, scikit-learn, pandas, NumPy</div>
+  <div class="skills-row"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP), agent &amp; subagent design, Claude / Anthropic APIs, Machine Learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
   <div class="skills-row"><b>Web &amp; Mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
   <div class="skills-row"><b>Backend &amp; Data:</b> REST APIs, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
   <div class="skills-row"><b>DevOps &amp; Cloud:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
-  <div class="skills-row"><b>Tools:</b> Git, JIRA, Figma, Sanity CMS</div>
+  <div class="skills-row"><b>Tools:</b> Git, pytest, JIRA, Figma, Sanity CMS</div>
   <div class="skills-row"><b>Methodologies:</b> Agile / Scrum</div>
 
   <h2>Languages</h2>
@@ -143,11 +144,25 @@
     <div class="entry-org">Remote</div>
     <ul>
       <li><b>LABNOV</b> (UFCG materials-research lab) — designed and built the bilingual (PT/EN) site from scratch: a Next.js frontend, a Sanity CMS content model for non-technical staff, and an automated publication-sync pipeline off Brazil&rsquo;s Plataforma Lattes, including a manual-assisted workaround for reCAPTCHA where full automation wasn&rsquo;t possible</li>
+      <li><b>Rogério Freire</b> (pop-art painter) — website showcasing his original paintings and a catalog of products made from them (mugs, pillows, notebooks, t-shirts), with purchase enquiries via WhatsApp and email; Next.js, Tailwind CSS, Vercel</li>
       <li>UI/UX prototyping in Figma through backend implementation in Python and Java for earlier client web and mobile projects</li>
     </ul>
   </div>
 
   <h2>Selected Projects</h2>
+  <!-- Scout numbers checked against the Scout repo (README, reports, TEST_LOG) -->
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Scout — Player Market-Value Forecasting</span>
+      <span class="entry-meta"><a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
+    </div>
+    <ul>
+      <li>Point-in-time pipeline forecasting 12-month market-value changes for ~8,200 players across 7 European leagues (2013–2024), with automated leakage tests and a sealed, logged test set</li>
+      <li>LightGBM with 80% prediction intervals (82% empirical coverage), cutting error ~13% vs a no-change baseline on held-out seasons</li>
+      <li>CI with tests, dependency audits, secret scanning and CodeQL; threat model documented in SECURITY.md</li>
+      <li>In progress: LLM extraction of injury and contract events from point-in-time Wikipedia revisions with quote verification; next, a tool-using agent and an MCP server</li>
+    </ul>
+  </div>
   <div class="entry">
     <div class="entry-head">
       <span class="entry-title">AI Portfolio Assistant — simonlaborde.com</span>
