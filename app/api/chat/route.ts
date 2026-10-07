@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { buildSystemPrompt } from "@/content/assistant-context";
 import { site } from "@/content/site";
 import { checkRateLimit, type LimitResult } from "./rate-limit";
-import { CHAT_LIMITS, CHAT_MODEL } from "./config";
+import { ALLOWED_ORIGINS, CHAT_LIMITS, CHAT_MODEL } from "./config";
 
 export const runtime = "nodejs";
 
@@ -54,7 +54,43 @@ function sanitize(messages: unknown): Anthropic.MessageParam[] {
     }));
 }
 
+/* CORS: an explicit allow-list. Allowed origins get their own origin echoed
+   back (never `*`); anything else gets 403 and no CORS headers, so a browser
+   on another site can neither preflight nor read the response. */
+function corsHeaders(origin: string): Record<string, string> {
+  return { "access-control-allow-origin": origin, vary: "Origin" };
+}
+
+function originCheck(req: NextRequest): { ok: true; cors: Record<string, string> } | { ok: false } {
+  const origin = req.headers.get("origin");
+  if (!origin) return { ok: true, cors: { vary: "Origin" } };
+  return ALLOWED_ORIGINS.includes(origin) ? { ok: true, cors: corsHeaders(origin) } : { ok: false };
+}
+
+export function OPTIONS(req: NextRequest) {
+  const check = originCheck(req);
+  if (!check.ok) return new Response(null, { status: 403 });
+  return new Response(null, {
+    status: 204,
+    headers: {
+      ...check.cors,
+      "access-control-allow-methods": "POST",
+      "access-control-allow-headers": "content-type",
+      "access-control-max-age": "600",
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
+  // 0. origin allow-list — before reading the body
+  const check = originCheck(req);
+  if (!check.ok) return text("Forbidden origin.", 403);
+  const res = await handle(req);
+  for (const [k, v] of Object.entries(check.cors)) res.headers.set(k, v);
+  return res;
+}
+
+async function handle(req: NextRequest): Promise<Response> {
   // 1. cheap validation first — malformed requests never touch the limits
   const declared = Number(req.headers.get("content-length") ?? 0);
   if (declared > CHAT_LIMITS.maxBodyBytes) return text("Request too large.", 413);

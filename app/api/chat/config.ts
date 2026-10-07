@@ -21,3 +21,15 @@ export const CHAT_LIMITS = {
   dailyCap: positiveInt("CHAT_DAILY_CAP", 200),
   redisTimeoutMs: 2000,
 } as const;
+
+/* Browser origins allowed to call the chat. Production accepts only the
+   site itself; localhost is allowed everywhere else (dev, CI smoke). A
+   request with a foreign Origin header is refused before anything runs;
+   requests without one (curl, server-side) are bounded by the rate limits. */
+export const ALLOWED_ORIGINS: readonly string[] = [
+  "https://www.simonlaborde.com",
+  "https://simonlaborde.com",
+  ...(process.env.VERCEL_ENV === "production"
+    ? []
+    : ["http://localhost:3000", "http://127.0.0.1:3000"]),
+];
