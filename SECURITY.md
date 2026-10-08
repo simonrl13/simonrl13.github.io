@@ -113,8 +113,13 @@ OWASP Top 10 (2021):
   manual review of every answer.
 - **Dev-only advisory:** `braces` (via the ESLint tooling) has no non-breaking
   fix upstream. It isn't shipped to the site; CI reports it without blocking.
-- **Git history:** the phone number appears in earlier commits of the CV and
-  its source (public before this hardening). History was not rewritten.
+- **Git history:** rewritten on 2026-10-08 (git filter-repo) to remove the
+  phone number from every commit; verified from a fresh clone. Old Vercel
+  deployment URLs are covered by Vercel Standard Protection (anonymous
+  visitors are sent to a login). GitHub Support has been asked to purge the
+  cached pull-request snapshots that still reach the old commits — **pending**.
+  The number was public on the old site (2024–2025) and in the CV before the
+  hardening, so copies may exist outside our control.
 
 ## Reporting a vulnerability
 
