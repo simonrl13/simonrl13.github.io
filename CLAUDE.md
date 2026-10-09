@@ -22,8 +22,8 @@
   `app/api/chat/config.ts`. Run `npm run redteam <url>` after changing the prompt.
 - **Every change goes through a PR and passes CI** (`verify`, `secret-scan`, `codeql`);
   `main` is protected with no admin bypass.
-- **Update `SECURITY.md`** whenever the attack surface or controls change (endpoint,
-  dependency, data flow, header, limit, third-party service).
+- **Update `SECURITY.md`** (and the /security page copy) whenever the attack surface or
+  controls change (endpoint, dependency, data flow, header, limit, third-party service).
 - Public CV never contains the phone number (`npm run cv` enforces it); `TODO(simon)`
   notes stay in code comments (the smoke test fails if one renders).
 
@@ -32,6 +32,8 @@
   certifications/training, chat copy, links.
 - `content/projects.ts` — Work carousel (card skins + dialog + `layers` for IsoStack).
 - `content/pipeline.ts` — Lattes sync case study section.
+- `content/security.ts` + `app/security/page.tsx` — the public "How this site is secured"
+  page (/security). Plain-language summary of SECURITY.md: keep them in sync, facts only.
 - `content/assistant-context.ts` — builds the chat system prompt from the files above
   (rules first, then `<profile>` as reference data).
 - `components/` — `SiteChrome` (rail, nav, mobile menu, `ThemeToggle`), `SheetFrame`,

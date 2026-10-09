@@ -431,7 +431,8 @@ main { padding-left: var(--rail-w); }
     margin-bottom: 48px;
     border-bottom: 1px solid var(--line);
 }
-.sec-head h2 {
+.sec-head h2,
+.sec-head h1 {
     font-family: var(--font-display);
     font-weight: 600;
     font-size: clamp(2rem, 5vw, 3.1rem);
@@ -704,7 +705,8 @@ main { padding-left: var(--rail-w); }
     stroke-linecap: round;
     stroke-linejoin: round;
 }
-.legend__def h3 {
+.legend__def h3,
+.legend__def h2 {
     font-family: var(--font-body);
     font-weight: 600;
     font-size: .95rem;
@@ -1279,6 +1281,39 @@ main { padding-left: var(--rail-w); }
 @media (max-width: 560px) {
     .contact__list li { grid-template-columns: 1fr; gap: 4px; }
 }
+
+/* =========================================================
+   SUB-PAGES (/security) — same drawing, no rail
+   ========================================================= */
+
+.subnav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    height: 62px;
+    padding: 0 clamp(20px, 5vw, 56px);
+    background: linear-gradient(var(--ink), rgba(var(--ink-rgb),.72));
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line-soft);
+}
+.subnav__right { display: flex; align-items: center; gap: clamp(14px, 3vw, 26px); }
+.subnav__back { font-size: .9rem; color: var(--paper-dim); }
+.subnav__back:hover { color: var(--paper); }
+
+main.subpage { padding-left: 0; }
+.legend--single { grid-template-columns: 1fr; list-style: none; }
+.legend--single .legend__key { color: var(--brass); font-size: .8rem; }
+.subpage__h {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--paper);
+    margin: 48px 0 14px;
+}
+.subpage__list { padding-left: 1.1em; display: grid; gap: 8px; max-width: 70ch; }
+.subpage__p { max-width: 70ch; margin-bottom: 10px; }
+.foot--sub { margin-left: auto; }
+.foot a { color: var(--paper); border-bottom: 1px solid var(--brass); }
 
 /* =========================================================
    FOOTER

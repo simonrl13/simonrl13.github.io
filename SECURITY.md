@@ -4,6 +4,9 @@ Simon Laborde's portfolio: a Next.js site on Vercel (www.simonlaborde.com) with
 one server endpoint, an "Ask about my work" chat backed by the Claude API.
 This file is kept in step with the code: it changes whenever an endpoint,
 dependency, data flow, header or limit does.
+A plain-language summary for visitors lives at
+[simonlaborde.com/security](https://www.simonlaborde.com/security/) (copy in
+`content/security.ts`); update it whenever this file changes.
 
 ## What this project protects
 

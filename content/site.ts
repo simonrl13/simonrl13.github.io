@@ -49,6 +49,7 @@ export const site = {
   // app/api/chat never logs messages; the per-IP rate-limit key expires
   // with its 10-minute window (app/api/chat/rate-limit.ts).
   chatNotice: {
+    securityLink: "How this assistant is secured",
     accuracy:
       "Answers are AI-generated from this site’s content — verify anything important with Simon directly.",
     privacy:

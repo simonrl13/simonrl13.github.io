@@ -98,6 +98,17 @@ await page.waitForFunction(
   { timeout: 2000 },
 );
 
+// 7. /security renders, is linked from the footer, and leaks no TODO
+const footerLink = await page.$eval(".foot a[href='/security/']", (a) => a.textContent).catch(() => null);
+if (!footerLink) fails.push("footer has no link to /security/");
+const sec = await page.goto(BASE.replace(/\/$/, "") + "/security/", { waitUntil: "networkidle0" });
+if (!sec || sec.status() !== 200) fails.push(`/security/ status ${sec && sec.status()}`);
+const secH1 = await page.$eval("h1", (el) => el.textContent).catch(() => "");
+if (!/secured/i.test(secH1)) fails.push(`/security/ h1: ${secH1}`);
+const secItems = await page.$eval(".legend__row", (r) => r.length);
+if (secItems < 8) fails.push(`/security/ lists only ${secItems} controls`);
+if (/TODO/i.test(await page.$eval("main", (el) => el.textContent))) fails.push("/security/ shows a TODO note");
+
 await browser.close();
 
 if (fails.length) {
