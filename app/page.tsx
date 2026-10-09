@@ -32,7 +32,7 @@ export default function Page() {
         <p>
           <span className="mono">SL&#8209;2026 · rev. 2026.5</span> — built by
           hand with Next.js, TypeScript &amp; plain CSS, on the schematic identity
-          from the vanilla original.
+          from the vanilla original. <a href="/security/">How this site is secured</a>.
         </p>
       </footer>
     </>

@@ -207,6 +207,9 @@ export default function ChatConsole() {
         </form>
         <p className="chat__note">{site.chatNotice.accuracy}</p>
         <p className="chat__note chat__note--privacy">{site.chatNotice.privacy}</p>
+        <p className="chat__note">
+          <a href="/security/">{site.chatNotice.securityLink} →</a>
+        </p>
       </dialog>
     </>
   );
