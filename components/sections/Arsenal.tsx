@@ -1,4 +1,5 @@
-import { arsenal, site, type ArsenalRow } from "@/content/site";
+import { site, type ArsenalRow } from "@/content/site";
+import type { Bundle } from "@/content/i18n";
 
 const ICONS: Record<ArsenalRow["icon"], React.ReactNode> = {
   code: (
@@ -38,7 +39,7 @@ const ICONS: Record<ArsenalRow["icon"], React.ReactNode> = {
   test: <path d="M4 12l5 5L20 6" />,
 };
 
-export default function Arsenal() {
+export default function Arsenal({ arsenal, ui }: { arsenal: Bundle["arsenal"]; ui: Bundle["ui"] }) {
   return (
     <section
       id="arsenal"
@@ -46,11 +47,8 @@ export default function Arsenal() {
       aria-labelledby="arsenal-title"
     >
       <header className="sec-head">
-        <h2 id="arsenal-title">Technical arsenal</h2>
-        <p>
-          Read as a legend, not a tag cloud — grouped by the layer of the system
-          each part touches.
-        </p>
+        <h2 id="arsenal-title">{ui.arsenal.title}</h2>
+        <p>{ui.arsenal.intro}</p>
       </header>
 
       <div className="legend">
@@ -75,13 +73,13 @@ export default function Arsenal() {
             </svg>
           </span>
           <div className="legend__def">
-            <h3>Certifications &amp; Training</h3>
+            <h3>{ui.arsenal.credentials}</h3>
             <p>
-              <span className="legend__sub mono">Certifications</span>
+              <span className="legend__sub mono">{ui.arsenal.certifications}</span>
               {site.certifications.join(" · ")}
             </p>
             <p>
-              <span className="legend__sub mono">Training</span>
+              <span className="legend__sub mono">{ui.arsenal.training}</span>
               {site.training.join(" · ")}
             </p>
           </div>

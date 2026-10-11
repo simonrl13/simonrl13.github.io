@@ -1,7 +1,25 @@
 /* Security headers on every route. 'unsafe-inline' for scripts is a known, accepted limitation:
    statically rendered Next.js pages carry inline bootstrap scripts, and
    nonces would force every page to render per request. See SECURITY.md. */
+import i18n from "./content/locales.json" with { type: "json" };
+
 const isDev = process.env.NODE_ENV === "development";
+
+/* Locale routing. The default locale (English) is served at the unprefixed
+   URLs: they are rewritten internally to app/[locale] as /en/…, and the
+   explicit /en/… URLs redirect back so each page has one address. Other
+   locales live under /<locale>/. Nothing redirects by browser language or
+   stored choice — the URL always decides the language. */
+const { locales, defaultLocale } = i18n;
+const localeRewrites = [
+  { source: "/", destination: `/${defaultLocale}/` },
+  // anything not already under a locale prefix (files, /api and /_next match before these)
+  { source: `/:path((?!(?:${locales.join("|")})(?:/|$)).+)`, destination: `/${defaultLocale}/:path` },
+];
+const localeRedirects = [
+  { source: `/${defaultLocale}`, destination: "/", permanent: true },
+  { source: `/${defaultLocale}/:path+`, destination: "/:path+/", permanent: true },
+];
 
 const csp = [
   "default-src 'self'",
@@ -34,6 +52,8 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   headers: async () => [{ source: "/:path*", headers: securityHeaders }],
+  rewrites: async () => ({ afterFiles: localeRewrites }),
+  redirects: async () => localeRedirects,
   poweredByHeader: false,
   // images are pre-sized and compressed by hand; no optimizer needed
   images: { unoptimized: true },
@@ -41,6 +61,8 @@ const nextConfig = {
   // client fetches /api/chat/ to avoid a 308 hop
   trailingSlash: true,
   reactStrictMode: true,
+  // app/global-not-found.tsx: the root layout is under [locale], so unmatched URLs need their own document
+  experimental: { globalNotFound: true },
 };
 
 export default nextConfig;

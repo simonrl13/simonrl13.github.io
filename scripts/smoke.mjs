@@ -109,6 +109,58 @@ const secItems = await page.$eval(".legend__row", (r) => r.length);
 if (secItems < 8) fails.push(`/security/ lists only ${secItems} controls`);
 if (/TODO/i.test(await page.$eval("main", (el) => el.textContent))) fails.push("/security/ shows a TODO note");
 
+// 8. Portuguese: /pt/ is translated, dialogs stay English with a note
+const url = (path) => BASE.replace(/\/$/, "") + path;
+await page.goto(url("/pt/"), { waitUntil: "networkidle0" });
+const htmlLang = () => page.$eval("html", (el) => el.lang);
+if ((await htmlLang()) !== "pt-BR") fails.push(`/pt/ html lang: ${await htmlLang()}`);
+const hreflangs = await page.$$eval("link[rel=alternate][hreflang]", (ls) => ls.map((l) => l.hreflang).sort().join(","));
+if (hreflangs !== "en,pt-BR,x-default") fails.push(`/pt/ hreflang: ${hreflangs}`);
+const ptTitle = await page.$eval("#journey-title", (el) => el.textContent);
+if (ptTitle !== "Trajetória") fails.push(`/pt/ journey title: ${ptTitle}`);
+// note markers only: "todo" is an ordinary Portuguese word
+const leaksTodo = (text) => /TODO[(:]/.test(text);
+if (leaksTodo(await page.$eval("main", (el) => el.textContent))) fails.push("/pt/ shows a TODO note");
+await page.click("#proj-medhelp .pcard__more");
+await page.waitForSelector("dialog.sheet[open]", { timeout: 2000 });
+const ptDlg = await page.$eval("dialog.sheet[open]", (el) => ({
+  h2: el.querySelector("h2").textContent,
+  note: el.querySelector(".sheet__note")?.textContent,
+}));
+if (ptDlg.h2 !== "MedHelp" || ptDlg.note !== "Estudo de caso em inglês.") fails.push(`/pt/ dialog: ${JSON.stringify(ptDlg)}`);
+await page.keyboard.press("Escape");
+await page.waitForFunction(() => !document.querySelector("dialog.sheet[open]"), { timeout: 2000 });
+if (!(await page.$(".foot a[href='/pt/seguranca/']"))) fails.push("/pt/ footer has no link to /pt/seguranca/");
+
+// 9. switcher: goes to the other language, remembers it, never redirects
+await Promise.all([page.waitForNavigation({ waitUntil: "networkidle0" }), page.click(".nav .lang-switch--nav a[hreflang='en']")]);
+if (new URL(page.url()).pathname !== "/" || (await htmlLang()) !== "en") fails.push(`switcher EN landed on ${page.url()}`);
+const stored = await page.evaluate(() => localStorage.getItem("lang"));
+if (stored !== "en") fails.push(`switcher stored lang: ${stored}`);
+await page.goto(url("/pt/"), { waitUntil: "networkidle0" }); // stored "en" must not win over the URL
+if (new URL(page.url()).pathname !== "/pt/" || (await htmlLang()) !== "pt-BR") fails.push(`/pt/ redirected to ${page.url()}`);
+
+// 10. /pt/seguranca/ and localized 404s
+const ptSec = await page.goto(url("/pt/seguranca/"), { waitUntil: "networkidle0" });
+if (!ptSec || ptSec.status() !== 200) fails.push(`/pt/seguranca/ status ${ptSec && ptSec.status()}`);
+if (!/protegido/.test(await page.$eval("h1", (el) => el.textContent))) fails.push("/pt/seguranca/ h1 not Portuguese");
+if ((await page.$$eval(".legend__row", (r) => r.length)) < 8) fails.push("/pt/seguranca/ lists too few controls");
+if (leaksTodo(await page.$eval("main", (el) => el.textContent))) fails.push("/pt/seguranca/ shows a TODO note");
+if (!(await page.$(".lang-switch--nav a[href='/security/']"))) fails.push("/pt/seguranca/ switcher misses /security/");
+for (const [path, h1] of [["/pt/nada/", "Fora do desenho"], ["/nothing-here/", "Off the drawing"]]) {
+  const r = await page.goto(url(path), { waitUntil: "networkidle0" });
+  const got = await page.$eval("h1", (el) => el.textContent).catch(() => "");
+  if (!r || r.status() !== 404 || got !== h1) fails.push(`${path}: ${r && r.status()} "${got}"`);
+}
+
+// 11. no horizontal overflow on a phone, in either language
+await page.setViewport({ width: 360, height: 780, isMobile: true, hasTouch: true });
+for (const path of ["/", "/pt/", "/security/", "/pt/seguranca/"]) {
+  await page.goto(url(path), { waitUntil: "networkidle0" });
+  const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  if (over > 0) fails.push(`${path} overflows by ${over}px at 360px`);
+}
+
 await browser.close();
 
 if (fails.length) {

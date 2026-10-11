@@ -1,23 +1,16 @@
-import { journey } from "@/content/site";
+import type { Bundle } from "@/content/i18n";
 
-export default function Journey() {
+export default function Journey({ items, ui }: { items: Bundle["journey"]; ui: Bundle["ui"] }) {
   return (
-    <section
-      id="journey"
-      className="section journey"
-      aria-labelledby="journey-title"
-    >
+    <section id="journey" className="section journey" aria-labelledby="journey-title">
       <header className="sec-head">
-        <h2 id="journey-title">Journey</h2>
-        <p>
-          One throughline: learning how systems behave, then making them serve
-          real needs — from physics engines to research infrastructure.
-        </p>
+        <h2 id="journey-title">{ui.journey.title}</h2>
+        <p>{ui.journey.intro}</p>
       </header>
 
       <ol className="journey__list">
-        {journey.map((item) => (
-          <li className="jitem" key={item.title}>
+        {items.map((item) => (
+          <li className="jitem" key={item.when + item.title}>
             <p className="jitem__when mono">{item.when}</p>
             <div className="jitem__body">
               <h3>{item.title}</h3>

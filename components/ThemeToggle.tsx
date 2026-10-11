@@ -40,19 +40,17 @@ function applyTheme(next: Theme) {
   listeners.forEach((l) => l());
 }
 
-export default function ThemeToggle() {
+export type ThemeLabels = { toLight: string; toDark: string; lightTitle: string; darkTitle: string };
+
+export default function ThemeToggle({ labels }: { labels: ThemeLabels }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, () => "dark");
 
   return (
     <button
       className="theme-toggle"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      aria-label={
-        theme === "dark"
-          ? "Switch to whiteprint (light)"
-          : "Switch to blueprint (dark)"
-      }
-      title={theme === "dark" ? "Whiteprint" : "Blueprint"}
+      aria-label={theme === "dark" ? labels.toLight : labels.toDark}
+      title={theme === "dark" ? labels.lightTitle : labels.darkTitle}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="1" />
