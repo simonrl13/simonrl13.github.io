@@ -1,0 +1,157 @@
+/* Per-locale content bundles. English is assembled from the existing English
+   sources; every other locale provides the same shape (TypeScript enforces
+   it). Adding French = content/i18n/fr.ts + one line in `bundles` + "fr" in
+   content/locales.json + a slug per page in routes.ts — no component code.
+
+   What is NOT translated: profile facts (names, links, numbers, cert names),
+   the project dialogs' detail (English case studies, with a note in other
+   locales) and the chat assistant's context (it answers in the visitor's
+   language from the English profile). */
+
+import { site, journey, arsenal, type JourneyItem, type ArsenalRow } from "../site";
+import { projects, type Project } from "../projects";
+import { pipeline } from "../pipeline";
+import { securityPage } from "../security";
+import { enUi } from "./en";
+import { pt } from "./pt";
+import { defaultLocale, locales, pathFor, type PageKey } from "./routes";
+
+/** Recursively widens literal types so another locale can supply its strings. */
+type Widen<T> = T extends string
+  ? string
+  : T extends number
+    ? number
+    : T extends boolean
+      ? boolean
+      : T extends readonly (infer U)[]
+        ? readonly Widen<U>[]
+        : T extends object
+          ? { -readonly [K in keyof T]: Widen<T[K]> }
+          : T;
+
+export type SiteCopy = Widen<
+  Pick<
+    typeof site,
+    | "role" | "title" | "description" | "roleLine" | "thesis" | "status"
+    | "workRights" | "contactIntro" | "chatLauncher" | "chatSuggestions" | "chatNotice"
+  >
+> & { titleBlock: { dt: string; dd: string; mono: boolean; stamp?: boolean }[] };
+
+type SkinText = Partial<{
+  vitals: { dt: string; value: string; unit?: string }[];
+  readings: { dt: string; value: string; unit?: string }[];
+  xpMeta: string;
+  xpAmount: string;
+  board: { pos: string; name: string; pts: string; you?: boolean }[];
+  placeholder: string;
+  caption: string;
+}>;
+
+/** Card copy per project; the dialog detail stays English. */
+export type ProjectCopy = {
+  tag: string;
+  title?: string;
+  lead: string;
+  layers: string[];
+  status?: string;
+  skin?: SkinText;
+};
+
+export type Bundle = {
+  locale: string;
+  ui: Widen<typeof enUi>;
+  site: SiteCopy;
+  journey: JourneyItem[];
+  arsenal: ArsenalRow[];
+  pipeline: Widen<typeof pipeline>;
+  projects: Record<(typeof projects)[number]["id"], ProjectCopy>;
+  security: Widen<typeof securityPage>;
+};
+
+/* ---------- English: built from the existing sources ---------- */
+
+const en: Bundle = {
+  locale: "en",
+  ui: enUi,
+  site: {
+    role: site.role,
+    title: site.title,
+    description: site.description,
+    roleLine: site.roleLine,
+    thesis: site.thesis,
+    status: { ...site.status },
+    workRights: site.workRights,
+    contactIntro: site.contactIntro,
+    chatLauncher: { ...site.chatLauncher },
+    chatSuggestions: [...site.chatSuggestions],
+    chatNotice: { ...site.chatNotice },
+    titleBlock: site.titleBlock.map((row) => ({ ...row, stamp: row.dt === "Revision" })),
+  },
+  journey,
+  arsenal,
+  pipeline,
+  projects: Object.fromEntries(
+    projects.map((p) => [p.id, { tag: p.tag, title: p.title, lead: p.lead, layers: p.layers, status: p.status }]),
+  ),
+  security: securityPage,
+};
+
+const bundles: Record<string, Bundle> = { en, pt };
+
+// every locale listed in content/locales.json must have a bundle
+for (const l of locales) {
+  if (!bundles[l]) throw new Error(`content/i18n: no bundle for locale "${l}"`);
+}
+
+export function getBundle(locale: string): Bundle {
+  // validated first: a raw lookup would hand back Object.prototype for "__proto__"
+  return isLocale(locale) ? bundles[locale] : en;
+}
+
+export function isLocale(value: unknown): value is string {
+  return typeof value === "string" && locales.includes(value);
+}
+
+/** Replaces {email} placeholders in UI strings. */
+export function fill(text: string): string {
+  return text.replaceAll("{email}", site.links.email);
+}
+
+/** Projects with this locale's card copy applied (dialog detail stays English). */
+export function localizedProjects(bundle: Bundle): Project[] {
+  return projects.map((p) => {
+    const c = bundle.projects[p.id];
+    if (!c) return p;
+    return {
+      ...p,
+      tag: c.tag,
+      title: c.title ?? p.title,
+      dialogTitle: p.dialogTitle ?? p.title, // the dialog stays English
+      lead: c.lead,
+      layers: c.layers,
+      status: c.status ?? p.status,
+      skin: { ...p.skin, ...(c.skin ?? {}) } as Project["skin"],
+    };
+  });
+}
+
+/** The same page in every locale, for the language switcher. */
+export function alternatesFor(page?: PageKey) {
+  return locales.map((l) => ({
+    locale: l,
+    lang: bundles[l].ui.meta.htmlLang,
+    href: pathFor(l, page),
+    name: bundles[l].ui.meta.languageName,
+  }));
+}
+
+/** canonical + hreflang links for a page (x-default = the default locale). */
+export function languageAlternates(locale: string, page?: PageKey) {
+  return {
+    canonical: pathFor(locale, page),
+    languages: {
+      ...Object.fromEntries(locales.map((l) => [bundles[l].ui.meta.htmlLang, pathFor(l, page)])),
+      "x-default": pathFor(defaultLocale, page),
+    },
+  };
+}

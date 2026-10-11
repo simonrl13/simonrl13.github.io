@@ -1,22 +1,21 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { NextRequest } from "next/server";
 import { buildSystemPrompt } from "@/content/assistant-context";
-import { site } from "@/content/site";
-import { checkRateLimit, type LimitResult } from "./rate-limit";
+import { fill, getBundle } from "@/content/i18n";
+import { checkRateLimit } from "./rate-limit";
 import { ALLOWED_ORIGINS, CHAT_LIMITS, CHAT_MODEL } from "./config";
 
 export const runtime = "nodejs";
 
 type IncomingMessage = { role: "user" | "assistant"; content: string };
-type BlockedScope = Extract<LimitResult, { allowed: false }>["scope"];
 
-const email = site.links.email;
-
-const LIMIT_MESSAGES: Record<BlockedScope, string> = {
-  ip: `That's a lot of questions in a short time — try again in a few minutes, or email ${email} directly.`,
-  global: `The assistant has reached today's limit — it resets at midnight UTC. In the meantime, email ${email}.`,
-  unavailable: `The assistant is briefly unavailable — please try again shortly, or email ${email}.`,
-};
+/** Server messages in the visitor's language; an unknown or missing locale
+ * gets English (getBundle validates it against content/locales.json). */
+function serverCopy(body: unknown) {
+  const locale = body && typeof body === "object" ? (body as { locale?: unknown }).locale : undefined;
+  const t = getBundle(typeof locale === "string" ? locale : "").ui.chatServer;
+  return (key: keyof typeof t) => fill(t[key]);
+}
 
 function text(body: string, status: number, headers: Record<string, string> = {}) {
   return new Response(body, {
@@ -116,11 +115,12 @@ async function handle(req: NextRequest): Promise<Response> {
   if (messages.length === 0 || messages[messages.length - 1].role !== "user") {
     return text("Bad request.", 400);
   }
+  const say = serverCopy(body);
 
   // 2. spend controls — per-IP window, then the global daily cap
   const limit = await checkRateLimit(clientIp(req));
   if (!limit.allowed) {
-    return text(LIMIT_MESSAGES[limit.scope], limit.scope === "unavailable" ? 503 : 429, {
+    return text(say(limit.scope), limit.scope === "unavailable" ? 503 : 429, {
       "retry-after": String(limit.retryAfterSeconds),
     });
   }
@@ -129,7 +129,7 @@ async function handle(req: NextRequest): Promise<Response> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     console.error("chat: ANTHROPIC_API_KEY is not set");
-    return text(`This assistant isn't configured yet. Email ${email} in the meantime.`, 500);
+    return text(say("notConfigured"), 500);
   }
 
   const client = new Anthropic({ apiKey });
@@ -158,8 +158,8 @@ async function handle(req: NextRequest): Promise<Response> {
         console.error("chat stream error:", err);
         const message =
           err instanceof Anthropic.RateLimitError
-            ? "The assistant is in high demand right now — please try again shortly."
-            : `Something went wrong answering that. Please try again, or email ${email}.`;
+            ? say("rateLimited")
+            : say("streamError");
         controller.enqueue(encoder.encode(message));
         controller.close();
       }

@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { projects, type Project } from "@/content/projects";
+import type { Project } from "@/content/projects";
+import type { Bundle } from "@/content/i18n";
+
+type CarouselUi = Bundle["ui"]["carousel"];
 import IsoStack from "@/components/IsoStack";
 
 /* ---------- per-project skin widgets ---------- */
@@ -94,11 +97,11 @@ function Skin({ skin }: { skin: Project["skin"] }) {
   }
 }
 
-function LabBody({ skin }: { skin: Extract<Project["skin"], { kind: "lab" }> }) {
+function LabBody({ skin, label }: { skin: Extract<Project["skin"], { kind: "lab" }>; label: string }) {
   const [lang, setLang] = useState<"pt" | "en">("pt");
   return (
     <>
-      <div className="lang-switch" role="group" aria-label="Card language">
+      <div className="lang-switch" role="group" aria-label={label}>
         <button
           type="button"
           aria-pressed={lang === "pt"}
@@ -130,10 +133,12 @@ function ProjectDialog({
   project,
   open,
   onClose,
+  ui,
 }: {
   project: Project | null;
   open: boolean;
   onClose: () => void;
+  ui: CarouselUi;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -167,7 +172,7 @@ function ProjectDialog({
       onClick={handleBackdrop}
     >
       <form method="dialog">
-        <button className="sheet__close" aria-label="Close" value="close">
+        <button className="sheet__close" aria-label={ui.close} value="close">
           &times;
         </button>
       </form>
@@ -177,12 +182,13 @@ function ProjectDialog({
             {project.tag}
             {project.status && <span className="status-label">{project.status}</span>}
           </p>
-          <h2>{project.dialogTitle ?? project.title}</h2>
+          <h2 lang="en">{project.dialogTitle ?? project.title}</h2>
+          {ui.detailNote && <p className="sheet__note mono">{ui.detailNote}</p>}
           <div className="sheet__iso">
             <IsoStack layers={project.layers} className="iso--lg" />
           </div>
-          <p className="sheet__body">{project.detail.body}</p>
-          <dl className="sheet__meta">
+          <p className="sheet__body" lang="en">{project.detail.body}</p>
+          <dl className="sheet__meta" lang="en">
             <div>
               <dt>Role</dt>
               <dd>{project.detail.role}</dd>
@@ -192,7 +198,7 @@ function ProjectDialog({
               <dd>{project.detail.outcome}</dd>
             </div>
           </dl>
-          <p className="sheet__stack mono">{project.detail.stack}</p>
+          <p className="sheet__stack mono" lang="en">{project.detail.stack}</p>
           {project.links && project.links.length > 0 && (
             <p className="sheet__links">
               {project.links.map((l) => (
@@ -215,7 +221,7 @@ function ProjectDialog({
 
 /* ---------- carousel ---------- */
 
-export default function WorkCarousel() {
+export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui: CarouselUi }) {
   const trackRef = useRef<HTMLUListElement>(null);
   const cardRefs = useRef<(HTMLLIElement | null)[]>([]);
   const dotRefs = useRef<(HTMLLIElement | null)[]>([]);
@@ -318,7 +324,7 @@ export default function WorkCarousel() {
         className="carousel__track"
         ref={trackRef}
         tabIndex={0}
-        aria-label="Project carousel, scrollable"
+        aria-label={ui.label}
       >
         {projects.map((p, i) => (
           <li
@@ -341,7 +347,7 @@ export default function WorkCarousel() {
               </div>
 
               {p.skin.kind === "lab" ? (
-                <LabBody skin={p.skin} />
+                <LabBody skin={p.skin} label={ui.cardLanguage} />
               ) : (
                 <p className="pcard__lead">{p.lead}</p>
               )}
@@ -368,7 +374,7 @@ export default function WorkCarousel() {
                   className="pcard__more"
                   onClick={(e) => openDialog(p, e)}
                 >
-                  Read the full drawing
+                  {ui.more}
                 </button>
               </div>
             </div>
@@ -381,7 +387,7 @@ export default function WorkCarousel() {
           className="carousel__btn"
           ref={prevRef}
           onClick={() => scrollByDir(-1)}
-          aria-label="Previous project"
+          aria-label={ui.prev}
         >
           &larr;
         </button>
@@ -399,13 +405,13 @@ export default function WorkCarousel() {
           className="carousel__btn"
           ref={nextRef}
           onClick={() => scrollByDir(1)}
-          aria-label="Next project"
+          aria-label={ui.next}
         >
           &rarr;
         </button>
       </div>
 
-      <ProjectDialog project={active} open={open} onClose={closeDialog} />
+      <ProjectDialog project={active} open={open} onClose={closeDialog} ui={ui} />
     </div>
   );
 }

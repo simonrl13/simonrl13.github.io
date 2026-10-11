@@ -34,6 +34,12 @@
 - `content/pipeline.ts` — Lattes sync case study section.
 - `content/security.ts` + `app/security/page.tsx` — the public "How this site is secured"
   page (/security). Plain-language summary of SECURITY.md: keep them in sync, facts only.
+- `content/i18n/` — EN + PT (French-ready). `locales.json` (root) lists locales; `routes.ts`
+  localized slugs (`/security/` ↔ `/pt/seguranca/`); `en.ts` UI strings, `pt.ts` the full PT-BR
+  bundle (TS enforces the EN shape); `index.ts` assembles bundles. English = unprefixed URLs
+  (next.config rewrites to `app/[locale]` as /en; /en/* redirects back). Adding French = `fr.ts`,
+  one line in `bundles`, `"fr"` in locales.json, a slug per page. Dialog case studies stay EN.
+  The switcher remembers the choice but **never redirects** — the URL always wins.
 - `content/assistant-context.ts` — builds the chat system prompt from the files above
   (rules first, then `<profile>` as reference data).
 - `components/` — `SiteChrome` (rail, nav, mobile menu, `ThemeToggle`), `SheetFrame`,
@@ -54,7 +60,7 @@ Blueprint (dark, default) + whiteprint (light) theme · rail draw-in + scroll tr
 hero dimension lines · drawing-sheet frame · scroll-revealed meters/ECG/XP/vitals ·
 section connectors · AS-BUILT stamp · exploded isometric project diagrams · Lattes
 pipeline flow diagram · "Ask about my work" chat with privacy note · security headers ·
-SEO/OG/JSON-LD · CV download.
+SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 
 ## Facts to keep right
 - Availability: open to AI and software engineering roles, remote or on-site in the EU
@@ -100,6 +106,9 @@ SEO/OG/JSON-LD · CV download.
 - Press feedback is `translate: 0 1px` (Simon's choice), never `scale(.97)`.
 - `IsoStack` takes any number of layers; `--k` per slab drives the explode spread.
 - `trailingSlash: true` → client fetches `/api/chat/` (avoids a 308 hop).
+- The root layout lives under `app/[locale]`, so unmatched URLs use `app/global-not-found.tsx`
+  (`experimental.globalNotFound`); shared fonts + theme head are in `app/document.tsx`.
+- Smoke-test TODO checks on PT pages match `TODO(`/`TODO:` only — "todo" is a Portuguese word.
 - On-load sequence (rail, nodes, hero dims) is one set: node delays = rail delay + when
   `--ease` reaches each node's `--at` (verified in slow motion, ≤1 frame off) — change
   together. It plays once per tab session; later loads get `data-drawn`.
@@ -114,4 +123,4 @@ SEO/OG/JSON-LD · CV download.
   mat, `object-fit: contain`) and the live URL. LABNOV live URL missing.
 - Scout full case study (card + CV entry live; backs Docker, pytest, AWS, LightGBM, MLflow).
 - Animation pass: chunks 4 and 7 held for Simon's call.
-- Language switcher (EN/FR/PT) — planned for later (see docs/audits/2026-09-30-audit.md).
+- French locale (structure ready; content only).

@@ -2,26 +2,31 @@
 
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
+import LangSwitch, { type Alternate } from "@/components/LangSwitch";
+import type { Bundle } from "@/content/i18n";
 
 const RAIL_NODES = [
-  { target: "origin", ref: "01", label: "Origin", at: "11%" },
-  { target: "journey", ref: "02", label: "Journey", at: "24%" },
-  { target: "arsenal", ref: "03", label: "Arsenal", at: "38%" },
-  { target: "work", ref: "04", label: "Work", at: "52%" },
-  { target: "pipeline", ref: "04.1", label: "Detail", at: "65%" },
-  { target: "languages", ref: "05", label: "Languages", at: "79%" },
-  { target: "contact", ref: "06", label: "Contact", at: "92%" },
-];
+  { target: "origin", ref: "01", at: "11%" },
+  { target: "journey", ref: "02", at: "24%" },
+  { target: "arsenal", ref: "03", at: "38%" },
+  { target: "work", ref: "04", at: "52%" },
+  { target: "pipeline", ref: "04.1", at: "65%" },
+  { target: "languages", ref: "05", at: "79%" },
+  { target: "contact", ref: "06", at: "92%" },
+] as const;
 
-const NAV_LINKS = [
-  { href: "#journey", label: "Journey" },
-  { href: "#arsenal", label: "Arsenal" },
-  { href: "#work", label: "Work" },
-  { href: "#languages", label: "Languages" },
-  { href: "#contact", label: "Contact" },
-];
+const NAV_TARGETS = ["journey", "arsenal", "work", "languages", "contact"] as const;
 
-export default function SiteChrome() {
+export default function SiteChrome({
+  ui,
+  locale,
+  alternates,
+}: {
+  ui: Bundle["ui"];
+  locale: string;
+  alternates: Alternate[];
+}) {
+  const NAV_LINKS = NAV_TARGETS.map((t) => ({ href: `#${t}`, label: ui.nav[t] }));
   const traceRef = useRef<HTMLSpanElement>(null);
   const toplineRef = useRef<HTMLSpanElement>(null);
   const railNodeRefs = useRef<(HTMLLIElement | null)[]>([]);
@@ -99,7 +104,7 @@ export default function SiteChrome() {
   return (
     <>
       <a className="skip-link" href="#origin">
-        Skip to content
+        {ui.skipLink}
       </a>
 
       {/* LEFT SCHEMATIC RAIL */}
@@ -118,7 +123,7 @@ export default function SiteChrome() {
               }}
             >
               <span className="rail__ref">{node.ref}</span>
-              <span className="rail__label">{node.label}</span>
+              <span className="rail__label">{ui.rail[node.target]}</span>
             </li>
           ))}
         </ol>
@@ -130,7 +135,7 @@ export default function SiteChrome() {
       </div>
 
       {/* NAV */}
-      <nav className="nav" aria-label="Section index">
+      <nav className="nav" aria-label={ui.navLabel}>
         <a className="nav__mark" href="#origin">
           S<span>·</span>L
         </a>
@@ -149,12 +154,13 @@ export default function SiteChrome() {
               </li>
             ))}
           </ul>
-          <ThemeToggle />
+          <LangSwitch current={locale} alternates={alternates} label={ui.langSwitch.label} />
+          <ThemeToggle labels={ui.theme} />
           <button
             className="nav__toggle"
             aria-expanded={menuOpen}
             aria-controls="nav-list-mobile"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? ui.menu.close : ui.menu.open}
             onClick={() => setMenuOpen((v) => !v)}
           >
             <span />
