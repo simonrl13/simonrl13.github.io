@@ -47,7 +47,7 @@ export const site = {
 
   // Shown under the chat input. Keep the privacy line true to the code:
   // app/api/chat never logs messages; the per-IP rate-limit key expires
-  // with its 10-minute window (app/api/chat/rate-limit.ts).
+  // with its 10-minute window (lib/rate-limit.ts).
   chatNotice: {
     securityLink: "How this assistant is secured",
     accuracy:

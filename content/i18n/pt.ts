@@ -15,6 +15,7 @@ export const pt: Bundle = {
     skipLink: "Pular para o conteúdo",
     navLabel: "Índice de seções",
     nav: { journey: "Trajetória", arsenal: "Arsenal", work: "Trabalhos", languages: "Idiomas", contact: "Contato" },
+    navServices: "Para empresas",
     rail: { origin: "Origem", journey: "Trajetória", arsenal: "Arsenal", work: "Trabalhos", pipeline: "Detalhe", languages: "Idiomas", contact: "Contato" },
     menu: { open: "Abrir menu", close: "Fechar menu" },
     theme: { toLight: "Mudar para whiteprint (claro)", toDark: "Mudar para blueprint (escuro)", lightTitle: "Whiteprint", darkTitle: "Blueprint" },
@@ -289,6 +290,10 @@ export const pt: Bundle = {
         body: "As perguntas são enviadas à API Claude, da Anthropic, para gerar a resposta. Este site não salva conversas, e seu endereço IP fica guardado por até 10 minutos para limitar o uso. Sem cookies, sem analytics.",
       },
       {
+        title: "O formulário de contato",
+        body: "Os contatos de empresas vão direto para o meu e-mail pelo Resend, um serviço de envio de e-mails. Este site não guarda nem registra nada do que é enviado. Cada campo é validado no servidor, o formulário só aceita requisições deste site, um campo-armadilha escondido barra robôs simples, e limites de 3 mensagens por hora por conexão e 20 por dia seguram enxurradas — se o limitador não responder, o formulário se recusa a enviar.",
+      },
+      {
         title: "Cabeçalhos de segurança",
         body: "Uma Content Security Policy que só permite scripts, estilos, fontes e conexões do próprio site; HTTPS obrigatório com HSTS; sem MIME sniffing; uma política de referrer restrita; câmera, microfone, localização e pagamentos desativados; e nenhum outro site pode incorporar estas páginas em um frame.",
         link: {
@@ -314,8 +319,106 @@ export const pt: Bundle = {
       "Os limites são por endereço IP, então alguém com muitos endereços poderia espalhar as requisições. O teto diário e o limite de gasto seguram o custo.",
       "As respostas da IA ainda podem exagerar. O assistente se baseia só no conteúdo deste site e é instruído a não enfeitar — confirme qualquer ponto importante diretamente comigo.",
       "O CDN da Vercel marca os arquivos estáticos públicos como legíveis por qualquer site (Access-Control-Allow-Origin: *). Isso é inofensivo para conteúdo público; o endpoint do assistente usa a própria lista de origens permitidas.",
+      "O formulário de contato não tem CAPTCHA, que exigiria um script de terceiros. O campo-armadilha só barra robôs simples; os limites por hora e por dia seguram o resto.",
     ],
     reportLine: `Encontrou um problema? Mande um e-mail para ${site.links.email} — o endereço também está em /.well-known/security.txt. Por favor, não abra uma issue pública para problemas de segurança.`,
     securityMd: "https://github.com/simonrl13/simonrl13.github.io/blob/main/SECURITY.md",
+  },
+
+  /* TODO(simon): confirmar as listas "inclui" e cada linha de `data` antes do
+     merge (mesmas regras de content/services.ts). "Nunca usados para treinar
+     modelos" fica de fora até ser verificado nos termos de cada provedor. */
+  services: {
+    title: "Projetos para empresas",
+    eyebrow: "Para empresas",
+    description:
+      "Dois projetos com escopo fechado para pequenas empresas: um assistente que responde seus clientes no WhatsApp a partir dos seus próprios documentos, e o processamento de documentos que acaba com a redigitação de recibos, boletos e papéis escaneados.",
+    intro:
+      "Dois projetos com escopo fechado para pequenas empresas, feitos por mim de ponta a ponta e rodando na minha infraestrutura. Cada um está descrito pelo resultado que você recebe, não pela tecnologia por trás.",
+
+    labels: {
+      included: "O que está incluído",
+      timeline: "Prazo",
+      price: "Investimento",
+      cta: "Quero saber mais",
+    },
+
+    offers: [
+      {
+        id: "assistant",
+        kicker: "Assistente de atendimento",
+        outcome: "Seus clientes recebem respostas no WhatsApp às 23h, a partir dos seus próprios documentos.",
+        included: [
+          "Um assistente configurado com os documentos que você já tem: perguntas frequentes, tabelas de preço, políticas, catálogo.",
+          "Respostas no WhatsApp da sua empresa, a qualquer hora do dia.",
+          "O que não estiver nos seus documentos é encaminhado para você, em vez de ser inventado.",
+          "Limites de uso e de gasto, para o custo mensal ficar previsível.",
+        ],
+        timeline: "[PRAZO]",
+        price: "a partir de R$ [PRICE]",
+      },
+      {
+        id: "documents",
+        kicker: "Processamento de documentos",
+        outcome: "Pare de redigitar recibos, boletos e documentos escaneados.",
+        included: [
+          "Os campos que você realmente usa — valores, datas, vencimentos, CNPJ/CPF — extraídos automaticamente.",
+          "Funciona com fotos, PDFs e papel escaneado.",
+          "Campos com dúvida são marcados para uma pessoa conferir.",
+          "Resultado entregue numa planilha ou no sistema que você já usa.",
+        ],
+        timeline: "[PRAZO]",
+        price: "a partir de R$ [PRICE]",
+      },
+    ],
+
+    data: {
+      title: "Como tratamos seus dados",
+      intro: "Em linguagem simples — e por escrito no contrato do projeto.",
+      items: [
+        {
+          title: "Na minha infraestrutura, isolados por cliente",
+          body: "Os dados do seu projeto ficam guardados numa infraestrutura que eu opero, não nas suas contas, e separados por cliente: nenhum cliente tem acesso aos dados de outro.",
+        },
+        {
+          title: "Processados por um provedor de IA nos Estados Unidos",
+          body: "A IA que lê seus documentos e mensagens é operada por um provedor sediado nos Estados Unidos. Pela LGPD, isso é uma transferência internacional de dados, e ela fica descrita no contrato antes de qualquer dado ser enviado.",
+        },
+        {
+          title: "Excluídos ao fim do projeto",
+          body: "Quando o projeto termina, os dados do cliente que eu guardo para ele são excluídos.",
+        },
+        {
+          title: "Este formulário",
+          body: "O que você enviar abaixo vai direto para o meu e-mail, só para eu te responder. Este site não guarda nada.",
+        },
+      ],
+    },
+
+    form: {
+      title: "Conte sobre a sua empresa",
+      intro: "Eu respondo por e-mail.",
+      name: "Seu nome",
+      business: "Empresa",
+      email: "E-mail",
+      message: "O que você gostaria de resolver?",
+      consent:
+        "Concordo com o uso destas informações para responder à minha mensagem, como descrito em “Como tratamos seus dados”.",
+      submit: "Enviar",
+      sending: "Enviando…",
+      sent: "Obrigado — sua mensagem foi enviada. Eu respondo por e-mail.",
+      failed: "Não foi possível enviar sua mensagem agora. Tente de novo ou mande um e-mail para {email}.",
+    },
+
+    server: {
+      invalid: "Confira os campos e tente de novo.",
+      consent: "Marque a caixa de consentimento para eu poder responder.",
+      ip: "Muitas mensagens vindas desta conexão — tente de novo mais tarde ou mande um e-mail para {email}.",
+      global: "O formulário atingiu o limite de hoje. Mande um e-mail para {email}.",
+      unavailable: "O formulário está indisponível por um instante — tente de novo em breve ou mande um e-mail para {email}.",
+      notConfigured: "O formulário ainda não está configurado. Mande um e-mail para {email}.",
+    },
+
+    footerLink: "Disponível para projetos",
   },
 };

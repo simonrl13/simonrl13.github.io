@@ -153,9 +153,52 @@ for (const [path, h1] of [["/pt/nada/", "Fora do desenho"], ["/nothing-here/", "
   if (!r || r.status() !== 404 || got !== h1) fails.push(`${path}: ${r && r.status()} "${got}"`);
 }
 
-// 11. no horizontal overflow on a phone, in either language
+// 11. services: /pt/empresas (PT nav) and /services (EN footer only), placeholders visible
+await page.goto(url("/pt/"), { waitUntil: "networkidle0" });
+if (!(await page.$(".nav__list a[href='/pt/empresas/']"))) fails.push("/pt/ nav has no Para empresas link");
+if (!(await page.$(".foot a[href='/pt/empresas/']"))) fails.push("/pt/ footer has no services link");
+await page.goto(url("/"), { waitUntil: "networkidle0" });
+if (await page.$(".nav__list a[href='/services/']")) fails.push("EN nav should not link /services/");
+if (!(await page.$(".foot a[href='/services/']"))) fails.push("EN footer has no /services/ link");
+for (const [path, h1] of [["/pt/empresas/", "Projetos para empresas"], ["/services/", "Project work for businesses"]]) {
+  const r = await page.goto(url(path), { waitUntil: "networkidle0" });
+  if (!r || r.status() !== 200) fails.push(`${path} status ${r && r.status()}`);
+  if ((await page.$eval("h1", (el) => el.textContent)) !== h1) fails.push(`${path} h1`);
+  const main = await page.$eval("main", (el) => el.textContent);
+  if (leaksTodo(main)) fails.push(`${path} shows a TODO note`);
+  if ((await page.$$(".offer")).length !== 2) fails.push(`${path} should list 2 offers`);
+  if (!(await page.$("form.cform input[type=checkbox][name=consent][required]"))) fails.push(`${path} form has no required consent box`);
+}
+
+// 12. contact API from the page's own origin: honeypot is swallowed, missing consent is refused
+const post = (body) =>
+  page.evaluate(async (b) => {
+    const r = await fetch("/api/contact/", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(b) });
+    return { status: r.status, text: await r.text() };
+  }, body);
+const valid = { name: "Smoke Test", business: "CI", email: "smoke@example.com", message: "Automated smoke test, please ignore.", consent: true, locale: "pt" };
+const hp = await post({ ...valid, website: "http://spam.example" });
+if (hp.status !== 200) fails.push(`honeypot post: ${hp.status}`);
+const noConsent = await post({ ...valid, consent: false });
+if (noConsent.status !== 400 || !/consentimento/.test(noConsent.text)) fails.push(`no-consent post: ${noConsent.status} ${noConsent.text}`);
+// a real submission only against a local server — never email Simon from a prod smoke run
+if (/localhost|127\.0\.0\.1/.test(BASE)) {
+  await page.goto(url("/pt/empresas/"), { waitUntil: "networkidle0" });
+  await page.type("input[name=name]", valid.name);
+  await page.type("input[name=business]", valid.business);
+  await page.type("input[name=email]", valid.email);
+  await page.type("textarea[name=message]", valid.message);
+  await page.click("input[name=consent]");
+  await page.click(".cform button[type=submit]");
+  await page.waitForFunction(() => document.querySelector(".cform__status")?.textContent.trim(), { timeout: 15000 });
+  const status = await page.$eval(".cform__status", (el) => el.textContent);
+  // locally: "not configured" without Resend vars, "sent" with them
+  if (!/não está configurado|foi enviada/.test(status)) fails.push(`form submit status: ${status}`);
+}
+
+// 13. no horizontal overflow on a phone, in either language
 await page.setViewport({ width: 360, height: 780, isMobile: true, hasTouch: true });
-for (const path of ["/", "/pt/", "/security/", "/pt/seguranca/"]) {
+for (const path of ["/", "/pt/", "/security/", "/pt/seguranca/", "/services/", "/pt/empresas/"]) {
   await page.goto(url(path), { waitUntil: "networkidle0" });
   const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (over > 0) fails.push(`${path} overflows by ${over}px at 360px`);

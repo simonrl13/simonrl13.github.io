@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import LangSwitch from "@/components/LangSwitch";
 import SheetFrame from "@/components/SheetFrame";
-import { alternatesFor, getBundle, languageAlternates, type Bundle } from "@/content/i18n";
+import ContactForm from "@/components/ContactForm";
+import { alternatesFor, fill, getBundle, languageAlternates, type Bundle } from "@/content/i18n";
 import { locales, pageForSlug, pageSlugs, pathFor, type PageKey } from "@/content/i18n/routes";
 
 /* Sub-pages, by localized slug (/security/, /pt/seguranca/). Every page in
@@ -69,7 +70,70 @@ export default async function SubPage({ params }: Props) {
 
 const BODIES: Record<PageKey, (b: Bundle) => React.ReactNode> = {
   security: SecurityBody,
+  services: ServicesBody,
 };
+
+function ServicesBody({ services: s, locale }: Bundle) {
+  return (
+    <section className="section" aria-labelledby="services-title">
+      <header className="sec-head">
+        <div>
+          <p className="sec-head__eyebrow mono">{s.eyebrow}</p>
+          <h1 id="services-title">{s.title}</h1>
+        </div>
+        <p>{s.intro}</p>
+      </header>
+
+      <div className="offers">
+        {s.offers.map((offer) => (
+          <article className="offer" key={offer.id} aria-labelledby={`offer-${offer.id}`}>
+            <p className="offer__kicker mono">{offer.kicker}</p>
+            <h2 id={`offer-${offer.id}`}>{offer.outcome}</h2>
+            <h3 className="offer__sub">{s.labels.included}</h3>
+            <ul className="offer__list">
+              {offer.included.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            <dl className="offer__terms">
+              <div>
+                <dt>{s.labels.timeline}</dt>
+                <dd className="mono">{offer.timeline}</dd>
+              </div>
+              <div>
+                <dt>{s.labels.price}</dt>
+                <dd className="mono">{offer.price}</dd>
+              </div>
+            </dl>
+            <a className="btn btn--ghost" href="#contact-form">
+              {s.labels.cta}
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <h2 className="subpage__h" id="data">{s.data.title}</h2>
+      <p className="subpage__p">{s.data.intro}</p>
+      <ol className="legend legend--single" aria-labelledby="data">
+        {s.data.items.map((item, i) => (
+          <li className="legend__row" key={item.title}>
+            <span className="legend__key mono" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div className="legend__def">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <h2 className="subpage__h" id="contact-form">{s.form.title}</h2>
+      <p className="subpage__p">{s.form.intro}</p>
+      <ContactForm copy={{ ...s.form, failed: fill(s.form.failed) }} locale={locale} />
+    </section>
+  );
+}
 
 function SecurityBody({ security: s, ui }: Bundle) {
   return (

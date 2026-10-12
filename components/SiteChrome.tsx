@@ -21,12 +21,16 @@ export default function SiteChrome({
   ui,
   locale,
   alternates,
+  servicesHref,
 }: {
   ui: Bundle["ui"];
   locale: string;
   alternates: Alternate[];
+  servicesHref: string;
 }) {
   const NAV_LINKS = NAV_TARGETS.map((t) => ({ href: `#${t}`, label: ui.nav[t] }));
+  // a page link, not a section: scroll-spy never marks it active
+  if (ui.navServices) NAV_LINKS.push({ href: servicesHref, label: ui.navServices });
   const traceRef = useRef<HTMLSpanElement>(null);
   const toplineRef = useRef<HTMLSpanElement>(null);
   const railNodeRefs = useRef<(HTMLLIElement | null)[]>([]);

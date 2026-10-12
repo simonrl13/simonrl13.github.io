@@ -2,10 +2,12 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { NextRequest } from "next/server";
 import { buildSystemPrompt } from "@/content/assistant-context";
 import { fill, getBundle } from "@/content/i18n";
-import { checkRateLimit } from "./rate-limit";
+import { createLimiter } from "@/lib/rate-limit";
 import { ALLOWED_ORIGINS, CHAT_LIMITS, CHAT_MODEL } from "./config";
 
 export const runtime = "nodejs";
+
+const checkRateLimit = createLimiter({ name: "chat", ...CHAT_LIMITS });
 
 type IncomingMessage = { role: "user" | "assistant"; content: string };
 

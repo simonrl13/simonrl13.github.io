@@ -44,10 +44,18 @@
   (rules first, then `<profile>` as reference data).
 - `components/` — `SiteChrome` (rail, nav, mobile menu, `ThemeToggle`), `SheetFrame`,
   `RevealController`, `WorkCarousel` (cards, `ProjectDialog`), `IsoStack`, `ChatConsole`,
-  `sections/*`.
+  `ContactForm`, `LangSwitch`, `sections/*`.
 - `app/api/chat/` — `route.ts` (Claude Haiku 4.5, streaming), `config.ts` (model + limits,
-  env-tunable), `rate-limit.ts` (Upstash per-IP + daily cap, fail closed; in-memory
-  fallback when Upstash env vars are absent).
+  env-tunable, `ALLOWED_ORIGINS`).
+- `app/api/contact/route.ts` — services contact form → one plain-text email via Resend
+  (`fetch`, no SDK). Env: `RESEND_API_KEY`, `CONTACT_TO`, `CONTACT_FROM` (Vercel only;
+  never write `CONTACT_TO`’s value anywhere). Stores and logs nothing from visitors.
+- `lib/rate-limit.ts` — `createLimiter()`: Upstash per-IP + daily cap, fail closed;
+  in-memory fallback when Upstash env vars are absent. Chat 8/10 min + 200/day,
+  contact 3/60 min + 20/day.
+- `content/services.ts` (EN) + `pt.ts` `services` — /services and /pt/empresas (primary):
+  two offers, LGPD data block, form copy. `[PRAZO]`/`[PRICE]` stay visible until Simon fills
+  them; never invent prices, clients, numbers or testimonials.
 - `scripts/cv-source.html` — the CV's single source. `npm run cv` → public PDF without
   the phone; `npm run cv:full` → private PDF (phone from `CV_PHONE`) in gitignored
   `cv-private/`.
@@ -114,10 +122,12 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
   together. It plays once per tab session; later loads get `data-drawn`.
 - CSP (`next.config.mjs`) is strict apart from `'unsafe-inline'`: any new third-party
   script, font, image or API origin needs a deliberate CSP change + SECURITY.md entry.
-- `@upstash/ratelimit` *allows* on timeout by default — `rate-limit.ts` treats
+- `@upstash/ratelimit` *allows* on timeout by default — `lib/rate-limit.ts` treats
   `reason === "timeout"` as a block. Keep it that way.
 
 ## Open
+- Services: Simon fills `[PRAZO]` and `[PRICE]` (EN + PT); verify "never used to train
+  models" against each AI provider’s terms before adding it.
 - NDA freelance project details → CV + journey (Simon to send).
 - Rogério Freire card has a placeholder — needs the artwork images (centred in the 5:2
   mat, `object-fit: contain`) and the live URL. LABNOV live URL missing.

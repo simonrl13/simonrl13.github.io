@@ -26,7 +26,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <>
-      <SiteChrome ui={ui} locale={locale} alternates={alternatesFor()} />
+      <SiteChrome ui={ui} locale={locale} alternates={alternatesFor()} servicesHref={pathFor(locale, "services")} />
       <SheetFrame />
       <RevealController />
       <ChatConsole
@@ -50,6 +50,9 @@ export default async function Page({ params }: Props) {
         <p>
           <span className="mono">SL&#8209;2026 · rev. 2026.5</span> — {ui.footer.builtWith}{" "}
           <a href={pathFor(locale, "security")}>{ui.footer.security}</a>.
+        </p>
+        <p>
+          <a href={pathFor(locale, "services")}>{b.services.footerLink}</a>
         </p>
       </footer>
     </>

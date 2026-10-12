@@ -10,6 +10,7 @@ export const defaultLocale = cfg.defaultLocale;
 /** Sub-pages (the home page is ""). Each needs a slug in every locale. */
 export const pageSlugs = {
   security: { en: "security", pt: "seguranca" },
+  services: { en: "services", pt: "empresas" },
 } as const satisfies Record<string, Record<string, string>>;
 
 export type PageKey = keyof typeof pageSlugs;
