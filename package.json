@@ -12,7 +12,7 @@
     "shots": "node scripts/shots.mjs",
     "smoke": "node scripts/smoke.mjs",
     "cv": "node scripts/render-cv.mjs",
-    "redteam": "node scripts/redteam.mjs",
+    "redteam": "node --env-file-if-exists=.env.local scripts/redteam.mjs",
     "cv:full": "node --env-file-if-exists=.env.local scripts/render-cv.mjs --full"
   },
   "dependencies": {
