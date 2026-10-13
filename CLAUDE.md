@@ -40,8 +40,10 @@
   (next.config rewrites to `app/[locale]` as /en; /en/* redirects back). Adding French = `fr.ts`,
   one line in `bundles`, `"fr"` in locales.json, a slug per page. Dialog case studies stay EN.
   The switcher remembers the choice but **never redirects** — the URL always wins.
-- `content/assistant-context.ts` — builds the chat system prompt from the files above
-  (rules first, then `<profile>` as reference data).
+- `content/assistant-context.ts` — builds the chat system prompt from the files above:
+  rules, `<facts>` (only source for claims about Simon, plus `CLARIFICATIONS`), `<services>`,
+  `<security>`, then the no-embellishment rule again. `npm run redteam` judges fit answers
+  against `<facts>` with Claude Opus 5.5 (needs `ANTHROPIC_API_KEY` in `.env.local`).
 - `components/` — `SiteChrome` (rail, nav, mobile menu, `ThemeToggle`), `SheetFrame`,
   `RevealController`, `WorkCarousel` (cards, `ProjectDialog`), `IsoStack`, `ChatConsole`,
   `ContactForm`, `LangSwitch`, `sections/*`.
