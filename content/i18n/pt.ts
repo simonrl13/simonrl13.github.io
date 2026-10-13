@@ -283,7 +283,7 @@ export const pt: Bundle = {
       },
       {
         title: "Testes de prompt injection",
-        body: "Seis testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado e pressioná-lo a revelar dados privados — mais uma pergunta normal, para checar que ele continua respondendo. Os seis passaram no site em produção. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
+        body: "Seis testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo — mais uma pergunta normal, para checar que ele continua respondendo. Os sete passaram no site em produção. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
       },
       {
         title: "Suas perguntas e sua privacidade",
