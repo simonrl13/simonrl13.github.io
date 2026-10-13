@@ -128,7 +128,10 @@ function loadFacts() {
     execFileSync(process.execPath, [tsc, "content/assistant-context.ts", "--outDir", out, "--module", "commonjs", "--target", "es2022", "--resolveJsonModule", "--esModuleInterop", "--skipLibCheck"], { stdio: "inherit" });
     const { buildSystemPrompt } = createRequire(import.meta.url)(path.resolve(out, "assistant-context.js"));
     const prompt = buildSystemPrompt();
-    const facts = prompt.slice(prompt.lastIndexOf("<facts>"), prompt.lastIndexOf("</facts>") + "</facts>".length);
+    // the tags also appear inside rules, so match the block's own lines
+    const start = prompt.indexOf("\n<facts>\n");
+    const end = prompt.indexOf("\n</facts>", start);
+    const facts = start < 0 || end < 0 ? "" : prompt.slice(start + 1, end + "\n</facts>".length);
     if (facts.length < 500) throw new Error("could not find the <facts> block");
     return facts;
   } finally {
