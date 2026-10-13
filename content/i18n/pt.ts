@@ -291,7 +291,7 @@ export const pt: Bundle = {
       },
       {
         title: "O formulário de contato",
-        body: "Os contatos de empresas vão direto para o meu e-mail pelo Resend, um serviço de envio de e-mails. Este site não guarda nem registra nada do que é enviado. Cada campo é validado no servidor, o formulário só aceita requisições deste site, um campo-armadilha escondido barra robôs simples, e limites de 3 mensagens por hora por conexão e 20 por dia seguram enxurradas — se o limitador não responder, o formulário se recusa a enviar.",
+        body: "Os contatos de empresas vão direto para o meu e-mail pelo Resend, um serviço de envio de e-mails dos Estados Unidos. Este site não guarda nem registra nada do que é enviado. Cada campo é validado no servidor, o formulário só aceita requisições deste site, um campo-armadilha escondido barra robôs simples, e limites de 3 mensagens por hora por conexão e 20 por dia seguram enxurradas — se o limitador não responder, o formulário se recusa a enviar.",
       },
       {
         title: "Cabeçalhos de segurança",
@@ -338,37 +338,42 @@ export const pt: Bundle = {
 
     labels: {
       included: "O que está incluído",
+      audience: "Para quem é",
+      pilot: "Como funciona o piloto",
       timeline: "Prazo",
       price: "Investimento",
-      cta: "Quero saber mais",
     },
+
+    pilot: "Primeiro, um piloto com escopo fechado: o escopo é combinado por escrito, 50% é pago no início, e os primeiros clientes têm desconto.",
 
     offers: [
       {
         id: "assistant",
         kicker: "Assistente de atendimento",
         outcome: "Seus clientes recebem respostas no WhatsApp às 23h, a partir dos seus próprios documentos.",
+        audience: "Escritórios de contabilidade, clínicas e quem vende cursos.",
         included: [
           "Um assistente configurado com os documentos que você já tem: perguntas frequentes, tabelas de preço, políticas, catálogo.",
           "Respostas no WhatsApp da sua empresa, a qualquer hora do dia.",
           "O que não estiver nos seus documentos é encaminhado para você, em vez de ser inventado.",
           "Limites de uso e de gasto, para o custo mensal ficar previsível.",
         ],
-        timeline: "[PRAZO]",
-        price: "a partir de R$ [PRICE]",
+        timeline: "Prazo definido na proposta",
+        price: "Peça um orçamento",
       },
       {
         id: "documents",
         kicker: "Processamento de documentos",
         outcome: "Pare de redigitar recibos, boletos e documentos escaneados.",
+        audience: "Escritórios de contabilidade, profissionais de escrituração e distribuidoras.",
         included: [
           "Os campos que você realmente usa — valores, datas, vencimentos, CNPJ/CPF — extraídos automaticamente.",
           "Funciona com fotos, PDFs e papel escaneado.",
           "Campos com dúvida são marcados para uma pessoa conferir.",
           "Resultado entregue numa planilha ou no sistema que você já usa.",
         ],
-        timeline: "[PRAZO]",
-        price: "a partir de R$ [PRICE]",
+        timeline: "Prazo definido na proposta",
+        price: "Peça um orçamento",
       },
     ],
 
@@ -388,16 +393,14 @@ export const pt: Bundle = {
           title: "Excluídos ao fim do projeto",
           body: "Quando o projeto termina, os dados do cliente que eu guardo para ele são excluídos.",
         },
-        {
-          title: "Este formulário",
-          body: "O que você enviar abaixo vai direto para o meu e-mail, só para eu te responder. Este site não guarda nada.",
-        },
       ],
     },
 
     form: {
       title: "Conte sobre a sua empresa",
       intro: "Eu respondo por e-mail.",
+      privacy:
+        "Este formulário coleta seu nome, empresa, e-mail e mensagem. Eles chegam à minha caixa de entrada por e-mail, pelo Resend, um serviço de e-mail dos Estados Unidos, só para eu poder responder. Nada fica guardado neste site.",
       name: "Seu nome",
       business: "Empresa",
       email: "E-mail",

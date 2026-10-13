@@ -41,7 +41,7 @@ export const securityPage = {
     },
     {
       title: "The contact form",
-      body: "Business enquiries from the services page go straight to my inbox through Resend, an email delivery service. This site saves nothing and logs nothing from them. Every field is checked on the server, the form only accepts requests from this site, a hidden trap field catches simple bots, and limits of 3 messages per hour per connection and 20 per day stop floods — if the limiter can’t be reached, the form refuses to send.",
+      body: "Business enquiries from the services page go straight to my inbox through Resend, a US-based email delivery service. This site saves nothing and logs nothing from them. Every field is checked on the server, the form only accepts requests from this site, a hidden trap field catches simple bots, and limits of 3 messages per hour per connection and 20 per day stop floods — if the limiter can’t be reached, the form refuses to send.",
     },
     {
       title: "Security headers",

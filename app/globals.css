@@ -1371,7 +1371,11 @@ main.subpage { padding-left: 0; }
 .offer__terms div { background: var(--ink); padding: 10px 12px; }
 .offer__terms dt { font-size: .75rem; color: var(--paper-dim); }
 .offer__terms dd { color: var(--paper); overflow-wrap: anywhere; }
-.offer .btn { align-self: flex-start; }
+.offer__audience { font-size: .92rem; }
+.offer__audience strong, .offers__pilot strong { color: var(--paper); font-weight: 600; }
+.offer__terms a { color: var(--brass); border-bottom: 1px solid currentColor; }
+.offer__terms a:hover { color: var(--gold); }
+.offers__pilot { margin-bottom: 18px; }
 
 .cform {
     display: grid;

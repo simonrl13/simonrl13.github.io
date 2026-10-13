@@ -84,11 +84,18 @@ function ServicesBody({ services: s, locale }: Bundle) {
         <p>{s.intro}</p>
       </header>
 
+      <p className="subpage__p offers__pilot">
+        <strong>{s.labels.pilot}:</strong> {s.pilot}
+      </p>
+
       <div className="offers">
         {s.offers.map((offer) => (
           <article className="offer" key={offer.id} aria-labelledby={`offer-${offer.id}`}>
             <p className="offer__kicker mono">{offer.kicker}</p>
             <h2 id={`offer-${offer.id}`}>{offer.outcome}</h2>
+            <p className="offer__audience">
+              <strong>{s.labels.audience}:</strong> {offer.audience}
+            </p>
             <h3 className="offer__sub">{s.labels.included}</h3>
             <ul className="offer__list">
               {offer.included.map((line) => (
@@ -102,12 +109,11 @@ function ServicesBody({ services: s, locale }: Bundle) {
               </div>
               <div>
                 <dt>{s.labels.price}</dt>
-                <dd className="mono">{offer.price}</dd>
+                <dd className="mono">
+                  <a href="#contact-form">{offer.price} →</a>
+                </dd>
               </div>
             </dl>
-            <a className="btn btn--ghost" href="#contact-form">
-              {s.labels.cta}
-            </a>
           </article>
         ))}
       </div>
@@ -130,6 +136,7 @@ function ServicesBody({ services: s, locale }: Bundle) {
 
       <h2 className="subpage__h" id="contact-form">{s.form.title}</h2>
       <p className="subpage__p">{s.form.intro}</p>
+      <p className="subpage__p cform__privacy">{s.form.privacy}</p>
       <ContactForm copy={{ ...s.form, failed: fill(s.form.failed) }} locale={locale} />
     </section>
   );

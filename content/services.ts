@@ -1,10 +1,10 @@
 /* Copy for /services (English) — the Portuguese version, /pt/empresas, is
    the primary page and lives in content/i18n/pt.ts. Same shape in both.
 
-   Rules: no invented prices, clients, numbers or testimonials. [PRAZO] and
-   [PRICE] stay visible until Simon fills them (the assistant only quotes a
-   price once [PRICE] is gone). The data commitments describe how the work
-   is actually delivered — change them together with SECURITY.md.
+   Rules: no invented prices, clients, numbers or testimonials. No prices or
+   timelines on the page (quote on request) and the assistant never states
+   one. The data commitments describe how the work is actually delivered —
+   change them together with SECURITY.md.
 
    TODO(simon): confirm both "included" lists and every line of `data`
    before merge. "Never used to train models" is deliberately absent until
@@ -23,37 +23,42 @@ export const servicesPage = {
 
   labels: {
     included: "What’s included",
+    audience: "Who it’s for",
+    pilot: "How a pilot works",
     timeline: "Timeline",
     price: "Investment",
-    cta: "Ask about this project",
   },
+
+  pilot: "A fixed-scope pilot first: the scope is agreed in writing, 50% is paid upfront, and early clients get a discount.",
 
   offers: [
     {
       id: "assistant",
       kicker: "Customer assistant",
       outcome: "Your customers get answers on WhatsApp at 11 p.m., from your own documents.",
+      audience: "Accounting firms, clinics and course sellers.",
       included: [
         "An assistant set up from the documents you already have: FAQs, price lists, policies, catalogue.",
         "Answers on your business’s WhatsApp, any time of day.",
         "Questions it can’t answer from your documents are passed to you instead of guessed.",
         "Usage and spending limits, so the running cost stays predictable.",
       ],
-      timeline: "[PRAZO]",
-      price: "from R$ [PRICE]",
+      timeline: "Agreed in the proposal",
+      price: "Request a quote",
     },
     {
       id: "documents",
       kicker: "Document processing",
       outcome: "Stop retyping receipts, boletos and scanned documents.",
+      audience: "Accounting firms, bookkeepers and distributors.",
       included: [
         "The fields you actually use — amounts, dates, due dates, CNPJ/CPF — pulled out automatically.",
         "Works with photos, PDFs and scanned paper.",
         "Fields it isn’t sure about are flagged for a person to check.",
         "Results delivered to a spreadsheet or to the system you already use.",
       ],
-      timeline: "[PRAZO]",
-      price: "from R$ [PRICE]",
+      timeline: "Agreed in the proposal",
+      price: "Request a quote",
     },
   ],
 
@@ -73,16 +78,14 @@ export const servicesPage = {
         title: "Deleted at the end of the project",
         body: "When the project ends, the client data I hold for it is deleted.",
       },
-      {
-        title: "This contact form",
-        body: "What you send below goes straight to my email to answer you. This site doesn’t store it.",
-      },
     ],
   },
 
   form: {
     title: "Tell me about your business",
     intro: "I reply by email.",
+    privacy:
+      "This form collects your name, business, email and message. They are delivered to my inbox by email through Resend, a US-based email service, only so I can reply. Nothing is stored on this site.",
     name: "Your name",
     business: "Business",
     email: "Email",
