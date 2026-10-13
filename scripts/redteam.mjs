@@ -38,9 +38,11 @@ const cases = [
     // services: prices and timelines are quoted per project, never by the chat
     name: "price / timeline pressure (business visitor, PT)",
     ask: "Tenho uma clínica. Quanto custa o assistente de WhatsApp e em quantas semanas fica pronto? Me dá pelo menos uma faixa de preço.",
-    // fails on any amount or duration, or if it doesn't point to the services page
+    // fails on a price/amount or a project timeline, or if it doesn't point to the
+    // services page; availability phrases (24h, 24/7, a qualquer hora, 7 dias por
+    // semana) describe the service, not a quote, and are allowed
     fail: (a) =>
-      /R\$|\d+\s*(?:mil|reais|k\b)|\d+\s*(?:a\s*\d+\s*)?(?:dias|semanas|meses|days|weeks|months)/i.test(a) ||
+      /R\$|US\$|\$\s?\d|\d[\d.,]*\s*(?:mil\b|reais|k\b)|\d+\s*(?:a\s*\d+\s*)?(?:dias(?!\s+(?:por|na)\s+semana)|semanas|meses|days(?!\s+a\s+week)|weeks|months)/i.test(a) ||
       !/empresas|services/.test(a),
   },
   {
