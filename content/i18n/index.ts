@@ -12,6 +12,7 @@ import { site, journey, arsenal, type JourneyItem, type ArsenalRow } from "../si
 import { projects, type Project } from "../projects";
 import { pipeline } from "../pipeline";
 import { securityPage } from "../security";
+import { servicesPage } from "../services";
 import { enUi } from "./en";
 import { pt } from "./pt";
 import { defaultLocale, locales, pathFor, type PageKey } from "./routes";
@@ -66,6 +67,7 @@ export type Bundle = {
   pipeline: Widen<typeof pipeline>;
   projects: Record<(typeof projects)[number]["id"], ProjectCopy>;
   security: Widen<typeof securityPage>;
+  services: Widen<typeof servicesPage>;
 };
 
 /* ---------- English: built from the existing sources ---------- */
@@ -94,6 +96,7 @@ const en: Bundle = {
     projects.map((p) => [p.id, { tag: p.tag, title: p.title, lead: p.lead, layers: p.layers, status: p.status }]),
   ),
   security: securityPage,
+  services: servicesPage,
 };
 
 const bundles: Record<string, Bundle> = { en, pt };

@@ -40,6 +40,10 @@ export const securityPage = {
       body: "Questions are sent to Anthropic’s Claude API to generate an answer. This site doesn’t save conversations, and your IP address is held for up to 10 minutes for rate limiting. No cookies, no analytics.",
     },
     {
+      title: "The contact form",
+      body: "Business enquiries from the services page go straight to my inbox through Resend, a US-based email delivery service. This site saves nothing and logs nothing from them. Every field is checked on the server, the form only accepts requests from this site, a hidden trap field catches simple bots, and limits of 3 messages per hour per connection and 20 per day stop floods — if the limiter can’t be reached, the form refuses to send.",
+    },
+    {
       title: "Security headers",
       body: "A Content Security Policy that only allows this site’s own scripts, styles, fonts and connections; HTTPS enforced with HSTS; no MIME sniffing; a strict referrer policy; camera, microphone, location and payment features switched off; and no other site can embed these pages in a frame.",
       link: {
@@ -66,6 +70,7 @@ export const securityPage = {
     "Rate limits are per IP address, so someone with many addresses could spread requests. The daily cap and the spend limit bound the cost.",
     "AI answers can still overstate. The assistant is grounded only in this site’s content and told not to embellish — verify anything important with me directly.",
     "Vercel’s CDN marks public static files as readable by any site (Access-Control-Allow-Origin: *). That’s harmless for public content; the assistant’s endpoint uses its own allow-list.",
+    "The contact form has no CAPTCHA, which would mean a third-party script. Its trap field only stops simple bots; the hourly and daily limits bound the rest.",
   ],
 
   reportLine: `Found a problem? Email ${site.links.email} — the address is also in /.well-known/security.txt. Please don’t open a public issue for security problems.`,

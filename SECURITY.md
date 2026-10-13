@@ -1,7 +1,8 @@
 # Security
 
 Simon Laborde's portfolio: a Next.js site on Vercel (www.simonlaborde.com) with
-one server endpoint, an "Ask about my work" chat backed by the Claude API.
+two server endpoints: an "Ask about my work" chat backed by the Claude API, and
+a business contact form (`/services`, `/pt/empresas`) that emails Simon via Resend.
 This file is kept in step with the code: it changes whenever an endpoint,
 dependency, data flow, header or limit does.
 A plain-language summary for visitors lives at
@@ -14,7 +15,12 @@ A plain-language summary for visitors lives at
   workspace with its own key and a monthly Console spend limit; the key is
   scoped to Vercel *Production* only.
 - **The Upstash Redis credentials** that back the rate limits.
-- **Visitor privacy**: chat questions and IP addresses.
+- **The Resend API key** (email delivery for the contact form) and Simon's
+  inbox, which receives the form. The destination address lives only in the
+  `CONTACT_TO` environment variable — never in the repo, the client bundle or
+  logs.
+- **Visitor privacy**: chat questions, IP addresses, and the name, business,
+  email and message sent through the contact form.
 - **Accuracy and integrity of the content.** The site is a job-application
   asset; a wrong claim is a real harm (reputation).
 - **Personal data in the public CV.** The phone number is kept out of it.
@@ -29,6 +35,9 @@ A plain-language summary for visitors lives at
 | `POST /api/chat` | System-prompt extraction | The prompt contains only public site content and the public contact email — nothing secret to leak | `npm run redteam` (extraction probe) |
 | Chat output in the browser | XSS via model output | Answers rendered as React text nodes; never HTML or Markdown | Code review; CodeQL |
 | `POST /api/chat` from another website | Cross-origin abuse from a visitor's browser | Explicit origin allow-list (`www.simonlaborde.com`, `simonlaborde.com`; localhost outside production): a foreign `Origin` gets **403** on preflight and POST, before the body is read, with no CORS headers; allowed origins get their own origin echoed back, never `*` | Local curl matrix (foreign / own / localhost / no Origin) in the CORS PR |
+| `POST /api/contact` (public) | Spam, email flooding, scripted abuse | Honeypot field (filled → 200, nothing sent, no limit spent); per-IP sliding window (3 / 60 min) **and** daily cap (20 / UTC day) in Upstash Redis via the same limiter as the chat (`lib/rate-limit.ts`), **fails closed** (503) | Local curl: 4th valid post from one IP → 429; `npm run smoke` (honeypot, consent) |
+| `POST /api/contact` | Malformed payloads; email header injection; HTML injection into the email | Body ≤ 8 KB (413); JSON object with string fields within length limits (name 100, business 120, email 254, message 10–3000) and an email shape check, all **before** the limiter; control characters (CR/LF included) collapsed in single-line fields, so the subject and Reply-To can't carry extra headers; LGPD consent must be `true`; the email is plain text only | Local curl matrix (this PR): bad JSON, array body, `Bcc:` smuggled via newline, short/long fields, missing consent → 400 |
+| `POST /api/contact` from another website or a script | Cross-origin abuse | Requires an allow-listed `Origin` (same list as the chat); a missing or foreign Origin gets **403** before the body is read; no CORS headers are sent | Local curl (no Origin / foreign Origin → 403) |
 | Static pages | XSS, clickjacking, MIME sniffing | React escaping; `dangerouslySetInnerHTML` only on repo-authored strings in `content/`; CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff` | Headless browser check: no CSP violations (PR #28); `curl -I` |
 | Build and dependencies | Vulnerable or malicious package; compromised action; third-party outage or tampering at build time | Lockfile; runtime `npm audit` gate in CI; Dependabot; actions pinned to commit SHAs; packages vetted before install (age, downloads, maintainers); fonts self-hosted from `app/fonts` (`next/font/local`, SIL OFL), so neither builds nor visitors contact Google Fonts | CI `verify` job; build succeeds with Google Fonts unreachable (PR below) |
 | Repository | Committed secret | gitleaks pre-commit hook + full-history gitleaks in CI; GitHub secret scanning | CI `secret-scan` job |
@@ -50,11 +59,12 @@ OWASP Top 10 for LLM Applications (2025):
   daily limits that fail closed, Console spend limit.
 
 OWASP Top 10 (2021):
-- **A03 Injection** — React escaping, CSP.
+- **A03 Injection** — React escaping, CSP; contact-form fields validated and
+  stripped of control characters, so no email header injection.
 - **A05 Security Misconfiguration** — security headers on every route
   ([securityheaders.com](https://securityheaders.com/?q=www.simonlaborde.com):
   grade **A** on 2026-10-07, capped only by the documented `'unsafe-inline'`);
-  explicit CORS allow-list on the chat API.
+  explicit origin allow-lists on both APIs.
 - **A06 Vulnerable and Outdated Components** — runtime audit gate, Dependabot.
 - **A08 Software and Data Integrity Failures** — SHA-pinned actions,
   lockfile, CodeQL (JavaScript/TypeScript and GitHub Actions).
@@ -76,14 +86,22 @@ OWASP Top 10 (2021):
 - **Chat questions** are sent to Anthropic's Claude API (Claude Haiku 4.5)
   to generate an answer and are handled under Anthropic's API terms. This site
   doesn't log or store them; only failures are logged, without message content.
+- **Contact form entries** (name, business, email, message, page language)
+  are sent once, as a plain-text email, through Resend (US-based email
+  delivery) to Simon's inbox, with the visitor's email as Reply-To. This
+  site stores nothing and logs nothing from them — only failure status codes.
+  Resend keeps its own delivery logs under its retention policy. Consent is
+  required (LGPD checkbox) and the page explains how the data is used.
 - **IP addresses** are used as the per-IP rate-limit key in Upstash Redis and
-  expire with the 10-minute window. The daily counter holds no visitor data.
-  Upstash analytics are off.
+  expire with the window (chat 10 minutes, contact form 60 minutes). The daily
+  counters hold no visitor data. Upstash analytics are off.
 - **Hosting logs**: Vercel keeps its own platform request logs under its
   retention policy; this project doesn't add to them.
 - **Fonts and third parties**: all fonts are served from this site; pages make
   no third-party requests (enforced by the CSP).
-- **Browser storage**: `localStorage.theme` (the chosen theme) and
+- **Browser storage**: `localStorage.theme` (the chosen theme),
+  `localStorage.lang` (the language last picked in the switcher — remembered,
+  never used to redirect) and
   `sessionStorage.drawn` (skip the draw-in animation on reloads). No cookies,
   no analytics, so no consent banner is needed.
 - **The chat tells visitors** that answers are AI-generated, that questions
@@ -108,8 +126,13 @@ OWASP Top 10 (2021):
   www.simonlaborde.com (path preserved); no site content is hosted there.
 - **IP-based limits** can be spread across many IPs. The global daily cap and
   the Console spend limit bound the cost.
-- **If the Upstash environment variables are missing**, the endpoint falls back
-  to per-instance in-memory limits and logs an error in production.
+- **If the Upstash environment variables are missing**, both endpoints fall
+  back to per-instance in-memory limits and log an error in production.
+- **The contact form has no CAPTCHA** (it would mean a third-party script). The
+  honeypot only stops naive bots; the per-IP and daily limits bound the rest,
+  and a flood can use up the day's 20 messages — visitors are then pointed to
+  the email address. If `RESEND_API_KEY`, `CONTACT_TO` or `CONTACT_FROM` is
+  missing, the form answers 503 and logs an error, without the payload.
 - **LLM answers can still overstate.** Grounding and the no-embellishment rule
   reduce it; the chat note asks visitors to verify with Simon directly.
 - **The injection tests are probes, not proof.** Six heuristic cases plus
