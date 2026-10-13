@@ -41,7 +41,7 @@ export const servicesPage = {
         "An assistant set up from the documents you already have: FAQs, price lists, policies, catalogue.",
         "Answers on your business’s WhatsApp, any time of day.",
         "Questions it can’t answer from your documents are passed to you instead of guessed.",
-        "Usage and spending limits, so the running cost stays predictable.",
+        "Usage and spending limits, so usage costs stay predictable.",
       ],
       timeline: "Agreed in the proposal",
       price: "Request a quote",
@@ -50,12 +50,12 @@ export const servicesPage = {
       id: "documents",
       kicker: "Document processing",
       outcome: "Stop retyping receipts, boletos and scanned documents.",
-      audience: "Accounting firms, bookkeepers and distributors.",
+      audience: "Accounting firms and distributors.",
       included: [
         "The fields you actually use — amounts, dates, due dates, CNPJ/CPF — pulled out automatically.",
         "Works with photos, PDFs and scanned paper.",
         "Fields it isn’t sure about are flagged for a person to check.",
-        "Results delivered to a spreadsheet or to the system you already use.",
+        "Results delivered to a spreadsheet, or in a format your system can import.",
       ],
       timeline: "Agreed in the proposal",
       price: "Request a quote",
@@ -66,9 +66,10 @@ export const servicesPage = {
     title: "How your data is handled",
     intro: "In plain language — and written into the project agreement.",
     items: [
+      // TODO(simon): per-tenant isolation test required before the first pilot.
       {
         title: "Hosted on my infrastructure, isolated per client",
-        body: "Your project’s data is stored on infrastructure I run, not in your accounts, and kept separate for each client: no client can reach another client’s data.",
+        body: "By default, your project’s data is stored on infrastructure I run, not in your accounts, and kept separate for each client: no client can reach another client’s data.",
       },
       {
         title: "Processed by a US-based AI provider",
@@ -76,7 +77,7 @@ export const servicesPage = {
       },
       {
         title: "Deleted at the end of the project",
-        body: "When the project ends, the client data I hold for it is deleted.",
+        body: "When the project ends, the client data I hold for it is deleted. The providers used (AI and email) keep temporary logs under their own terms, described in the agreement.",
       },
     ],
   },
@@ -85,7 +86,7 @@ export const servicesPage = {
     title: "Tell me about your business",
     intro: "I reply by email.",
     privacy:
-      "This form collects your name, business, email and message. They are delivered to my inbox by email through Resend, a US-based email service, only so I can reply. Nothing is stored on this site.",
+      "This form collects your name, business, email and message. They are delivered to my inbox by email through Resend, a US-based email service, only so I can reply. Resend keeps a temporary copy of the message. Nothing is stored on this site.",
     name: "Your name",
     business: "Business",
     email: "Email",

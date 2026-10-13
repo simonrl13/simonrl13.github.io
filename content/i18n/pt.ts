@@ -356,7 +356,7 @@ export const pt: Bundle = {
           "Um assistente configurado com os documentos que você já tem: perguntas frequentes, tabelas de preço, políticas, catálogo.",
           "Respostas no WhatsApp da sua empresa, a qualquer hora do dia.",
           "O que não estiver nos seus documentos é encaminhado para você, em vez de ser inventado.",
-          "Limites de uso e de gasto, para o custo mensal ficar previsível.",
+          "Limites de uso e de gasto, para o custo de uso ficar previsível.",
         ],
         timeline: "Prazo definido na proposta",
         price: "Peça um orçamento",
@@ -365,12 +365,12 @@ export const pt: Bundle = {
         id: "documents",
         kicker: "Processamento de documentos",
         outcome: "Pare de redigitar recibos, boletos e documentos escaneados.",
-        audience: "Escritórios de contabilidade, profissionais de escrituração e distribuidoras.",
+        audience: "Escritórios de contabilidade e distribuidoras.",
         included: [
           "Os campos que você realmente usa — valores, datas, vencimentos, CNPJ/CPF — extraídos automaticamente.",
           "Funciona com fotos, PDFs e papel escaneado.",
           "Campos com dúvida são marcados para uma pessoa conferir.",
-          "Resultado entregue numa planilha ou no sistema que você já usa.",
+          "Resultado entregue numa planilha ou num formato que o seu sistema aceite importar.",
         ],
         timeline: "Prazo definido na proposta",
         price: "Peça um orçamento",
@@ -381,9 +381,10 @@ export const pt: Bundle = {
       title: "Como tratamos seus dados",
       intro: "Em linguagem simples — e por escrito no contrato do projeto.",
       items: [
+        // TODO(simon): teste de isolamento por cliente obrigatório antes do primeiro piloto.
         {
           title: "Na minha infraestrutura, isolados por cliente",
-          body: "Os dados do seu projeto ficam guardados numa infraestrutura que eu opero, não nas suas contas, e separados por cliente: nenhum cliente tem acesso aos dados de outro.",
+          body: "Por padrão, os dados do seu projeto ficam guardados numa infraestrutura que eu opero, não nas suas contas, e separados por cliente: nenhum cliente tem acesso aos dados de outro.",
         },
         {
           title: "Processados por um provedor de IA nos Estados Unidos",
@@ -391,7 +392,7 @@ export const pt: Bundle = {
         },
         {
           title: "Excluídos ao fim do projeto",
-          body: "Quando o projeto termina, os dados do cliente que eu guardo para ele são excluídos.",
+          body: "Quando o projeto termina, os dados do cliente que eu guardo para ele são excluídos. Os provedores usados (IA e e-mail) mantêm registros temporários conforme seus próprios termos, descritos no contrato.",
         },
       ],
     },
@@ -400,7 +401,7 @@ export const pt: Bundle = {
       title: "Conte sobre a sua empresa",
       intro: "Eu respondo por e-mail.",
       privacy:
-        "Este formulário coleta seu nome, empresa, e-mail e mensagem. Eles chegam à minha caixa de entrada por e-mail, pelo Resend, um serviço de e-mail dos Estados Unidos, só para eu poder responder. Nada fica guardado neste site.",
+        "Este formulário coleta seu nome, empresa, e-mail e mensagem. Eles chegam à minha caixa de entrada por e-mail, pelo Resend, um serviço de e-mail dos Estados Unidos, só para eu poder responder. O Resend mantém uma cópia temporária do envio. Nada fica guardado neste site.",
       name: "Seu nome",
       business: "Empresa",
       email: "E-mail",
