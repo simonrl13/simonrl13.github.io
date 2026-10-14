@@ -86,7 +86,7 @@ export const servicesPage = {
     title: "Tell me about your business",
     intro: "I reply by email.",
     privacy:
-      "This form collects your name, business, email and message. They are delivered to my inbox by email through Resend, a US-based email service, only so I can reply. Resend keeps a temporary copy of the message. Nothing is stored on this site.",
+      "This form collects your name, business, email and message. Once it’s enabled, they will be delivered to my inbox by email through Resend, a US-based email service, only so I can reply; until then, sending the form shows my email address instead. Resend keeps a temporary copy of the message. Nothing is stored on this site.",
     name: "Your name",
     business: "Business",
     email: "Email",
