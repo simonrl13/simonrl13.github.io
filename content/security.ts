@@ -33,7 +33,7 @@ export const securityPage = {
     },
     {
       title: "Prompt-injection tests",
-      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model. All 15 passed against the live site on 14 October 2026. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
+      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model, and a third tries to talk the answer checker into approving false claims. All 17 passed against the live site on 14 October 2026. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
     },
     {
       title: "Every answer is checked before you see it",
@@ -41,7 +41,7 @@ export const securityPage = {
     },
     {
       title: "Your questions and your privacy",
-      body: "Questions are sent to Anthropic’s Claude API to generate an answer. This site doesn’t save conversations, and your IP address is held for up to 10 minutes for rate limiting. No cookies, no analytics.",
+      body: "Questions are sent to Anthropic’s Claude API to generate an answer and to check it. This site doesn’t save conversations, and your IP address is held for up to 10 minutes for rate limiting. No cookies, no analytics.",
     },
     {
       title: "The contact form",
