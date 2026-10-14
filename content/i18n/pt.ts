@@ -276,7 +276,7 @@ export const pt: Bundle = {
       },
       {
         title: "Entradas limitadas e checadas antes",
-        body: "Requisições acima de 16 KB são rejeitadas, cada mensagem é cortada em 800 caracteres, só as últimas 8 trocas são mantidas e as respostas têm teto de 500 tokens. Requisições malformadas são recusadas antes de chegar a qualquer limite ou ao modelo.",
+        body: "Requisições acima de 16 KB são rejeitadas, cada mensagem é cortada em 800 caracteres, só as últimas 8 trocas são mantidas e cada chamada ao modelo tem teto de 1.500 tokens. Requisições malformadas são recusadas antes de chegar a qualquer limite ou ao modelo.",
       },
       {
         title: "Só este site pode chamar o assistente",
@@ -284,7 +284,11 @@ export const pt: Bundle = {
       },
       {
         title: "Testes de prompt injection",
-        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA. Uma rodada anterior passou, mas foi substituída por esses testes mais rigorosos, e a nova rodada completa está pendente. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
+        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA. Os 15 passaram no site publicado em 14 de outubro de 2026. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
+      },
+      {
+        title: "Toda resposta é conferida antes de chegar a você",
+        body: "Antes de uma resposta ser enviada, uma segunda chamada de IA confere cada afirmação contra o meu perfil. Se algo não tiver base, a resposta é reescrita uma vez; se ainda não passar — ou se a própria checagem falhar — você recebe um aviso curto com o meu e-mail, em vez de uma resposta não conferida.",
       },
       {
         title: "Suas perguntas e sua privacidade",
