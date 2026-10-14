@@ -14,7 +14,8 @@ function Readings({ items }: { items: { dt: string; value: string; unit?: string
   return (
     <dl className="vitals">
       {items.map((v) => {
-        const numeric = !Number.isNaN(Number(v.value));
+        // plain integers only: "8.190" (PT thousands) or "82.2" must never animate into a different number
+        const numeric = /^\d+$/.test(v.value);
         return (
           <div key={v.dt} data-reveal {...(numeric ? { "data-count": "" } : {})}>
             <dt>{v.dt}</dt>

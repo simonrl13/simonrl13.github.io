@@ -77,18 +77,20 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    // Numbers checked against the Scout repo (README, reports/m3_sources.md,
-    // docs/TEST_LOG.md, 2026-10-07): 8,190 distinct players; test MAE 0.357 vs
-    // 0.410 no-change (−12.9%); 80% intervals at 82.2% coverage on 2023–24.
-    // The agent (M4) and MCP server (M5) are planned, not started.
+    // Numbers verbatim from the Scout repo (README, reports/evals_heldout.md,
+    // docs/TEST_LOG.md; checked 2026-10-14): 8,190 players; test MAE 0.357 vs
+    // 0.410 no-change and 0.359 linear (does NOT beat linear); 80% intervals at
+    // 82.2% coverage on 2023–24. Agent (M4) and MCP server (M5a) are built:
+    // 19/20 held-out, 2/2 injection resisted. Extraction in progress; deploy next.
     id: "scout",
-    tag: "01 · ML forecasting + LLM extraction",
+    tag: "01 · ML forecasting + Claude agent",
     title: "Scout",
     dialogTitle: "Scout — player market-value forecasting",
     status: "In progress",
-    lead: "Forecasts 12-month changes in Transfermarkt market value for ~8,200 players across 7 European leagues (2013–2024) — point-in-time, leakage-tested, with a sealed, logged test set.",
+    lead: "Forecasts 12-month changes in Transfermarkt market value for 8,190 players across 7 European leagues (2013–2024), with a Claude agent and an MCP server on top — point-in-time, leakage-tested, with a sealed, logged test set.",
     skinClass: "pcard--data",
     layers: [
+      "Claude agent · MCP server",
       "80% prediction intervals",
       "LightGBM · MLflow runs",
       "Point-in-time features",
@@ -97,17 +99,17 @@ export const projects: Project[] = [
     skin: {
       kind: "metrics",
       readings: [
-        { dt: "Players", value: "~8,200" },
-        { dt: "Interval coverage", value: "82", unit: "%" },
-        { dt: "Error vs no-change", value: "−13", unit: "%" },
+        { dt: "Players", value: "8,190" },
+        { dt: "Interval coverage", value: "82.2", unit: "%" },
+        { dt: "Agent, held-out evals", value: "19/20" },
       ],
     },
     links: [{ label: "GitHub", href: "https://github.com/simonrl13/footballscout" }],
     detail: {
-      body: "Forecasts how a player’s Transfermarkt market value — a crowd-sourced estimate, not a transfer fee — will change over the next 12 months, for ~8,200 players across 7 European leagues from 2013 to 2024. Every feature is built point-in-time and checked by automated leakage tests, and the 2023–24 test set is reachable only through one gated, logged path. LightGBM with split-conformal 80% prediction intervals reaches 82% empirical coverage and cuts error by ~13% against a no-change baseline on the held-out seasons. In progress: LLM extraction of injury and contract events from point-in-time Wikipedia revisions, with verbatim-quote verification. Next: a tool-using agent and an MCP server. A full case study is coming.",
+      body: "Forecasts how a player’s Transfermarkt market value — a crowd-sourced estimate, not a transfer fee — will change over the next 12 months, for 8,190 players across 7 European leagues from 2013 to 2024. Every feature is built point-in-time and checked by automated leakage tests, and the 2023–24 test set is reachable only through one gated, logged path. The forecasting model is complete: on the 2023–24 test seasons, LightGBM has an MAE of 0.357 against 0.410 for a no-change baseline, and its split-conformal 80% prediction intervals cover 82.2%. It does not beat a linear (ridge) baseline (MAE 0.359). Built on top: a Claude agent over read-only tools that also searches the players’ Wikipedia pages and cites the exact revision, and an MCP server exposing the same tools. The agent passes 19/20 held-out evals (deterministic checks) and resisted 2/2 injection attempts. Still in progress: LLM extraction of injury and contract events from Wikipedia revisions. Next: deployment. A full case study is coming.",
       role: "Independent project — in progress",
       outcome:
-        "82% coverage for 80% prediction intervals and ~13% lower error than a no-change baseline on held-out 2023–24 seasons; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",
+        "On the 2023–24 test seasons: MAE 0.357 vs 0.410 for a no-change baseline (no gain over a linear baseline) and 82.2% coverage for 80% prediction intervals; agent at 19/20 held-out evals with 2/2 injection attempts resisted; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",
       stack: "Python · pandas · LightGBM · scikit-learn · MLflow · FastAPI · PostgreSQL · Docker · pytest · Claude API",
     },
   },

@@ -157,10 +157,10 @@
       <span class="entry-meta"><a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
     </div>
     <ul>
-      <li>Point-in-time pipeline forecasting 12-month market-value changes for ~8,200 players across 7 European leagues (2013–2024), with automated leakage tests and a sealed, logged test set</li>
-      <li>LightGBM with 80% prediction intervals (82% empirical coverage), cutting error ~13% vs a no-change baseline on held-out seasons</li>
-      <li>CI with tests, dependency audits, secret scanning and CodeQL; threat model documented in SECURITY.md</li>
-      <li>In progress: LLM extraction of injury and contract events from point-in-time Wikipedia revisions with quote verification; next, a tool-using agent and an MCP server</li>
+      <li>Point-in-time pipeline forecasting 12-month market-value changes for 8,190 players across 7 European leagues (2013–2024), with automated leakage tests and a sealed, logged test set</li>
+      <li>LightGBM: test MAE 0.357 vs 0.410 for a no-change baseline, 80% prediction intervals at 82.2% coverage; does not beat a linear baseline (0.359)</li>
+      <li>Claude agent over read-only tools with cited Wikipedia search, plus an MCP server: 19/20 on held-out evals, 2/2 injection attempts resisted</li>
+      <li>CI with tests, dependency audits, secret scanning and CodeQL; threat model in SECURITY.md. In progress: LLM extraction from Wikipedia revisions; next: deployment</li>
     </ul>
   </div>
   <div class="entry">
@@ -168,7 +168,7 @@
       <span class="entry-title">AI Portfolio Assistant — simonlaborde.com</span>
     </div>
     <ul>
-      <li>Live, streaming chat console on my portfolio, grounded in structured site content via the Claude API (Haiku)</li>
+      <li>Live chat assistant on my portfolio, grounded in structured site content via the Claude API (Haiku); every answer is checked against the profile before it is shown</li>
       <li>Hardened for production: per-IP rate limits and a daily spending cap, CSP and security headers (grade A on securityheaders.com), prompt-injection tests, and CI with CodeQL and secret scanning</li>
     </ul>
   </div>
