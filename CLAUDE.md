@@ -47,8 +47,9 @@
 - `components/` — `SiteChrome` (rail, nav, mobile menu, `ThemeToggle`), `SheetFrame`,
   `RevealController`, `WorkCarousel` (cards, `ProjectDialog`), `IsoStack`, `ChatConsole`,
   `ContactForm`, `LangSwitch`, `sections/*`.
-- `app/api/chat/` — `route.ts` (Claude Haiku 4.5, streaming), `config.ts` (model + limits,
-  env-tunable, `ALLOWED_ORIGINS`).
+- `app/api/chat/` — `route.ts` (Claude Haiku 5.5, effort `low`, no streaming), `grounding.ts`
+  (draft → second-call check against `buildReference()` → one redraft → safe answer; fail-closed),
+  `config.ts` (model + limits, env-tunable, `ALLOWED_ORIGINS`).
 - `app/api/contact/route.ts` — services contact form → one plain-text email via Resend
   (`fetch`, no SDK). Env: `RESEND_API_KEY`, `CONTACT_TO`, `CONTACT_FROM` (Vercel only;
   never write `CONTACT_TO`’s value anywhere). Stores and logs nothing from visitors.
@@ -89,7 +90,9 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - Scout (github.com/simonrl13/footballscout, read-only source at C:\Projetos\Scout) is
   first in Selected Projects and the Work carousel, labelled "In progress". Check every
   number against its README/reports before changing copy (8,190 players, 82.2% interval
-  coverage, MAE 0.357 vs 0.410 no-change). Agent (M4) and MCP (M5) are *next*, not in progress.
+  coverage, MAE 0.357 vs 0.410 no-change). Agent and MCP server are **built** (19/20 held-out, 2/2 injection resisted); forecasting
+  model complete; deployment next (not live); it does **not** beat linear — never say it does.
+  The chat's verified Scout entry is `SCOUT` in `content/assistant-context.ts`.
 - No "graduated with highest honors". Thesis defended with distinction is fine.
 - Certifications (exam-based): AI-900, SFC, EF SET C2 (77/100). Training (courses):
   5 × Anthropic Academy, Accenture Academy (Oracle BRM). Never call training a certification.

@@ -1,9 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { NextRequest } from "next/server";
-import { buildSystemPrompt } from "@/content/assistant-context";
 import { fill, getBundle } from "@/content/i18n";
 import { createLimiter } from "@/lib/rate-limit";
-import { ALLOWED_ORIGINS, CHAT_LIMITS, CHAT_MODEL } from "./config";
+import { ALLOWED_ORIGINS, CHAT_LIMITS } from "./config";
+import { answer } from "./grounding";
 
 export const runtime = "nodejs";
 
@@ -134,41 +134,18 @@ async function handle(req: NextRequest): Promise<Response> {
     return text(say("notConfigured"), 500);
   }
 
-  const client = new Anthropic({ apiKey });
-  const encoder = new TextEncoder();
+  // 4. draft → grounding check → (one redraft) → send; never stream an
+  // unchecked answer. Fail-closed: anything unverified gets the safe answer.
+  const client = new Anthropic({ apiKey, timeout: 20_000, maxRetries: 1 });
+  let reply: string;
+  try {
+    reply = (await answer(client, messages)) ?? say("unverified");
+  } catch (err) {
+    console.error("chat: model error:", err instanceof Error ? err.name : "unknown");
+    return text(err instanceof Anthropic.RateLimitError ? say("rateLimited") : say("streamError"), 503);
+  }
 
-  const readable = new ReadableStream<Uint8Array>({
-    async start(controller) {
-      try {
-        const stream = client.messages.stream({
-          model: CHAT_MODEL,
-          max_tokens: CHAT_LIMITS.maxOutputTokens,
-          system: buildSystemPrompt(),
-          messages,
-        });
-
-        for await (const event of stream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            controller.enqueue(encoder.encode(event.delta.text));
-          }
-        }
-        controller.close();
-      } catch (err) {
-        console.error("chat stream error:", err);
-        const message =
-          err instanceof Anthropic.RateLimitError
-            ? say("rateLimited")
-            : say("streamError");
-        controller.enqueue(encoder.encode(message));
-        controller.close();
-      }
-    },
-  });
-
-  return new Response(readable, {
+  return new Response(reply, {
     headers: {
       "content-type": "text/plain; charset=utf-8",
       "cache-control": "no-store",
