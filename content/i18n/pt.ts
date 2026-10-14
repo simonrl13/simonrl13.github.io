@@ -296,7 +296,7 @@ export const pt: Bundle = {
       },
       {
         title: "O formulário de contato",
-        body: "Os contatos de empresas vão direto para o meu e-mail pelo Resend, um serviço de envio de e-mails dos Estados Unidos. Este site não guarda nem registra nada do que é enviado. Cada campo é validado no servidor, o formulário só aceita requisições deste site, um campo-armadilha escondido barra robôs simples, e limites de 3 mensagens por hora por conexão e 20 por dia seguram enxurradas — se o limitador não responder, o formulário se recusa a enviar.",
+        body: "Quando estiver ativado, o formulário de contato da página para empresas vai entregar as mensagens no meu e-mail pelo Resend, um serviço de envio de e-mails dos Estados Unidos; até lá, ao enviar, ele mostra o meu endereço de e-mail. Este site não guarda nem registra nada do que é enviado. Cada campo é validado no servidor, o formulário só aceita requisições deste site, um campo-armadilha escondido barra robôs simples, e limites de 3 mensagens por hora por conexão e 20 por dia seguram enxurradas — se o limitador não responder, o formulário se recusa a enviar.",
       },
       {
         title: "Cabeçalhos de segurança",

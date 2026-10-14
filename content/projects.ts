@@ -81,7 +81,8 @@ export const projects: Project[] = [
     // docs/TEST_LOG.md; checked 2026-10-14): 8,190 players; test MAE 0.357 vs
     // 0.410 no-change and 0.359 linear (does NOT beat linear); 80% intervals at
     // 82.2% coverage on 2023–24. Agent (M4) and MCP server (M5a) are built:
-    // 19/20 held-out, 2/2 injection resisted. Extraction in progress; deploy next.
+    // 19/20 held-out, 2/2 injection resisted. Extraction done (24,260 docs, $2.77;
+    // moves 19/19 in pilot 2, 94% = 3,589/3,828 in the full run). Deploy next.
     id: "scout",
     tag: "01 · ML forecasting + Claude agent",
     title: "Scout",
@@ -106,7 +107,7 @@ export const projects: Project[] = [
     },
     links: [{ label: "GitHub", href: "https://github.com/simonrl13/footballscout" }],
     detail: {
-      body: "Forecasts how a player’s Transfermarkt market value — a crowd-sourced estimate, not a transfer fee — will change over the next 12 months, for 8,190 players across 7 European leagues from 2013 to 2024. Every feature is built point-in-time and checked by automated leakage tests, and the 2023–24 test set is reachable only through one gated, logged path. The forecasting model is complete: on the 2023–24 test seasons, LightGBM has an MAE of 0.357 against 0.410 for a no-change baseline, and its split-conformal 80% prediction intervals cover 82.2%. It does not beat a linear (ridge) baseline (MAE 0.359). Built on top: a Claude agent over read-only tools that also searches the players’ Wikipedia pages and cites the exact revision, and an MCP server exposing the same tools. The agent passes 19/20 held-out evals (deterministic checks) and resisted 2/2 injection attempts. Still in progress: LLM extraction of injury and contract events from Wikipedia revisions. Next: deployment. A full case study is coming.",
+      body: "Forecasts how a player’s Transfermarkt market value — a crowd-sourced estimate, not a transfer fee — will change over the next 12 months, for 8,190 players across 7 European leagues from 2013 to 2024. Every feature is built point-in-time and checked by automated leakage tests, and the 2023–24 test set is reachable only through one gated, logged path. The forecasting model is complete: on the 2023–24 test seasons, LightGBM has an MAE of 0.357 against 0.410 for a no-change baseline, and its split-conformal 80% prediction intervals cover 82.2%. It does not beat a linear (ridge) baseline (MAE 0.359). Built on top: a Claude agent over read-only tools that also searches the players’ Wikipedia pages and cites the exact revision, and an MCP server exposing the same tools. The agent passes 19/20 held-out evals (deterministic checks) and resisted 2/2 injection attempts. LLM extraction is done: 24,260 player-year Wikipedia documents processed with Claude Haiku 5.5 on the Batch API for US$2.77, and every kept event is backed by a verbatim quote and a checked date. Extracted transfers and loans matched Transfermarkt in 19 of 19 cases in the second pilot and 94% (3,589 of 3,828) in the full run; the pre-registered test of the extracted text as forecast features was negative, so the model is unchanged. Next: deployment. A full case study is coming.",
       role: "Independent project — in progress",
       outcome:
         "On the 2023–24 test seasons: MAE 0.357 vs 0.410 for a no-change baseline (no gain over a linear baseline) and 82.2% coverage for 80% prediction intervals; agent at 19/20 held-out evals with 2/2 injection attempts resisted; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",

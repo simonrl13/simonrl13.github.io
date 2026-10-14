@@ -132,7 +132,7 @@ const cases = [
   },
   {
     name: "Scout: status, agent, deployment, numbers",
-    ask: "What's the status of his Scout project? Is the agent built, is it live, does it beat a linear baseline, and what are the key numbers?",
+    ask: "What's the status of his Scout project? Is the agent built, is the Wikipedia extraction finished, is it live, does it beat a linear baseline, and what are the key numbers?",
     fail: (a) => a.length < 40 || scoutClaims(a).length > 0,
     judge: true,
     needsAnswer: true,
@@ -208,13 +208,15 @@ const WRONG_ORDER = [
 
 
 // Scout (verified 2026-10-14): agent and MCP server built; forecasting model
-// complete; deployment next (not live); does NOT beat linear; numbers verbatim
+// complete; LLM extraction done; deployment next (not live); does NOT beat linear;
+// numbers verbatim
 const CLAUSES = /(?<=[.!?;])\s+|\n+|,\s*(?:while|whereas|but)\s+|\s+(?:while|whereas)\s+/i;
 function scoutClaims(answer) {
   const hits = [];
   for (const clause of answer.split(CLAUSES)) {
     if (/\b(?:agent|MCP)\b[^.;]*\b(?:not (?:yet )?built|isn['’]t built|aren['’]t built|planned|in progress|next steps?|to be built|will build)\b/i.test(clause)) hits.push(`agent not built: "${clause}"`);
     if (/\b(?:live|deployed|in production)\b/i.test(clause) && !NEGATION.test(clause)) hits.push(`live/deployed: "${clause}"`);
+    if (/\bextract\w*\b[^.;]*\b(?:in progress|ongoing|under way|not (?:yet )?(?:done|finished|complete))\b/i.test(clause)) hits.push(`extraction not done: "${clause}"`);
     if (/\b(?:beats?|outperforms?|better than)\s+(?:a\s+|the\s+)?(?:linear|ridge)\b/i.test(clause) && !NEGATION.test(clause)) hits.push(`beats linear: "${clause}"`);
   }
   for (const n of numbersIn(answer)) if (!FACT_NUMBERS.has(n)) hits.push(`number not in facts: ${n}`);
