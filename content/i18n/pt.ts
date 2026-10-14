@@ -95,6 +95,7 @@ export const pt: Bundle = {
       unavailable: "O assistente está fora do ar por um instante — tente de novo em breve ou mande um e-mail para {email}.",
       notConfigured: "Este assistente ainda não está configurado. Enquanto isso, mande um e-mail para {email}.",
       rateLimited: "O assistente está com muita demanda agora — tente de novo em instantes.",
+      unverified: "Não consegui dar uma resposta confiável para isso. Pergunte direto ao Simon pelo e-mail {email}.",
       streamError: "Algo deu errado ao responder. Tente de novo ou mande um e-mail para {email}.",
     },
   },

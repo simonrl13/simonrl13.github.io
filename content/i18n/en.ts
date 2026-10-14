@@ -95,5 +95,7 @@ export const enUi = {
     notConfigured: "This assistant isn't configured yet. Email {email} in the meantime.",
     rateLimited: "The assistant is in high demand right now — please try again shortly.",
     streamError: "Something went wrong answering that. Please try again, or email {email}.",
+    /** sent when no draft passes the grounding check */
+    unverified: "I couldn't give you an answer I can stand behind on that one. Please ask Simon directly at {email}.",
   },
 };
