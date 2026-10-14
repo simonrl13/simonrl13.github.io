@@ -118,6 +118,8 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - `trailingSlash: true` → client fetches `/api/chat/` (avoids a 308 hop).
 - The root layout lives under `app/[locale]`, so unmatched URLs use `app/global-not-found.tsx`
   (`experimental.globalNotFound`); shared fonts + theme head are in `app/document.tsx`.
+- `npm run redteam` exits non-zero on any failure and stops (exit 2) without `ANTHROPIC_API_KEY`
+  in `.env.local`. Never pipe it through `tail` without `set -o pipefail` — that masked an exit code once.
 - Smoke-test TODO checks on PT pages match `TODO(`/`TODO:` only — "todo" is a Portuguese word.
 - On-load sequence (rail, nodes, hero dims) is one set: node delays = rail delay + when
   `--ease` reaches each node's `--at` (verified in slow motion, ≤1 frame off) — change
