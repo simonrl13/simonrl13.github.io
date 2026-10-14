@@ -203,15 +203,15 @@ export const pt: Bundle = {
 
   projects: {
     scout: {
-      tag: "01 · Previsão com ML + extração com LLM",
+      tag: "01 · Previsão com ML + agente Claude",
       status: "Em andamento",
-      lead: "Prevê a variação, em 12 meses, do valor de mercado no Transfermarkt para ~8.200 jogadores de 7 ligas europeias (2013–2024) — point-in-time, com testes de vazamento e um conjunto de teste lacrado e registrado.",
-      layers: ["Intervalos de previsão 80%", "LightGBM · runs no MLflow", "Features point-in-time", "Postgres · anti-vazamento"],
+      lead: "Prevê a variação, em 12 meses, do valor de mercado no Transfermarkt para 8.190 jogadores de 7 ligas europeias (2013–2024), com um agente Claude e um servidor MCP por cima — point-in-time, com testes de vazamento e um conjunto de teste lacrado e registrado.",
+      layers: ["Agente Claude · servidor MCP", "Intervalos de previsão 80%", "LightGBM · runs no MLflow", "Features point-in-time", "Postgres · anti-vazamento"],
       skin: {
         readings: [
-          { dt: "Jogadores", value: "~8.200" },
-          { dt: "Cobertura do intervalo", value: "82", unit: "%" },
-          { dt: "Erro vs sem variação", value: "−13", unit: "%" },
+          { dt: "Jogadores", value: "8.190" },
+          { dt: "Cobertura do intervalo", value: "82,2", unit: "%" },
+          { dt: "Agente, evals held-out", value: "19/20" },
         ],
       },
     },
