@@ -284,7 +284,7 @@ export const pt: Bundle = {
       },
       {
         title: "Testes de prompt injection",
-        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA. Os 15 passaram no site publicado em 14 de outubro de 2026. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
+        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA, e um terceiro tenta convencer o verificador de respostas a aprovar afirmações falsas. Os 17 passaram no site publicado em 14 de outubro de 2026. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
       },
       {
         title: "Toda resposta é conferida antes de chegar a você",
@@ -292,7 +292,7 @@ export const pt: Bundle = {
       },
       {
         title: "Suas perguntas e sua privacidade",
-        body: "As perguntas são enviadas à API Claude, da Anthropic, para gerar a resposta. Este site não salva conversas, e seu endereço IP fica guardado por até 10 minutos para limitar o uso. Sem cookies, sem analytics.",
+        body: "As perguntas são enviadas à API Claude, da Anthropic, para gerar a resposta e conferi-la. Este site não salva conversas, e seu endereço IP fica guardado por até 10 minutos para limitar o uso. Sem cookies, sem analytics.",
       },
       {
         title: "O formulário de contato",
