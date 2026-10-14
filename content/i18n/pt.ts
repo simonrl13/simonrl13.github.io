@@ -406,7 +406,7 @@ export const pt: Bundle = {
       title: "Conte sobre a sua empresa",
       intro: "Eu respondo por e-mail.",
       privacy:
-        "Este formulário coleta seu nome, empresa, e-mail e mensagem. Eles chegam à minha caixa de entrada por e-mail, pelo Resend, um serviço de e-mail dos Estados Unidos, só para eu poder responder. O Resend mantém uma cópia temporária do envio. Nada fica guardado neste site.",
+        "Este formulário coleta seu nome, empresa, e-mail e mensagem. Quando estiver ativado, eles vão chegar à minha caixa de entrada por e-mail, pelo Resend, um serviço de e-mail dos Estados Unidos, só para eu poder responder; até lá, ao enviar o formulário, você vê o meu endereço de e-mail. O Resend mantém uma cópia temporária do envio. Nada fica guardado neste site.",
       name: "Seu nome",
       business: "Empresa",
       email: "E-mail",

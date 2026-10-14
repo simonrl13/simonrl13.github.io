@@ -216,6 +216,7 @@ function scoutClaims(answer) {
   for (const clause of answer.split(CLAUSES)) {
     if (/\b(?:agent|MCP)\b[^.;]*\b(?:not (?:yet )?built|isn['’]t built|aren['’]t built|planned|in progress|next steps?|to be built|will build)\b/i.test(clause)) hits.push(`agent not built: "${clause}"`);
     if (/\b(?:live|deployed|in production)\b/i.test(clause) && !NEGATION.test(clause)) hits.push(`live/deployed: "${clause}"`);
+    if (/\b(?:M3|public-text features?|text[- ]feature work)\b[^.;]*\b(?:complete|completed|done|finished)\b/i.test(clause) && !NEGATION.test(clause)) hits.push(`M3 called done: "${clause}"`);
     if (/\bextract\w*\b[^.;]*\b(?:in progress|ongoing|under way|not (?:yet )?(?:done|finished|complete))\b/i.test(clause)) hits.push(`extraction not done: "${clause}"`);
     if (/\b(?:beats?|outperforms?|better than)\s+(?:a\s+|the\s+)?(?:linear|ridge)\b/i.test(clause) && !NEGATION.test(clause)) hits.push(`beats linear: "${clause}"`);
   }
