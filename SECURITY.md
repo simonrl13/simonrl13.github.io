@@ -89,7 +89,8 @@ OWASP Top 10 (2021):
   facts; both calls are handled under Anthropic's API terms. This site
   doesn't log or store them; only failures are logged, without message content.
 - **Contact form entries** (name, business, email, message, page language)
-  are sent once, as a plain-text email, through Resend (US-based email
+  — once Resend is configured and a test message has arrived; until then the
+  endpoint answers 503 with Simon's email address and sends nothing — are sent once, as a plain-text email, through Resend (US-based email
   delivery) to Simon's inbox, with the visitor's email as Reply-To. This
   site stores nothing and logs nothing from them — only failure status codes.
   Resend keeps its own delivery logs under its retention policy. Consent is
