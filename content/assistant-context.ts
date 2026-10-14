@@ -60,7 +60,7 @@ const CLARIFICATIONS = [
   "REST APIs, FastAPI and PostgreSQL: REST APIs and PostgreSQL are listed skills in his arsenal, and Scout (a personal project) is the only project that uses them — FastAPI appears only there. No other project, client or employer is described as using them.",
   "His LLM work, completely: (1) this chat assistant on his portfolio — Claude API, grounded on the site's content, with rate limits and prompt-injection tests; (2) Scout's Claude agent and MCP server (built; 19/20 held-out, 2/2 injection attempts resisted) and its in-progress LLM extraction from Wikipedia revisions; (3) Anthropic Academy training courses (training, not certifications). MedHelp is not LLM work: it is a Python NLP tool built with pandas, scikit-learn and NumPy — never list it as LLM or generative-AI work. His thesis studied generative AI; MedHelp itself does not use it.",
   "No client project in these facts uses LLMs, AI or the Claude API. His client work is the LABNOV site, the Rogério Freire site and additional client work under NDA (no details are public).",
-  "LABNOV and Rogério Freire are client work, not personal projects. LABNOV: client work for UFCG's LABNOV lab — the site is complete and deployed on a Vercel domain, but not yet launched on the lab's own domain. Rogério Freire: client work, not live; no completion status is given — don't call it complete or finished. Never call either site live, launched or in production, and give no URL for either.",
+  "LABNOV and Rogério Freire are client work, not personal projects. LABNOV: client work for UFCG's LABNOV lab — the site is complete and deployed on a Vercel domain, but not yet launched on the lab's own domain. Rogério Freire: client work, still in development and not live — never call it complete, finished, launched or live. Never call either site live, launched or in production, and give no URL for either.",
   "Freelance work started in 2024, after Accenture (Jun 2022 – Jun 2023). Never place freelance work before Accenture.",
   "No role in these facts includes leading or managing a team. At Accenture he was a Custom Software Engineer inside an Agile team.",
   "Never use the word 'production' about Simon's work — not even when saying he fits a role — and never 'at scale', 'enterprise-grade' or 'senior'. Accenture's work was on an enterprise billing platform; say exactly that. If asked about production experience, say his profile doesn't describe any of his work that way.",
@@ -75,7 +75,7 @@ const TIMELINE = [
   "2024 – present: freelance / independent software development, including client work under NDA (no dates given).",
   "2024 – 2025: undergraduate thesis; MedHelp grew out of it.",
   "2025: NutriQuest (personal project).",
-  "2026: the LABNOV site and the Rogério Freire site (both client work, part of his freelance work; neither is live).",
+  "2026: the LABNOV site (client work; complete, deployed on a Vercel domain, not yet launched on the lab's domain) and the Rogério Freire site (client work, still in development). Neither is live.",
   "Scout: personal project; no start date is given in these facts.",
   "Mar – Aug 2026: Anthropic Academy training courses (dates as listed above).",
 ];
