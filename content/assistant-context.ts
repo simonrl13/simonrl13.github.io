@@ -65,10 +65,13 @@ const CLARIFICATIONS = [
  * gives them; anything undated says so instead of guessing. */
 const TIMELINE = [
   "2018 – 2020: game development foundation, UNIFACISA.",
-  "2020 – 2025: B.Sc. Information Systems, UNIFACISA. His undergraduate thesis (Applications of Generative AI in Clinical Decision Support, defended with distinction) is part of this degree; MedHelp grew out of it. No separate date is given for the thesis or MedHelp.",
+  "2020 – 2025: B.Sc. Information Systems, UNIFACISA. His undergraduate thesis (Applications of Generative AI in Clinical Decision Support, defended with distinction) is part of this degree.",
   "Jun 2022 – Jun 2023: Custom Software Engineer at Accenture (enterprise billing optimization).",
-  "2024 – present: freelance / independent software development — the LABNOV site and the Rogério Freire site (both client work), plus client work under NDA. No individual dates are given for these projects.",
-  "Personal projects with no dates in these facts: NutriQuest, and Scout (in progress now).",
+  "2024 – present: freelance / independent software development, including client work under NDA (no dates given).",
+  "2024 – 2025: undergraduate thesis; MedHelp grew out of it.",
+  "2025: NutriQuest (personal project).",
+  "2026: the LABNOV site and the Rogério Freire site (both client work, part of his freelance work; neither is live).",
+  "Scout: personal project, in progress now; no start date is given in these facts.",
   "Mar – Aug 2026: Anthropic Academy training courses (dates as listed above).",
 ];
 

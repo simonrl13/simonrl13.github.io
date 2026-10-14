@@ -41,7 +41,7 @@ export const site = {
   chatSuggestions: [
     "What's his experience with LLMs and agents?",
     "Tell me about the Lattes pipeline.",
-    "Has he shipped anything to production?",
+    "What has he built with LLMs?",
     "Can he work in the EU?",
   ],
 

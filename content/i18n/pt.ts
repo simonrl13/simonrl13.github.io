@@ -120,7 +120,7 @@ export const pt: Bundle = {
     chatSuggestions: [
       "Qual é a experiência dele com LLMs e agentes?",
       "Me conta sobre o pipeline do Lattes.",
-      "Ele já colocou algo em produção?",
+      "O que ele já construiu com LLMs?",
       "Ele pode trabalhar na UE?",
     ],
     chatNotice: {
@@ -283,7 +283,7 @@ export const pt: Bundle = {
       },
       {
         title: "Testes de prompt injection",
-        body: "Seis testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo — mais uma pergunta normal, para checar que ele continua respondendo. Os sete passaram no site em produção. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
+        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA. Uma rodada anterior passou, mas foi substituída por esses testes mais rigorosos, e a nova rodada completa está pendente. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
       },
       {
         title: "Suas perguntas e sua privacidade",
