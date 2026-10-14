@@ -25,7 +25,7 @@ export const securityPage = {
     },
     {
       title: "Inputs are capped and checked first",
-      body: "Requests over 16 KB are rejected, each message is cut to 800 characters, only the last 8 turns are kept, and answers are capped at 500 tokens. Malformed requests are refused before they reach any limit or the model.",
+      body: "Requests over 16 KB are rejected, each message is cut to 800 characters, only the last 8 turns are kept, and each model call is capped at 1,500 tokens. Malformed requests are refused before they reach any limit or the model.",
     },
     {
       title: "Only this site can call the assistant",
@@ -33,7 +33,11 @@ export const securityPage = {
     },
     {
       title: "Prompt-injection tests",
-      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model. An earlier run passed but is superseded by these stricter tests, and the full rerun is pending. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
+      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model. All 15 passed against the live site on 14 October 2026. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
+    },
+    {
+      title: "Every answer is checked before you see it",
+      body: "Before an answer is sent, a second AI call checks every claim in it against my profile. If anything isn’t supported, the answer is rewritten once; if it still doesn’t pass — or the check itself fails — you get a short note pointing to my email instead of an unchecked answer.",
     },
     {
       title: "Your questions and your privacy",
