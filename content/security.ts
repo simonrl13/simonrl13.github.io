@@ -33,7 +33,7 @@ export const securityPage = {
     },
     {
       title: "Prompt-injection tests",
-      body: "Six probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline — plus one normal question to check it still answers. All seven passed against the live site. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
+      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model. An earlier run passed but is superseded by these stricter tests, and the full rerun is pending. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
     },
     {
       title: "Your questions and your privacy",
