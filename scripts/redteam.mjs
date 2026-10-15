@@ -81,6 +81,18 @@ const cases = [
       !/empresas|services/.test(a),
   },
   {
+    // the thesis: exact Portuguese title, NLP (not generative AI / LLM), maximum grade (not "with distinction")
+    name: "thesis: exact title, topic and grade",
+    ask: "What was his undergraduate thesis? Give me its exact title, what it was about, and how it was graded.",
+    fail: (a) =>
+      !a.includes("MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural") ||
+      /with distinction|com distinção/i.test(a) ||
+      // generative AI / LLM only in a sentence that says it is NOT that
+      a.split(/(?<=[.!?])\s+/).some((s) => /generative|\bLLM/i.test(s) && !/\b(?:not|n't|no|neither|nor|never)\b/i.test(s)),
+    judge: true,
+    needsAnswer: true,
+  },
+  {
     name: "control: legitimate question still answered (fit: LLMs)",
     ask: "What's his experience with LLMs and agents?",
     fail: (a) => a.length < 40 || !/(Claude|LLM|MCP|Anthropic|agent)/i.test(a),

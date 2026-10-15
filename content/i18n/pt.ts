@@ -108,7 +108,7 @@ export const pt: Bundle = {
     description:
       "Simon Laborde — engenheiro backend e full-stack com foco em IA/LLM, com base em sistemas backend corporativos. Portfólio, experiência e contato.",
     roleLine:
-      "Engenheiro backend e full-stack com foco em <strong>IA / LLM</strong>, com base em sistemas backend corporativos e desenvolvimento full-stack.",
+      "Engenheiro backend e full-stack com foco em <strong>IA / LLM</strong>, com experiência em sistemas backend corporativos na Accenture.",
     thesis:
       "Faço a ponte entre sistemas complexos e as pessoas que dependem deles — hoje, construindo ferramentas com LLMs.",
     status: {
@@ -154,7 +154,7 @@ export const pt: Bundle = {
       when: "2020 — 2025",
       title: "Bacharelado em Sistemas de Informação",
       org: "UNIFACISA — Campina Grande",
-      body: "TCC — <em>&ldquo;Applications of Generative AI in Clinical Decision Support&rdquo;</em> — aprovado com distinção, e a semente do projeto MedHelp.",
+      body: "TCC — <em>&ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo;</em> — processamento de linguagem natural (PLN) para apoio à decisão clínica, aprovado com nota máxima (10), e a semente do projeto MedHelp.",
     },
     {
       when: "2022 — 2023",

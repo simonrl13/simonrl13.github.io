@@ -17,7 +17,7 @@ export const site = {
 
   // Hero copy
   roleLine:
-    "Backend & full-stack engineer with an <strong>AI / LLM</strong> focus, built on a foundation in enterprise backend systems and full-stack development.",
+    "Backend & full-stack engineer with an <strong>AI / LLM</strong> focus, built on enterprise backend systems at Accenture.",
   thesis:
     "I bridge the gap between complex systems and the people who depend on them — currently building LLM-backed tools.",
 
@@ -121,7 +121,7 @@ export const journey: JourneyItem[] = [
     when: "2020 — 2025",
     title: "B.Sc. Information Systems",
     org: "UNIFACISA — Campina Grande",
-    body: "Thesis — <em>&ldquo;Applications of Generative AI in Clinical Decision Support&rdquo;</em> — defended with distinction, and the seed of the MedHelp project.",
+    body: "Thesis — <em>&ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo;</em> [translation: &ldquo;MedHelp: A Clinical Decision Support System for Preventive Exam Recommendations Using Natural Language Processing&rdquo;] — natural language processing (NLP) for clinical decision support, graded 10/10, the maximum grade, and the seed of the MedHelp project.",
   },
   {
     when: "2022 — 2023",

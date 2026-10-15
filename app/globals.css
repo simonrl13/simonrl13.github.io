@@ -617,7 +617,7 @@ main { padding-left: var(--rail-w); }
     font-size: .88rem;
 }
 .origin__lg-code {
-    color: var(--green);
+    color: var(--brass);
     border: 1px solid var(--line);
     padding: 1px 5px;
     margin-right: 7px;
@@ -1602,8 +1602,8 @@ main.subpage { padding-left: 0; }
 .chat-launcher__dot {
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 0 3px rgba(var(--green-rgb), .25);
+    background: var(--brass);
+    box-shadow: 0 0 0 3px rgba(var(--brass-rgb), .25);
     flex: none;
 }
 
@@ -1843,8 +1843,8 @@ main.subpage { padding-left: 0; }
 
 /* ---- hero: the drafted map (components/MapDraft.tsx) — end of the load set ----
    These are the resting styles: the finished, settled drawing. The drafting
-   itself (graticule, compass, pencil, dividers, route; ≈11.7 s on wide
-   screens, ≈4 s on phones) is a Web Animations timeline built in
+   itself (graticule, compass, pencil, dividers, route; ≈14 s on wide
+   screens, ≈6 s on phones) is a Web Animations timeline built in
    MapDraft.tsx from the map's vertices, so every animation runs from blank
    and a skip simply finishes them. Wide screens get variant C (camera, bold ink, texture, climax). */
 
