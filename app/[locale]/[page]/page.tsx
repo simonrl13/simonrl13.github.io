@@ -92,6 +92,7 @@ function ServicesBody({ services: s, locale }: Bundle) {
         {s.offers.map((offer) => (
           <article className="offer" key={offer.id} aria-labelledby={`offer-${offer.id}`}>
             <p className="offer__kicker mono">{offer.kicker}</p>
+            {offer.badge && <p className="offer__badge mono">{offer.badge}</p>}
             <h2 id={`offer-${offer.id}`}>{offer.outcome}</h2>
             <p className="offer__audience">
               <strong>{s.labels.audience}:</strong> {offer.audience}
@@ -117,6 +118,12 @@ function ServicesBody({ services: s, locale }: Bundle) {
           </article>
         ))}
       </div>
+
+      <aside className="offer-other" aria-labelledby="offer-other">
+        <h2 id="offer-other">{s.other.title}</h2>
+        <p>{s.other.body}</p>
+        <a href="#contact-form">{s.other.cta} <span aria-hidden="true">→</span></a>
+      </aside>
 
       <h2 className="subpage__h" id="data">{s.data.title}</h2>
       <p className="subpage__p">{s.data.intro}</p>

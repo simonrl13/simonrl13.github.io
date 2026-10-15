@@ -26,6 +26,8 @@ export const pt: Bundle = {
       cta: "Vamos conversar",
       cv: "Baixar CV",
       cvNote: "(PDF, em inglês)",
+      servicesLink: "Para empresas",
+      servicesLinkStyle: "strong",
       titleBlockLabel: "Carimbo do desenho",
       languagesLabel: "Idiomas falados",
       dimLabel: "FOLHA 1 / 1 — ESCALA 1:1",
@@ -356,11 +358,12 @@ export const pt: Bundle = {
       {
         id: "assistant",
         kicker: "Assistente de atendimento",
-        outcome: "Seus clientes recebem respostas no WhatsApp às 23h, a partir dos seus próprios documentos.",
+        outcome: "Seus clientes recebem respostas no WhatsApp até às 23h, quando você já fechou, a partir dos seus próprios documentos.",
+        badge: "A qualquer hora do dia",
         audience: "Escritórios de contabilidade, clínicas e quem vende cursos.",
         included: [
-          "Um assistente configurado com os documentos que você já tem: perguntas frequentes, tabelas de preço, políticas, catálogo.",
           "Respostas no WhatsApp da sua empresa, a qualquer hora do dia.",
+          "Um assistente configurado com os documentos que você já tem: perguntas frequentes, tabelas de preço, políticas, catálogo.",
           "O que não estiver nos seus documentos é encaminhado para você, em vez de ser inventado.",
           "Limites de uso e de gasto, para o custo de uso ficar previsível.",
         ],
@@ -371,6 +374,7 @@ export const pt: Bundle = {
         id: "documents",
         kicker: "Processamento de documentos",
         outcome: "Pare de redigitar recibos, boletos e documentos escaneados.",
+        badge: "",
         audience: "Escritórios de contabilidade e distribuidoras.",
         included: [
           "Os campos que você realmente usa — valores, datas, vencimentos, CNPJ/CPF — extraídos automaticamente.",
@@ -382,6 +386,12 @@ export const pt: Bundle = {
         price: "Peça um orçamento",
       },
     ],
+
+    other: {
+      title: "Outra solução",
+      body: "Tem uma necessidade que não cabe nas ofertas acima? Descreva seu caso no formulário e eu digo se consigo ajudar.",
+      cta: "Descrever meu caso",
+    },
 
     data: {
       title: "Como tratamos seus dados",

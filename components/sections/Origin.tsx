@@ -3,7 +3,7 @@ import type { Bundle } from "@/content/i18n";
 import MapDraft from "@/components/MapDraft";
 import { BEARING_TO_PARIS, KM_TO_PARIS, bearingLabel } from "@/content/geo";
 
-export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle["ui"] }) {
+export default function Origin({ copy, ui, servicesHref }: { copy: Bundle["site"]; ui: Bundle["ui"]; servicesHref: string }) {
   return (
     <section id="origin" className="section origin" aria-labelledby="origin-name">
       <div className="origin__frame">
@@ -41,6 +41,10 @@ export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle[
           </a>
           <a className="btn btn--ghost" href={site.links.cv} download>
             {ui.origin.cv} <span className="mono">{ui.origin.cvNote}</span>
+          </a>
+          {/* a text link, not a third button: the hero stays job-first */}
+          <a className={`origin__svc origin__svc--${ui.origin.servicesLinkStyle}`} href={servicesHref}>
+            {ui.origin.servicesLink} <span aria-hidden="true">→</span>
           </a>
         </div>
 
