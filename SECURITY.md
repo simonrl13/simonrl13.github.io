@@ -40,7 +40,7 @@ A plain-language summary for visitors lives at
 | `POST /api/contact` | Malformed payloads; email header injection; HTML injection into the email | Body ≤ 8 KB (413); JSON object with string fields within length limits (name 100, business 120, email 254, message 10–3000) and an email shape check, all **before** the limiter; control characters (CR/LF included) collapsed in single-line fields, so the subject and Reply-To can't carry extra headers; LGPD consent must be `true`; the email is plain text only | Local curl matrix (this PR): bad JSON, array body, `Bcc:` smuggled via newline, short/long fields, missing consent → 400 |
 | `POST /api/contact` from another website or a script | Cross-origin abuse | Requires an allow-listed `Origin` (same list as the chat); a missing or foreign Origin gets **403** before the body is read; no CORS headers are sent | Local curl (no Origin / foreign Origin → 403) |
 | Static pages | XSS, clickjacking, MIME sniffing | React escaping; `dangerouslySetInnerHTML` only on repo-authored strings in `content/`; CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff` | Headless browser check: no CSP violations (PR #28); `curl -I` |
-| Build and dependencies | Vulnerable or malicious package; compromised action; third-party outage or tampering at build time | Lockfile; runtime `npm audit` gate in CI; Dependabot; actions pinned to commit SHAs; packages vetted before install (age, downloads, maintainers); fonts self-hosted from `app/fonts` (`next/font/local`, SIL OFL), so neither builds nor visitors contact Google Fonts | CI `verify` job; build succeeds with Google Fonts unreachable (PR below) |
+| Build and dependencies | Vulnerable or malicious package; compromised action; third-party outage or tampering at build time | Lockfile; runtime `npm audit` gate in CI; Dependabot; actions pinned to commit SHAs; packages vetted before install (age, downloads, maintainers); fonts self-hosted from `app/fonts` (`next/font/local`, SIL OFL), so neither builds nor visitors contact Google Fonts; the hero map's packages (`d3-geo`, `topojson-client`, `world-atlas`) are devDependencies run only by `npm run gen:map` — what ships is committed static JSON in `public/map/`, fetched same-origin (no CSP change, no runtime dependency) | CI `verify` job; build succeeds with Google Fonts unreachable (PR below) |
 | Repository | Committed secret | gitleaks pre-commit hook + full-history gitleaks in CI; GitHub secret scanning | CI `secret-scan` job |
 | Public CV (`/assets/cv.pdf`) | Personal data exposure | `npm run cv` strips the phone segment and **refuses to render** if a phone number or placeholder survives; the full CV is generated only into the gitignored `cv-private/` | Renderer guard |
 | AI coding assistant (Claude Code) | Reading secrets, unreviewed installs or network calls | `.claude/settings.json`: deny reading `.env*`, keys and `cv-private/`; ask before installs, `curl`/`wget`, `git push`, web fetches | — |
@@ -77,6 +77,17 @@ OWASP Top 10 (2021):
 - Dependency audits in CI (`npm audit --omit=dev --audit-level=high` blocks;
   the full audit is reported); Dependabot for npm and GitHub Actions.
 - Static analysis: CodeQL, `security-extended` queries.
+- **Known dev-only findings (logged 2026-10-15).** The full audit reports 5 high,
+  all one chain: `eslint-config-next@16.3.8` → `@next/eslint-plugin-next` →
+  `fast-glob@3.3.1` → `micromatch` → `braces@3.0.3`
+  ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm),
+  stack-exhaustion DoS on deeply nested glob patterns). Dev-only: it runs only in
+  `npm run lint` on repo-authored patterns, never in the build output or on
+  Vercel at runtime; the runtime audit (`--omit=dev`, the CI gate) is 0. No fix
+  exists yet: `braces` has no patched release, `eslint-config-next@16.4.1` still
+  pins `fast-glob@3.3.1`, and `npm audit fix` only offers a downgrade to 14.x.
+  Revisit with the ESLint 10 upgrade (ignored as a major in `.github/dependabot.yml`;
+  backlog in CLAUDE.md → Open) or as soon as a patched `braces` ships.
 - `main` is protected: the `verify`, `secret-scan` and `codeql` checks are
   required, no admin bypass.
 - Claude Code permissions: no reading secrets; approval required for installs

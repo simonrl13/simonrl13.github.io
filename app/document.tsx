@@ -8,7 +8,14 @@ import { site } from "@/content/site";
    the latin subset of each variable font, as Google Fonts serves it, so
    builds never reach out to a third party. Latin covers EN/FR/PT; any other
    glyph falls back to the system stack. Next requires font-loader options
-   to be literals, hence the repeated latin unicode-range below. */
+   to be literals, hence the repeated latin unicode-range below.
+
+   font-display: Inter and JetBrains Mono use "optional" — a late font is
+   never swapped in after first paint, because their swaps rewrap the hero
+   role line and the title block (CLS 0.021 when fonts arrive late). All
+   three are preloaded, so normal loads still get them; a very slow first
+   view keeps the size-matched fallback and the next view has the cached
+   font. Fraunces keeps "swap": its fallback metrics match (no shift). */
 const fraunces = localFont({
   src: "./fonts/fraunces-latin.woff2", // opsz 9–144 + wght axes
   weight: "100 900",
@@ -24,7 +31,7 @@ const inter = localFont({
   weight: "400 600",
   style: "normal",
   variable: "--font-inter",
-  display: "swap",
+  display: "optional",
   declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
   adjustFontFallback: "Arial",
 });
@@ -34,7 +41,7 @@ const jetbrains = localFont({
   weight: "400 500",
   style: "normal",
   variable: "--font-jetbrains",
-  display: "swap",
+  display: "optional",
   declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
   adjustFontFallback: false, // monospace: keep the plain fallback stack
 });
