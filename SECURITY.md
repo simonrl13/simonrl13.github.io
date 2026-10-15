@@ -98,6 +98,12 @@ OWASP Top 10 (2021):
 - **IP addresses** are used as the per-IP rate-limit key in Upstash Redis and
   expire with the window (chat 10 minutes, contact form 60 minutes). The daily
   counters hold no visitor data. Upstash analytics are off.
+- **Chat logging**: no question, answer or flagged claim is ever logged. A
+  failed grounding check logs one line with a reason code — `checker_rejected`,
+  `timeout`, `api_error`, `parse_error`, or `draft_unusable` when the drafting
+  call itself is refused or cut off — and the attempt number. Each safe-answer
+  fallback increments a per-day counter (`chat:fallback:<UTC date>` in Upstash,
+  expires after 8 days, no visitor data) and logs the count.
 - **Hosting logs**: Vercel keeps its own platform request logs under its
   retention policy; this project doesn't add to them.
 - **Fonts and third parties**: all fonts are served from this site; pages make

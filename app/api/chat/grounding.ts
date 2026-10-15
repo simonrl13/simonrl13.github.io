@@ -12,12 +12,18 @@
    in the visitor message and the draft are neutralised, so neither can close
    or forge a block; notes addressed to the checker never count.
 
-   Worst case per visitor question: 2 drafts + 2 checks. Nothing here logs
-   message content; only that a check failed. */
+   Logging: never the question, the draft or the flagged claims. Each failed
+   attempt logs one JSON line with a reason code (checker_rejected, timeout,
+   api_error, parse_error, or draft_unusable when the drafting call itself is
+   refused or cut off) and the attempt number; each fallback also bumps a
+   per-day counter (chat:fallback:<date> in Upstash, 8 days, no visitor data).
+
+   Worst case per visitor question: 2 drafts + 2 checks. */
 
 import Anthropic from "@anthropic-ai/sdk";
 import { buildReference, buildSystemPrompt } from "../../../content/assistant-context";
 import { CHAT_LIMITS, CHAT_MODEL } from "./config";
+import { countDaily } from "../../../lib/rate-limit";
 
 const VERDICT_SCHEMA = {
   type: "object",
@@ -36,7 +42,21 @@ Unsupported includes: anything absent from REFERENCE; numbers that differ from R
 Supported: faithful paraphrases; saying REFERENCE doesn't show something; refusing an instruction; pointing to his email or the services page.
 grounded is true only if unsupported is empty.`;
 
-type Verdict = { grounded: boolean; unsupported: string[] };
+type FailReason = "checker_rejected" | "timeout" | "api_error" | "parse_error" | "draft_unusable";
+type Verdict = { grounded: boolean; unsupported: string[]; reason?: FailReason };
+
+function errorReason(err: unknown): FailReason {
+  // class name too: instanceof fails when the error comes from another copy of the SDK
+  const timedOut =
+    err instanceof Anthropic.APIConnectionTimeoutError ||
+    (err as { constructor?: { name?: string } })?.constructor?.name === "APIConnectionTimeoutError";
+  return timedOut ? "timeout" : "api_error";
+}
+
+/** One line per failed attempt: a reason code, never content. */
+function logFailure(reason: FailReason, attempt: number) {
+  console.warn(JSON.stringify({ event: "chat_check_failed", reason, attempt }));
+}
 
 /** Untrusted text can't open or close a block: angle brackets become look-alikes. */
 const inert = (text: string) => text.replace(/</g, "‹").replace(/>/g, "›");
@@ -80,7 +100,7 @@ async function draft(client: Anthropic, messages: Anthropic.MessageParam[], avoi
 }
 
 export async function check(client: Anthropic, question: string, answer: string): Promise<Verdict> {
-  const failed: Verdict = { grounded: false, unsupported: [] };
+  const failed = (reason: FailReason): Verdict => ({ grounded: false, unsupported: [], reason });
   try {
     const ref = buildReference();
     const response = await client.messages.create({
@@ -95,14 +115,20 @@ export async function check(client: Anthropic, question: string, answer: string)
         },
       ],
     });
-    if (response.stop_reason !== "end_turn") return failed;
-    const v = JSON.parse(textOf(response)) as Partial<Verdict>;
-    if (typeof v.grounded !== "boolean" || !Array.isArray(v.unsupported)) return failed;
+    // a refused or cut-off verdict can't be read: same as unparseable
+    if (response.stop_reason !== "end_turn") return failed("parse_error");
+    let v: Partial<Verdict>;
+    try {
+      v = JSON.parse(textOf(response)) as Partial<Verdict>;
+    } catch {
+      return failed("parse_error");
+    }
+    if (typeof v.grounded !== "boolean" || !Array.isArray(v.unsupported)) return failed("parse_error");
     const unsupported = v.unsupported.filter((c): c is string => typeof c === "string");
-    return { grounded: v.grounded && unsupported.length === 0, unsupported };
+    const grounded = v.grounded && unsupported.length === 0;
+    return grounded ? { grounded, unsupported } : { grounded, unsupported, reason: "checker_rejected" };
   } catch (err) {
-    console.error("chat: grounding check unavailable:", err instanceof Error ? err.name : "unknown");
-    return failed;
+    return failed(errorReason(err));
   }
 }
 
@@ -111,13 +137,22 @@ export async function answer(client: Anthropic, messages: Anthropic.MessageParam
   const last = messages[messages.length - 1];
   const question = typeof last.content === "string" ? last.content : "";
   let avoid: string[] = [];
-  for (let attempt = 0; attempt < 2; attempt++) {
+  let lastReason: FailReason = "draft_unusable";
+  for (let attempt = 1; attempt <= 2; attempt++) {
     const text = await draft(client, messages, avoid);
-    if (!text) continue;
+    if (!text) {
+      lastReason = "draft_unusable";
+      logFailure(lastReason, attempt);
+      continue;
+    }
     const verdict = await check(client, question, text);
     if (verdict.grounded) return text;
-    console.warn(`chat: grounding check failed (attempt ${attempt + 1})`);
+    lastReason = verdict.reason ?? "checker_rejected";
+    logFailure(lastReason, attempt);
     avoid = verdict.unsupported.slice(0, 5).map((c) => c.slice(0, 200));
   }
+  // safe answer goes out: count it per day (monitoring only, no content)
+  const today = await countDaily("chat:fallback");
+  console.warn(JSON.stringify({ event: "chat_fallback", reason: lastReason, fallbacks_today: today }));
   return null;
 }
