@@ -269,9 +269,11 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
       }
     });
 
-    dotRefs.current.forEach((dot, di) =>
-      dot?.classList.toggle("is-active", di === best),
-    );
+    // survey traverse: the current station shows its mark; earlier ones are inked
+    dotRefs.current.forEach((dot, di) => {
+      dot?.classList.toggle("is-active", di === best);
+      dot?.classList.toggle("is-passed", di < best);
+    });
 
     const atStart = track.scrollLeft <= 2;
     const atEnd =

@@ -25,6 +25,8 @@ export const enUi = {
     titleBlockLabel: "Drawing title block",
     languagesLabel: "Spoken languages",
     dimLabel: "SHEET 1 / 1 — SCALE 1:1",
+    /** {deg} = initial great-circle bearing Origin → Paris (content/geo.ts) */
+    bearingLabel: "BRG {deg} → PARIS",
   },
   journey: {
     title: "Journey",

@@ -105,6 +105,30 @@ export default function SiteChrome({
 
   const closeMenu = () => setMenuOpen(false);
 
+  // open menu: Esc closes it (focus back on the toggle), and so does a tap or
+  // click anywhere outside the menu and its toggle
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setMenuOpen(false);
+      toggleRef.current?.focus();
+    };
+    const onPointer = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (menuRef.current?.contains(target) || toggleRef.current?.contains(target)) return;
+      setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [menuOpen]);
+
   return (
     <>
       <a className="skip-link" href="#origin">
@@ -161,6 +185,7 @@ export default function SiteChrome({
           <LangSwitch current={locale} alternates={alternates} label={ui.langSwitch.label} />
           <ThemeToggle labels={ui.theme} />
           <button
+            ref={toggleRef}
             className="nav__toggle"
             aria-expanded={menuOpen}
             aria-controls="nav-list-mobile"
@@ -172,7 +197,7 @@ export default function SiteChrome({
           </button>
         </div>
       </nav>
-      <ul className="nav__mobile" id="nav-list-mobile" hidden={!menuOpen}>
+      <ul className="nav__mobile" id="nav-list-mobile" hidden={!menuOpen} ref={menuRef}>
         {NAV_LINKS.map((link) => (
           <li key={link.href}>
             <a href={link.href} onClick={closeMenu}>

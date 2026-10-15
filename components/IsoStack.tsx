@@ -48,7 +48,8 @@ export default function IsoStack({
             className="iso__layer"
             data-layer={i}
             key={label}
-            style={{ ["--k" as string]: i - (layers.length - 1) / 2 }}
+            // --k: distance from the middle (explode spread); --i: order (dialog stagger)
+            style={{ ["--k" as string]: i - (layers.length - 1) / 2, ["--i" as string]: i }}
           >
             <polygon className="iso__face" points={leftFace} />
             <polygon className="iso__face iso__face--r" points={rightFace} />
