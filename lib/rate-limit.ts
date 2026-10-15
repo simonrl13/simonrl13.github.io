@@ -91,6 +91,32 @@ export function createLimiter(cfg: LimitConfig): (ip: string) => Promise<LimitRe
   };
 }
 
+/* ---- daily counters for monitoring (no visitor data) ---- */
+
+const memoryCounts = new Map<string, number>();
+
+/** Increments `<name>:<UTC date>` and returns today's count, or null if it
+ * couldn't be counted. Monitoring only: never throws, never blocks a reply,
+ * and keys expire after 8 days. */
+export async function countDaily(name: string): Promise<number | null> {
+  const key = `${name}:${new Date().toISOString().slice(0, 10)}`;
+  if (!redis) {
+    const n = (memoryCounts.get(key) ?? 0) + 1;
+    memoryCounts.set(key, n);
+    return n;
+  }
+  try {
+    const n = await Promise.race([
+      redis.incr(key),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), 2000)),
+    ]);
+    if (n === 1) await redis.expire(key, 8 * 86_400);
+    return n;
+  } catch {
+    return null;
+  }
+}
+
 /* ---- fallback: per-instance memory (no Redis configured) ---- */
 
 const MAX_TRACKED_KEYS = 5000;
