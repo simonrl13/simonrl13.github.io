@@ -400,7 +400,8 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
     transition: opacity .2s var(--ease), translate .2s var(--ease),
                 display .2s var(--ease) allow-discrete;
 }
-.nav__mobile[hidden] { display: none; opacity: 0; translate: 0 -8px; }
+/* closing is the system response: faster than the deliberate open */
+.nav__mobile[hidden] { display: none; opacity: 0; translate: 0 -8px; transition-duration: .15s; }
 @starting-style {
     .nav__mobile:not([hidden]) { opacity: 0; translate: 0 -8px; }
 }
@@ -865,10 +866,11 @@ main { padding-left: var(--rail-w); }
 .sheet__iso .iso { max-width: 340px; }
 .sheet__iso .iso__layer { transform: translate(calc(var(--k) * 9px), calc(var(--k) * 15px)); }
 /* continuity: the stack opens collapsed (as on the card) and pulls apart,
-   top slab first, 40ms apart — 80ms after the sheet starts settling */
+   top slab first, 30ms apart, 40ms after the sheet starts settling — the
+   last of 5 slabs lands at ≈400ms, inside the modal budget */
 .sheet[open] .sheet__iso .iso__layer {
-    transition: transform .32s var(--ease);
-    transition-delay: calc(80ms + var(--i, 0) * 40ms);
+    transition: transform .24s var(--ease);
+    transition-delay: calc(40ms + var(--i, 0) * 30ms);
 }
 @starting-style {
     .sheet[open] .sheet__iso .iso__layer { transform: none; }
@@ -1157,7 +1159,7 @@ main { padding-left: var(--rail-w); }
         linear-gradient(var(--brass), var(--brass)) center / 1px 100% no-repeat,
         linear-gradient(var(--brass), var(--brass)) center / 100% 1px no-repeat;
     opacity: 0;
-    transform: scale(.6);
+    transform: scale(.9);
     transition: opacity .2s var(--ease), transform .2s var(--ease);
 }
 .carousel__dots li.is-passed,
@@ -1844,7 +1846,7 @@ main.subpage { padding-left: 0; }
     animation-duration: 0s;
     animation-delay: 0s;
 }
-/* the stamp's one-time landing belongs to the first load only */
+/* the stamp's landing belongs to the first load only: later loads show it stamped */
 :root[data-drawn] .titleblock__stamp-host::after { animation: none; }
 
 /* ---- hero: survey construction, Origin → Paris (end of the load sequence) ----
@@ -1944,7 +1946,7 @@ main.subpage { padding-left: 0; }
 @keyframes surveyNorth { from { transform: scaleY(0); } }
 @keyframes surveyArc   { from { stroke-dashoffset: 1; } }
 @keyframes surveyLine  { from { transform: rotate(var(--brg)) scaleY(0); } }
-@keyframes fadeIn      { from { opacity: 0; } }
+@keyframes fadeIn      { from { opacity: 0; translate: 0 3px; } }
 
 @keyframes dimGrow  { to { transform: scaleX(1); } }
 @keyframes dimGrowY { to { transform: scaleY(1); } }
@@ -2020,33 +2022,33 @@ main.subpage { padding-left: 0; }
 /* ---- title-block stamp on hover ---- */
 
 .titleblock__stamp-host { position: relative; overflow: hidden; }
+/* the AS-BUILT stamp sits in the Revision cell's empty right side, in
+   transparent ink, so "2026.5" stays readable underneath */
 .titleblock__stamp-host::after {
     content: "AS-BUILT";
     position: absolute;
-    inset: 4px;
-    display: grid;
-    place-items: center;
+    right: 8px; top: 50%;
+    padding: 2px 6px;
     font-family: var(--font-mono);
-    font-size: .66rem;
-    letter-spacing: .16em;
+    font-size: .6rem;
+    letter-spacing: .14em;
     color: var(--brass);
-    background: rgba(var(--ink-rgb),.82);
     border: 1.5px solid var(--brass);
-    transform: rotate(-5deg);
-    opacity: 0;
-    transition: opacity .16s var(--ease);
+    transform: translateY(-50%) rotate(-5deg);
+    opacity: .85;
     pointer-events: none;
 }
-.titleblock__stamp-host:hover::after,
-.titleblock__stamp-host:focus-within::after { opacity: .9; }
-/* lands once after the load sequence, holds, lifts — then hover-only again.
-   fill: backwards only, so hover keeps working once it has played */
-.titleblock__stamp-host::after { animation: stampLand 1.8s var(--ease) 2.2s backwards; }
+/* narrow cells: the stamp goes under the value instead of beside it */
+@media (max-width: 520px) {
+    .titleblock__stamp-host { padding-bottom: 30px; }
+    .titleblock__stamp-host::after { top: auto; bottom: 8px; left: 14px; right: auto; transform: rotate(-5deg); }
+    @keyframes stampLand { from { opacity: 0; transform: rotate(-5deg) scale(1.06); } }
+}
+/* lands once at the end of the load sequence and stays stamped; before it
+   lands (first load only) the fill holds it blank */
+.titleblock__stamp-host::after { animation: stampLand .16s var(--ease) 2.2s both; }
 @keyframes stampLand {
-    0%   { opacity: 0;  transform: rotate(-5deg) scale(1.06); }
-    9%   { opacity: .9; transform: rotate(-5deg) scale(1); }
-    75%  { opacity: .9; transform: rotate(-5deg) scale(1); }
-    100% { opacity: 0;  transform: rotate(-5deg) scale(1); }
+    from { opacity: 0; transform: translateY(-50%) rotate(-5deg) scale(1.06); }
 }
 
 @keyframes vtFadeOut { to { opacity: 0; } }
