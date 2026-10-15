@@ -95,7 +95,10 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
   coverage, MAE 0.357 vs 0.410 no-change). Agent and MCP server are **built** (19/20 held-out, 2/2 injection resisted); forecasting
   model complete; deployment next (not live); it does **not** beat linear — never say it does.
   The chat's verified Scout entry is `SCOUT` in `content/assistant-context.ts`.
-- No "graduated with highest honors". Thesis defended with distinction is fine.
+- No "graduated with highest honors", no "with distinction". Thesis: "MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural" (keep the
+  Portuguese title; in English add a bracketed translation marked as one). Topic: NLP for
+  clinical decision support — never generative AI or LLM work. Graded 10/10, the maximum grade
+  ("aprovado com nota máxima (10)").
 - Certifications (exam-based): AI-900, SFC, EF SET C2 (77/100). Training (courses):
   5 × Anthropic Academy, Accenture Academy (Oracle BRM). Never call training a certification.
 - Skills: no Kubernetes, JMeter, Vue or Flask. Docker, pytest and AWS stay (Scout project
@@ -128,10 +131,11 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - Smoke-test TODO checks on PT pages match `TODO(`/`TODO:` only — "todo" is a Portuguese word.
 - On-load sequence is one set: rail 1.5 s from .3 s, node pops = rail delay + when
   `--ease` over 1.5 s reaches each node's `--at`, hero dims .5–1.9 s, the drafted map
-  (`MapDraft`: a Web Animations timeline in `draft()`, ≈7.8 s wide / ≈4 s phone, from when
-  its JSON arrives after `load` + idle; pencil paced per vertex). Wide = variant C (≈11.7 s:
-  camera following the pencil, bold ink, texture, climax); phones = A. On wide screens the AS-BUILT
-  stamp waits for it (`md-wait` → `md-landed`); elsewhere it lands at 3.2 s. Once per tab
+  (`MapDraft`: a Web Animations timeline in `draft()`, ≈14 s wide (C) / ≈6 s phone (A), from when
+  its JSON arrives after `load` + idle; pencil paced per vertex). Wide = variant C (camera
+  following the pencil, bold ink, texture, climax); phones = A. The title block's S. LABORDE
+  signature, then AS-BUILT, wait for the drawing (`md-wait` → `md-landed`; skip = `md-skip`,
+  stamped at once); with no map they land at 2.85 / 3.2 s. Once per tab
   session (`data-drawn`). Skip = any click/tap/key/scroll (phone: scroll the figure away).
 - Map line work that draws itself is stroked in user units (`--u`, set by MapDraft), never
   `vector-effect: non-scaling-stroke`: Chrome then takes the dashes in screen space and the

@@ -132,7 +132,7 @@ export const projects: Project[] = [
         "M0 20 H120 l6 -14 l6 28 l6 -20 l5 6 H180 l8 -22 l7 34 l6 -12 H320",
     },
     detail: {
-      body: "A Python NLP tool built for Brazil’s public health record system (PEC). It reads free-text clinical notes, normalizes inconsistent terminology, rewrites explanations for the intended audience (clinician vs. patient), and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on generative AI in clinical decision support.",
+      body: "A Python NLP tool built for Brazil’s public health record system (PEC). It reads free-text clinical notes, normalizes inconsistent terminology, rewrites explanations for the intended audience (clinician vs. patient), and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on natural language processing (NLP) for clinical decision support.",
       role: "Undergraduate thesis project",
       outcome:
         "92% accuracy on clinical terminology normalization",

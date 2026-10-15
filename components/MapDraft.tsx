@@ -10,9 +10,9 @@ import { ORIGIN, PARIS, formatLatLon, intermediatePoint } from "@/content/geo";
    quick on long straight runs, lifting between strokes · dividers step out
    the route and stamp the distance · the great circle inks and lands on the
    bearing label · the instruments lift away and the drawing settles faint.
-   Phones (≈4 s): the same drawing, pencil only, when the figure scrolls in.
+   Phones (≈6 s): the same drawing, pencil only, when the figure scrolls in.
 
-   Wide screens (variant C, ≈11.7 s — prototype): A's pencil pacing and
+   Wide screens (variant C, ≈14 s): A's pencil pacing and
    pen-lifts at a slower tempo, filmed by a camera that follows the pencil
    and lingers where it lingers — close on the Origin and the compass, a
    slow drift up the Brazilian coast, a long pull back across the Atlantic,
@@ -158,11 +158,11 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
       { opacity: 0, transform: "translateY(-14px)" },
     ], from, to - from);
 
-  // the schedule (s): wide (C) ≈ 11.7 — A's pacing at 3.6/6.0 of the speed,
-  // so the close-up never races; phone (A) ≈ 4. compass: in, out, sweep, sweep length, inner arc
+  // the schedule (s): wide (C) ≈ 14 — A's pacing at 3.6/8.3 of the speed,
+  // so the drawing never races; phone (A) ≈ 6 (coast 3.8 s). compass: in, out, sweep, sweep length, inner arc
   const T = wide
-    ? { grat: 0, gratDur: 0.4, gratStep: 0.035, origin: 0.4, compass: [0.55, 2.6, 0.9, 1.1, 2.0], coast: 2.5, coastDur: 6.0, dividers: 9.0, route: 9.9, routeDur: 0.8, settle: 11.2 }
-    : { grat: 0, gratDur: 0.25, gratStep: 0.025, origin: 0.3, compass: [0, 0, 0, 0, 0], coast: 0.6, coastDur: 2.2, dividers: 2.8, route: 2.95, routeDur: 0.6, settle: 3.7 };
+    ? { grat: 0, gratDur: 0.4, gratStep: 0.035, origin: 0.4, compass: [0.55, 2.6, 0.9, 1.1, 2.0], coast: 2.5, coastDur: 8.3, dividers: 11.3, route: 12.2, routeDur: 0.8, settle: 13.5 }
+    : { grat: 0, gratDur: 0.3, gratStep: 0.03, origin: 0.35, compass: [0, 0, 0, 0, 0], coast: 0.7, coastDur: 3.8, dividers: 4.6, route: 4.75, routeDur: 0.8, settle: 5.6 };
 
   // 1. graticule, ruled line by line
   $$(".md-grat path").forEach((p, i) => ink(p, T.grat + i * T.gratStep, T.gratDur));
@@ -353,10 +353,14 @@ export default function MapDraft({ km, bearing }: { km: string; bearing: string 
     if (data.still) return;
     const root = document.documentElement;
     const { anims, stop } = draft(svg, data.d, data.wide);
-    const finish = () => anims.forEach((a) => a.playState !== "finished" && a.finish());
+    const finish = () => {
+      if (root.classList.contains("md-wait")) root.classList.add("md-skip");
+      anims.forEach((a) => a.playState !== "finished" && a.finish());
+    };
 
-    // wide: the AS-BUILT stamp waits for the drawing (unless it already landed)
-    if (data.wide && (document.timeline.currentTime as number) < 3200) root.classList.add("md-wait");
+    // the title block's stamps (signature, then AS-BUILT) wait for the drawing
+    // (unless they already landed); a skip shows them stamped at once
+    if ((document.timeline.currentTime as number) < 2800) root.classList.add("md-wait");
     let live = true;
     Promise.all(anims.map((a) => a.finished)).then(
       () => { if (live && root.classList.contains("md-wait")) { root.classList.remove("md-wait"); root.classList.add("md-landed"); } },

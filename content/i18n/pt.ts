@@ -23,6 +23,7 @@ export const pt: Bundle = {
 
     origin: {
       eyebrow: "DESENHO",
+      statusKey: "STATUS",
       cta: "Vamos conversar",
       cv: "Baixar CV",
       cvNote: "(PDF, em inglês)",
@@ -107,7 +108,7 @@ export const pt: Bundle = {
     description:
       "Simon Laborde — engenheiro backend e full-stack com foco em IA/LLM, com base em sistemas backend corporativos. Portfólio, experiência e contato.",
     roleLine:
-      "Engenheiro backend e full-stack com foco em <strong>IA / LLM</strong>, com base em sistemas backend corporativos e desenvolvimento full-stack.",
+      "Engenheiro backend e full-stack com foco em <strong>IA / LLM</strong>, com experiência em sistemas backend corporativos na Accenture.",
     thesis:
       "Faço a ponte entre sistemas complexos e as pessoas que dependem deles — hoje, construindo ferramentas com LLMs.",
     status: {
@@ -133,7 +134,7 @@ export const pt: Bundle = {
         "Privacidade: suas perguntas são enviadas à API Claude, da Anthropic, para gerar as respostas. Este site não salva conversas; seu endereço IP fica guardado por até 10 minutos para limitar o uso.",
     },
     titleBlock: [
-      { dt: "Desenhado por", dd: "S. Laborde", mono: false },
+      { dt: "Desenhado por", dd: "S. Laborde", mono: false, sign: true },
       { dt: "Origem", dd: "07°13′S 35°53′W", mono: true },
       { dt: "Rumo", dd: "Brasil → Europa", mono: false },
       { dt: "Revisão", dd: "2026.5", mono: true, stamp: true },
@@ -153,7 +154,7 @@ export const pt: Bundle = {
       when: "2020 — 2025",
       title: "Bacharelado em Sistemas de Informação",
       org: "UNIFACISA — Campina Grande",
-      body: "TCC — <em>&ldquo;Applications of Generative AI in Clinical Decision Support&rdquo;</em> — aprovado com distinção, e a semente do projeto MedHelp.",
+      body: "TCC — <em>&ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo;</em> — processamento de linguagem natural (PLN) para apoio à decisão clínica, aprovado com nota máxima (10), e a semente do projeto MedHelp.",
     },
     {
       when: "2022 — 2023",

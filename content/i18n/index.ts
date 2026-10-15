@@ -36,7 +36,7 @@ export type SiteCopy = Widen<
     | "role" | "title" | "description" | "roleLine" | "thesis" | "status"
     | "workRights" | "contactIntro" | "chatLauncher" | "chatSuggestions" | "chatNotice"
   >
-> & { titleBlock: { dt: string; dd: string; mono: boolean; stamp?: boolean }[] };
+> & { titleBlock: { dt: string; dd: string; mono: boolean; stamp?: boolean; sign?: boolean }[] };
 
 type SkinText = Partial<{
   vitals: { dt: string; value: string; unit?: string }[];
@@ -87,7 +87,7 @@ const en: Bundle = {
     chatLauncher: { ...site.chatLauncher },
     chatSuggestions: [...site.chatSuggestions],
     chatNotice: { ...site.chatNotice },
-    titleBlock: site.titleBlock.map((row) => ({ ...row, stamp: row.dt === "Revision" })),
+    titleBlock: site.titleBlock.map((row) => ({ ...row, stamp: row.dt === "Revision", sign: row.dt === "Drawn by" })),
   },
   journey,
   arsenal,
