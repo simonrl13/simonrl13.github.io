@@ -2031,7 +2031,7 @@ main.subpage { padding-left: 0; }
 }
 /* narrow cells: the stamp goes under the value instead of beside it */
 @media (max-width: 520px) {
-    .titleblock > .titleblock__stamp-host { padding-bottom: 32px; }
+    .titleblock > .titleblock__stamp-host { padding-bottom: 32px; } /* beats the base .titleblock > div padding */
     .titleblock__stamp-host::after { top: auto; bottom: 8px; left: 14px; right: auto; transform: rotate(-5deg); }
     @keyframes stampLand { from { opacity: 0; transform: rotate(-5deg) scale(1.06); } }
 }
