@@ -1851,7 +1851,7 @@ main.subpage { padding-left: 0; }
    itself (graticule, compass, pencil, dividers, route; ≈7.8 s on wide
    screens, ≈4 s on phones) is a Web Animations timeline built in
    MapDraft.tsx from the map's vertices, so every animation runs from blank
-   and a skip simply finishes them. ?v=a / ?v=b pick the variant (prototype). */
+   and a skip simply finishes them. */
 
 /* desktop: a layer behind the hero. Absolutely positioned inside the frame
    (isolated, z-index -1), so it can never shift layout. The route map fits,
@@ -1887,22 +1887,17 @@ main.subpage { padding-left: 0; }
 
 /* line work that draws itself is stroked in user units (--u = units per CSS
    px, set by MapDraft): a non-scaling stroke would take its dashes in screen
-   space and break the draw-on under B's camera zoom (which instead, rightly,
-   thickens the lines close up) */
+   space and break the draw-on under any transform */
 .md-grat path { fill: none; stroke: var(--line); stroke-width: var(--u, 1.7); }
 .md-arcs path { fill: none; stroke: var(--brass); stroke-width: var(--u, 1.7); opacity: .7; }
-.md-coast path { fill: none; stroke: var(--brass); stroke-width: calc(var(--u, 1.7) * var(--w, 1)); stroke-linejoin: round; stroke-linecap: round; }
+.md-coast path { fill: none; stroke: var(--brass); stroke-width: var(--u, 1.7); stroke-linejoin: round; stroke-linecap: round; }
 .md-coast { opacity: .75; }
-.md-con path { fill: none; stroke: var(--paper-dim); stroke-width: calc(var(--u, 1.7) * .75); opacity: .55; }
 .md-route { fill: none; stroke: var(--brass); stroke-width: calc(var(--u, 1.7) * 2); stroke-linecap: round; }
 .md-pt { fill: var(--ink); stroke: var(--brass); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.md-pt, .md-label, .md-splash { transform-box: fill-box; transform-origin: center; }
-.md-splash { fill: none; stroke: var(--brass); stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: 0; }
+.md-pt, .md-label { transform-box: fill-box; transform-origin: center; }
 .md-label { fill: var(--paper); font-family: var(--font-mono); font-size: 27px; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
 .mapfig .md-label { font-size: 20px; }
 .md-label--km { fill: var(--brass); }
-.md-label--coords { fill: var(--paper-dim); font-size: 20px; }
-.mapfig .md-label--coords { font-size: 15px; }
 .md-inst { fill: none; stroke: var(--paper); stroke-width: 1.6; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .md-inst--thin { stroke-width: 1; }
 .md-inst--hinge { fill: var(--ink); }
@@ -1910,13 +1905,7 @@ main.subpage { padding-left: 0; }
 .md-tool { opacity: 0; }
 
 /* line work draws itself (pathLength=1); dash 1 = drawn at rest */
-.md-grat path, .md-coast path, .md-route, .md-arcs path, .md-con path { stroke-dasharray: 1; stroke-dashoffset: 0; }
-
-/* variant B: pencil-grain ink (a 5-unit pattern tile, painted once) and a
-   hand-varied line weight per stroke (set inline) */
-.md-b .md-coast path { stroke: url(#md-grain); }
-.md-grain-ink { fill: var(--brass); }
-.md-grain-gap { fill: var(--ink); opacity: .6; }
+.md-grat path, .md-coast path, .md-route, .md-arcs path { stroke-dasharray: 1; stroke-dashoffset: 0; }
 
 @keyframes dimGrow  { to { transform: scaleX(1); } }
 @keyframes dimGrowY { to { transform: scaleY(1); } }

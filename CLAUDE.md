@@ -132,10 +132,9 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
   its JSON arrives after `load` + idle; pencil paced per vertex). On wide screens the AS-BUILT
   stamp waits for it (`md-wait` → `md-landed`); elsewhere it lands at 3.2 s. Once per tab
   session (`data-drawn`). Skip = any click/tap/key/scroll (phone: scroll the figure away).
-  Prototype variants: `?v=a` (default) / `?v=b` (camera, bold ink, texture, climax).
 - Map line work that draws itself is stroked in user units (`--u`, set by MapDraft), never
   `vector-effect: non-scaling-stroke`: Chrome then takes the dashes in screen space and the
-  draw-on breaks under a transform (B's camera).
+  draw-on breaks under any transform (e.g. a camera zoom).
   Bearing (027°) and distance (7,259 km) → Paris are computed in `content/geo.ts` and tested.
 - Map data: `npm run gen:map` → committed `public/map/*.json` (Natural Earth, public domain).
   d3-geo / topojson-client / world-atlas are devDependencies only — never import them in app code.

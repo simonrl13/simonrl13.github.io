@@ -41,23 +41,3 @@ export function greatCircleKm(a: { lat: number; lon: number }, b: { lat: number;
 /** Great-circle distance ORIGIN → Paris, whole km (7,259; tested). */
 export const KM_TO_PARIS = Math.round(greatCircleKm(ORIGIN, PARIS));
 
-/** The point a fraction f (0–1) of the way along the great circle a → b. */
-export function intermediatePoint(a: { lat: number; lon: number }, b: { lat: number; lon: number }, f: number) {
-  const d = greatCircleKm(a, b) / EARTH_RADIUS_KM;
-  if (d === 0) return { ...a };
-  const A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
-  const x = A * Math.cos(rad(a.lat)) * Math.cos(rad(a.lon)) + B * Math.cos(rad(b.lat)) * Math.cos(rad(b.lon));
-  const y = A * Math.cos(rad(a.lat)) * Math.sin(rad(a.lon)) + B * Math.cos(rad(b.lat)) * Math.sin(rad(b.lon));
-  const z = A * Math.sin(rad(a.lat)) + B * Math.sin(rad(b.lat));
-  const deg = (r: number) => (r * 180) / Math.PI;
-  return { lat: deg(Math.atan2(z, Math.hypot(x, y))), lon: deg(Math.atan2(y, x)) };
-}
-
-/** "07°13′S 35°53′W" — the title block's format (whole minutes, truncated). */
-export function formatLatLon({ lat, lon }: { lat: number; lon: number }): string {
-  const part = (v: number, pos: string, neg: string) => {
-    const m = Math.floor(Math.abs(v) * 60 + 1e-9);
-    return `${String(Math.floor(m / 60)).padStart(2, "0")}°${String(m % 60).padStart(2, "0")}′${v < 0 ? neg : pos}`;
-  };
-  return `${part(lat, "N", "S")} ${part(lon, "E", "W")}`;
-}
