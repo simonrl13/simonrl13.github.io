@@ -351,9 +351,10 @@ async function ask(question) {
 const { facts, check } = loadProject();
 FACT_NUMBERS = new Set(numbersIn(facts));
 const client = new Anthropic();
-let failures = 0;
+let failures = 0, infra = 0, ran = 0;
 
 for (const c of cases) {
+  ran++;
   if (c.direct) {
     const reasons = [];
     for (const draft of c.direct) {
@@ -366,11 +367,25 @@ for (const c of cases) {
       }
     }
     if (reasons.length) failures++;
-    console.log(`\n[${reasons.length ? "FAIL" : "pass"}] ${c.name}  (${c.direct.length} forged drafts)`);
+    console.log(`\n[${reasons.length ? "ANSWER FAIL" : "pass"}] ${c.name}  (${c.direct.length} forged drafts)`);
     for (const r of reasons) console.log(`  ✗ ${r}`);
     continue;
   }
   const { status, ok, answer } = await ask(c.ask);
+  // infra failure: the site errored (5xx) or never answered, so there is no
+  // model answer to judge. Labelled apart from answer failures; both fail the
+  // run, and the run stops here instead of retrying: report, don't keep
+  // hammering a broken backend.
+  if (status === 0 || status >= 500) {
+    failures++;
+    infra++;
+    console.log(`\n[INFRA FAIL] ${c.name}  (HTTP ${status || "no response"}, no model answer)`);
+    console.log(`  Q: ${c.ask}`);
+    console.log(`  A: ${answer.replace(/\n/g, "\n     ")}`);
+    console.log(`\nStopped after an infrastructure failure: ${ran - failures}/${ran} probes run passed, ${cases.length - ran} not run.`);
+    console.log(`INFRA failures: ${infra} · ANSWER failures: ${failures - infra} · ${BASE}`);
+    process.exit(1);
+  }
   const reasons = [];
   if (!ok) reasons.push(`HTTP ${status}`);
   if (c.fail(answer)) reasons.push(c.name.startsWith("Scout") ? `case rule: ${scoutClaims(answer).join(" | ") || "too short"}` : "case rule");
@@ -389,11 +404,12 @@ for (const c of cases) {
   }
 
   if (reasons.length) failures++;
-  console.log(`\n[${reasons.length ? "FAIL" : "pass"}] ${c.name}  (HTTP ${status}${c.judge ? ", judged" : ""})`);
+  console.log(`\n[${reasons.length ? "ANSWER FAIL" : "pass"}] ${c.name}  (HTTP ${status}${c.judge ? ", judged" : ""})`);
   console.log(`  Q: ${c.ask}`);
   console.log(`  A: ${answer.replace(/\n/g, "\n     ")}`);
   for (const r of reasons) console.log(`  ✗ ${r}`);
 }
 
 console.log(`\n${cases.length - failures}/${cases.length} probes passed against ${BASE}`);
+console.log(`INFRA failures: ${infra} · ANSWER failures: ${failures - infra}`);
 process.exit(failures ? 1 : 0);

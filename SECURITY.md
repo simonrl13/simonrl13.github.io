@@ -112,7 +112,13 @@ OWASP Top 10 (2021):
 - **Chat logging**: no question, answer or flagged claim is ever logged. A
   failed grounding check logs one line with a reason code — `checker_rejected`,
   `timeout`, `api_error`, `parse_error`, or `draft_unusable` when the drafting
-  call itself is refused or cut off — and the attempt number. Each safe-answer
+  call itself is refused or cut off — and the attempt number. A drafting call
+  that errors logs `chat_model_error` with its reason code. Whenever an
+  Anthropic API call fails (drafting or checking), the line also records the
+  SDK error's HTTP status, `error.type` (e.g. `overloaded_error`,
+  `rate_limit_error`, `api_error`, `invalid_request_error`), the
+  `request-id` and the error class — never the error message, which can echo
+  request content. Each safe-answer
   fallback increments a per-day counter (`chat:fallback:<UTC date>` in Upstash,
   expires after 8 days, no visitor data) and logs the count.
 - **Hosting logs**: Vercel keeps its own platform request logs under its

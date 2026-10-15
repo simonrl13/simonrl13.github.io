@@ -96,7 +96,7 @@ export const enUi = {
     global: "The assistant has reached today's limit — it resets at midnight UTC. In the meantime, email {email}.",
     unavailable: "The assistant is briefly unavailable — please try again shortly, or email {email}.",
     notConfigured: "This assistant isn't configured yet. Email {email} in the meantime.",
-    rateLimited: "The assistant is in high demand right now — please try again shortly.",
+    rateLimited: "The assistant is in high demand right now — please try again shortly, or email {email}.",
     streamError: "Something went wrong answering that. Please try again, or email {email}.",
     /** sent when no draft passes the grounding check */
     unverified: "I couldn't give you an answer I can stand behind on that one. Please ask Simon directly at {email}.",

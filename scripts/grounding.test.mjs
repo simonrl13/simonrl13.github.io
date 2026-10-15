@@ -18,7 +18,7 @@ import path from "node:path";
 mkdirSync(path.join("node_modules", ".cache"), { recursive: true });
 const out = mkdtempSync(path.join("node_modules", ".cache", "grounding-test-"));
 execFileSync(process.execPath, [path.join("node_modules", "typescript", "bin", "tsc"), "app/api/chat/grounding.ts", "--rootDir", ".", "--outDir", out, "--module", "commonjs", "--target", "es2022", "--resolveJsonModule", "--esModuleInterop", "--skipLibCheck"], { stdio: "inherit" });
-const { answer } = createRequire(import.meta.url)(path.resolve(out, "app", "api", "chat", "grounding.js"));
+const { answer, apiErrorFields } = createRequire(import.meta.url)(path.resolve(out, "app", "api", "chat", "grounding.js"));
 rmSync(out, { recursive: true, force: true });
 
 const text = (t) => [{ type: "text", text: t }];
@@ -72,4 +72,46 @@ test("a readable grounded verdict returns the draft (control)", async () => {
   const { result, events } = await run(text(JSON.stringify({ grounded: true, unsupported: [] })));
   assert.equal(result, "Simon is a backend engineer.");
   assert.equal(events.length, 0);
+});
+
+/** An API error shaped like the SDK's APIError (status, type, requestID, body, headers). */
+class APIError extends Error {
+  constructor() {
+    super("529 Overloaded: Who is Simon? (message text must never be logged)");
+    this.status = 529;
+    this.type = "overloaded_error";
+    this.requestID = "req_011CTestOverloaded";
+    this.error = { type: "error", error: { type: "overloaded_error", message: "Overloaded" } };
+    this.headers = new Headers({ "request-id": "req_011CTestOverloaded" });
+  }
+}
+
+test("a failed checker call logs the API error's status, type and request-id, never its message", async () => {
+  const lines = [];
+  const original = console.warn;
+  console.warn = (msg) => lines.push(String(msg));
+  try {
+    const client = {
+      messages: {
+        create: async (req) => {
+          if (req.output_config?.format) throw new APIError();
+          return { stop_reason: "end_turn", content: text("Simon is a backend engineer.") };
+        },
+      },
+    };
+    const result = await answer(client, [{ role: "user", content: "Who is Simon?" }]);
+    assert.equal(result, null);
+    const events = lines.map((l) => JSON.parse(l));
+    const failures = events.filter((e) => e.event === "chat_check_failed");
+    assert.deepEqual(failures[0], { event: "chat_check_failed", reason: "api_error", attempt: 1, status: 529, error_type: "overloaded_error", request_id: "req_011CTestOverloaded", error_class: "APIError" });
+    assert.ok(!lines.join("\n").includes("Who is Simon") && !lines.join("\n").includes("Overloaded:"), "no message or content in the logs");
+  } finally {
+    console.warn = original;
+  }
+});
+
+test("apiErrorFields reads the body's error.type and the header request-id when the SDK fields are absent", () => {
+  const err = { status: 500, error: { error: { type: "api_error" } }, headers: new Headers({ "request-id": "req_x" }) };
+  assert.deepEqual(apiErrorFields(err), { status: 500, error_type: "api_error", request_id: "req_x", error_class: "Object" });
+  assert.deepEqual(apiErrorFields(new TypeError("fetch failed")), { error_class: "TypeError" });
 });

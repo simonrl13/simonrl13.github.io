@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { fill, getBundle } from "@/content/i18n";
 import { createLimiter } from "@/lib/rate-limit";
 import { ALLOWED_ORIGINS, CHAT_LIMITS } from "./config";
-import { answer } from "./grounding";
+import { answer, apiErrorFields, errorReason } from "./grounding";
 
 export const runtime = "nodejs";
 
@@ -141,7 +141,9 @@ async function handle(req: NextRequest): Promise<Response> {
   try {
     reply = (await answer(client, messages)) ?? say("unverified");
   } catch (err) {
-    console.error("chat: model error:", err instanceof Error ? err.name : "unknown");
+    // the drafting call failed: a reason code and the API error's status,
+    // error.type and request-id — never the question or any draft
+    console.error(JSON.stringify({ event: "chat_model_error", reason: errorReason(err), ...apiErrorFields(err) }));
     return text(err instanceof Anthropic.RateLimitError ? say("rateLimited") : say("streamError"), 503);
   }
 

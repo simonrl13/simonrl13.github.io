@@ -15,8 +15,10 @@
    Logging: never the question, the draft or the flagged claims. Each failed
    attempt logs one JSON line with a reason code (checker_rejected, timeout,
    api_error, parse_error, or draft_unusable when the drafting call itself is
-   refused or cut off) and the attempt number; each fallback also bumps a
-   per-day counter (chat:fallback:<date> in Upstash, 8 days, no visitor data).
+   refused or cut off) and the attempt number; a failed API call adds the
+   error's HTTP status, error.type and request-id (apiErrorFields). Each
+   fallback also bumps a per-day counter (chat:fallback:<date> in Upstash, 8
+   days, no visitor data).
 
    Worst case per visitor question: 2 drafts + 2 checks. */
 
@@ -43,9 +45,30 @@ Supported: faithful paraphrases; saying REFERENCE doesn't show something; refusi
 grounded is true only if unsupported is empty.`;
 
 type FailReason = "checker_rejected" | "timeout" | "api_error" | "parse_error" | "draft_unusable";
-type Verdict = { grounded: boolean; unsupported: string[]; reason?: FailReason };
+type ErrorFields = { status?: number; error_type?: string; request_id?: string; error_class?: string };
+type Verdict = { grounded: boolean; unsupported: string[]; reason?: FailReason; error?: ErrorFields };
 
-function errorReason(err: unknown): FailReason {
+/** What a failed API call says about itself, for the logs: the HTTP status,
+ * the API's error.type (overloaded_error, rate_limit_error, api_error,
+ * invalid_request_error…), the request-id and the SDK error class. Never the
+ * message, which can echo request content. */
+export function apiErrorFields(err: unknown): ErrorFields {
+  const e = (err ?? {}) as {
+    status?: unknown; type?: unknown; requestID?: unknown;
+    error?: { error?: { type?: unknown } }; headers?: { get?: (h: string) => string | null };
+    constructor?: { name?: string };
+  };
+  const str = (v: unknown) => (typeof v === "string" && v ? v.slice(0, 80) : undefined);
+  const fields: ErrorFields = {
+    status: typeof e.status === "number" ? e.status : undefined,
+    error_type: str(e.type) ?? str(e.error?.error?.type),
+    request_id: str(e.requestID) ?? str(e.headers?.get?.("request-id")),
+    error_class: str(e.constructor?.name),
+  };
+  return Object.fromEntries(Object.entries(fields).filter(([, v]) => v !== undefined)) as ErrorFields;
+}
+
+export function errorReason(err: unknown): FailReason {
   // class name too: instanceof fails when the error comes from another copy of the SDK
   const timedOut =
     err instanceof Anthropic.APIConnectionTimeoutError ||
@@ -53,9 +76,9 @@ function errorReason(err: unknown): FailReason {
   return timedOut ? "timeout" : "api_error";
 }
 
-/** One line per failed attempt: a reason code, never content. */
-function logFailure(reason: FailReason, attempt: number) {
-  console.warn(JSON.stringify({ event: "chat_check_failed", reason, attempt }));
+/** One line per failed attempt: a reason code (and the API error's fields), never content. */
+function logFailure(reason: FailReason, attempt: number, error?: ErrorFields) {
+  console.warn(JSON.stringify({ event: "chat_check_failed", reason, attempt, ...(error && { ...error }) }));
 }
 
 /** Untrusted text can't open or close a block: angle brackets become look-alikes. */
@@ -128,7 +151,7 @@ export async function check(client: Anthropic, question: string, answer: string)
     const grounded = v.grounded && unsupported.length === 0;
     return grounded ? { grounded, unsupported } : { grounded, unsupported, reason: "checker_rejected" };
   } catch (err) {
-    return failed(errorReason(err));
+    return { ...failed(errorReason(err)), error: apiErrorFields(err) };
   }
 }
 
@@ -148,7 +171,7 @@ export async function answer(client: Anthropic, messages: Anthropic.MessageParam
     const verdict = await check(client, question, text);
     if (verdict.grounded) return text;
     lastReason = verdict.reason ?? "checker_rejected";
-    logFailure(lastReason, attempt);
+    logFailure(lastReason, attempt, verdict.error);
     avoid = verdict.unsupported.slice(0, 5).map((c) => c.slice(0, 200));
   }
   // safe answer goes out: count it per day (monitoring only, no content)
