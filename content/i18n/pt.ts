@@ -29,6 +29,7 @@ export const pt: Bundle = {
       titleBlockLabel: "Carimbo do desenho",
       languagesLabel: "Idiomas falados",
       dimLabel: "FOLHA 1 / 1 — ESCALA 1:1",
+      bearingLabel: "RUMO {deg} → PARIS",
     },
     journey: {
       title: "Trajetória",
@@ -134,7 +135,7 @@ export const pt: Bundle = {
     titleBlock: [
       { dt: "Desenhado por", dd: "S. Laborde", mono: false },
       { dt: "Origem", dd: "07°13′S 35°53′W", mono: true },
-      { dt: "Rumo", dd: "Brasil → Europa", mono: false },
+      { dt: "Rumo", dd: "Brasil → Europa", mono: false, survey: true },
       { dt: "Revisão", dd: "2026.5", mono: true, stamp: true },
       { dt: "Folha", dd: "1 / 1", mono: true },
       { dt: "Escala", dd: "1:1", mono: true },
