@@ -22,6 +22,17 @@ test("initial great-circle bearing Origin → Paris rounds to 027°", () => {
   assert.equal(geo.bearingLabel(geo.BEARING_TO_PARIS), "027°");
 });
 
+test("great-circle distance Origin → Paris rounds to 7,259 km", () => {
+  const exact = geo.greatCircleKm(geo.ORIGIN, geo.PARIS);
+  // 7,259.38 km with Paris at 48.8566°N 2.3522°E and the IUGG mean radius
+  assert.ok(exact > 7259 && exact < 7259.5, `expected ≈ 7,259.4 km, got ${exact}`);
+  assert.equal(geo.KM_TO_PARIS, 7259);
+  // independent check: d3-free spherical law of cosines agrees within 1 km
+  const r = (d) => (d * Math.PI) / 180, o = geo.ORIGIN, p = geo.PARIS;
+  const slc = geo.EARTH_RADIUS_KM * Math.acos(Math.sin(r(o.lat)) * Math.sin(r(p.lat)) + Math.cos(r(o.lat)) * Math.cos(r(p.lat)) * Math.cos(r(p.lon - o.lon)));
+  assert.ok(Math.abs(slc - exact) < 1, `law of cosines ${slc} vs haversine ${exact}`);
+});
+
 test("known bearings from the same origin (sanity: London 023°, Rome 038°)", () => {
   assert.equal(Math.round(geo.initialBearing(geo.ORIGIN, { lat: 51.5074, lon: -0.1278 })), 23);
   assert.equal(Math.round(geo.initialBearing(geo.ORIGIN, { lat: 41.9028, lon: 12.4964 })), 38);

@@ -68,7 +68,8 @@
 
 ## Features live
 Blueprint (dark, default) + whiteprint (light) theme · rail draw-in + scroll trace ·
-survey construction (Origin → Paris bearing) · survey-traverse carousel stations ·
+drafted hero map (Origin → Paris: compass, pencil, dividers, great circle) ·
+survey-traverse carousel stations ·
 hero dimension lines · drawing-sheet frame · scroll-revealed meters/ECG/XP/vitals ·
 section connectors · AS-BUILT stamp · exploded isometric project diagrams · Lattes
 pipeline flow diagram · "Ask about my work" chat with privacy note · security headers ·
@@ -125,11 +126,16 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - `npm run redteam` exits non-zero on any failure and stops (exit 2) without `ANTHROPIC_API_KEY`
   in `.env.local`. Never pipe it through `tail` without `set -o pipefail` — that masked an exit code once.
 - Smoke-test TODO checks on PT pages match `TODO(`/`TODO:` only — "todo" is a Portuguese word.
-- On-load sequence is one set (≈2.1 s): rail 1.5 s from .3 s, node pops = rail delay + when
-  `--ease` over 1.5 s reaches each node's `--at`, hero dims .5–1.9 s, survey construction
-  (mark 1.1 · north 1.15 · arc 1.25 · bearing line 1.45–2.0 · label 1.9), then the AS-BUILT
-  stamp lands once at 2.2 s — change together. It plays once per tab session; later loads get
-  `data-drawn`. The bearing (027° → Paris) is computed in `content/geo.ts` and tested.
+- On-load sequence is one set: rail 1.5 s from .3 s, node pops = rail delay + when
+  `--ease` over 1.5 s reaches each node's `--at`, hero dims .5–1.9 s, the drafted map
+  (`MapDraft`, ≈3.25 s from when its JSON arrives after `load` + idle; timeline in the
+  globals.css map block), then the AS-BUILT stamp lands once at 3.2 s — change together.
+  It plays once per tab session; later loads get `data-drawn`. Skip = first scroll/tap/key.
+  Bearing (027°) and distance (7,259 km) → Paris are computed in `content/geo.ts` and tested.
+- Map data: `npm run gen:map` → committed `public/map/*.json` (Natural Earth, public domain).
+  d3-geo / topojson-client / world-atlas are devDependencies only — never import them in app code.
+- Inter and JetBrains Mono use `display: "optional"` (a swap rewrapped the hero role line:
+  CLS 0.02). Keep it; Fraunces stays `swap`.
 - CSP (`next.config.mjs`) is strict apart from `'unsafe-inline'`: any new third-party
   script, font, image or API origin needs a deliberate CSP change + SECURITY.md entry.
 - `@upstash/ratelimit` *allows* on timeout by default — `lib/rate-limit.ts` treats

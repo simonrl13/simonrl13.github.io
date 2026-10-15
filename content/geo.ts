@@ -26,3 +26,17 @@ export const BEARING_TO_PARIS = Math.round(initialBearing(ORIGIN, PARIS));
 
 /** "027°" — three digits, the way bearings are written. */
 export const bearingLabel = (deg: number) => `${String(deg).padStart(3, "0")}°`;
+
+/** Mean Earth radius, km (IUGG). */
+export const EARTH_RADIUS_KM = 6371.0088;
+
+/** Great-circle distance from a to b in km (haversine, spherical Earth). */
+export function greatCircleKm(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
+  const dLat = rad(b.lat - a.lat);
+  const dLon = rad(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
+}
+
+/** Great-circle distance ORIGIN → Paris, whole km (7,259; tested). */
+export const KM_TO_PARIS = Math.round(greatCircleKm(ORIGIN, PARIS));

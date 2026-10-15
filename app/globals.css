@@ -215,7 +215,7 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
                 box-shadow .3s var(--ease), transform .3s var(--ease);
     /* each dot pops as the line passes it: delay = rail delay (.3s) + the
        moment --ease over 1.5s reaches the node's --at. Retune together
-       with .rail__base, the hero dims and the survey construction below —
+       with .rail__base, the hero dims and the drafted map below —
        they're one sequence. */
     opacity: 0;
     animation: popNode .3s var(--ease) forwards;
@@ -1840,113 +1840,104 @@ main.subpage { padding-left: 0; }
 :root[data-drawn] .rail__node::before,
 :root[data-drawn] .origin__dim,
 :root[data-drawn] .origin__dim--top::after,
-:root[data-drawn] .survey *,
-:root[data-drawn] .survey__brg,
-:root[data-drawn] .survey__brg * {
+.md-still *,
+:root[data-drawn] .mapdraft *,
+:root[data-drawn] .mapfig * {
     animation-duration: 0s;
     animation-delay: 0s;
 }
 /* the stamp's landing belongs to the first load only: later loads show it stamped */
 :root[data-drawn] .titleblock__stamp-host::after { animation: none; }
 
-/* ---- hero: survey construction, Origin → Paris (end of the load sequence) ----
-   Timeline (s): mark 1.10 · north reference 1.15 · compass arc 1.25 ·
-   bearing line 1.45–2.0 · label 1.9 · AS-BUILT stamp lands 2.2. Every
-   element's resting style is its finished drawing; the keyframes only run
-   from blank (fill: both), so data-drawn / reduced motion show it at rest. */
-.survey-plot { position: relative; height: 0; display: none; }
-@media (min-width: 1280px) { .survey-plot { display: block; } }
+/* ---- hero: the drafted map (components/MapDraft.tsx) — end of the load set ----
+   Timeline (s): graticule 0–.6 · compass .3–3.1 (sweep .45–1.05) · coast +
+   pencil .95–2.0 · dividers 1.95–2.95 (steps 2.0–2.6, distance 2.6) · route
+   2.45–2.95 · bearing label 2.85 · settle 2.9–3.25 · AS-BUILT stamp 3.2.
+   Resting styles are the settled drawing; keyframes run from blank (both). */
 
-.survey {
+/* desktop: a layer behind the hero. Absolutely positioned inside the frame
+   (isolated, z-index -1), so it can never shift layout. The route map fits,
+   uncropped, in the hero's empty top-right area — right of the headline,
+   above the status line — with a soft left edge; it never reaches the
+   buttons or the title block */
+.origin__frame { isolation: isolate; }
+.mapdraft {
     position: absolute;
-    width: 0; height: 0;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
     pointer-events: none;
-    color: var(--brass);
+    contain: strict;
+    display: none;
+    -webkit-mask-image: linear-gradient(to right, transparent 54%, #000 64%);
+            mask-image: linear-gradient(to right, transparent 54%, #000 64%);
 }
-/* wide screens: in the hero's empty right side, just above the title block */
-.survey { right: 17%; bottom: -30px; --len: 330px; --r: 46px; }
+.mapdraft svg { position: absolute; top: 3%; right: 2%; width: 42%; height: 52%; opacity: .7; animation: mdSettle .35s var(--ease) 2.9s both; }
+@media (min-width: 1100px) { .mapdraft { display: block; } }
 
-.survey__north {
-    position: absolute;
-    left: 0; bottom: 0;
-    height: calc(var(--r) + 20px);
-    border-left: 1px dashed var(--line);
-    transform-origin: bottom center;
-    animation: surveyNorth .25s var(--ease) 1.15s both;
+/* smaller screens: a fixed-ratio figure in the flow (rendered from first
+   paint, so it can't shift anything either) */
+.mapfig {
+    display: block;
+    margin: clamp(22px, 5vw, 32px) 0 0;
+    aspect-ratio: 600 / 400;
+    border: 1px solid var(--line-soft);
 }
-.survey__arc {
-    position: absolute;
-    width: calc(var(--r) * 2.5); height: calc(var(--r) * 2.5);
-    left: calc(var(--r) * -1.25); bottom: calc(var(--r) * -1.25);
-    overflow: visible;
-}
-.survey__arc path {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1;
-    vector-effect: non-scaling-stroke;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 0;
-    animation: surveyArc .35s var(--ease) 1.25s both;
-}
-.survey__line {
-    position: absolute;
-    left: -.5px; bottom: 0;
-    width: 1px;
-    height: var(--len);
-    background: currentColor;
-    opacity: .6;
-    transform-origin: bottom center;
-    transform: rotate(var(--brg));
-    animation: surveyLine .55s var(--ease) 1.45s both;
-}
-.survey__mark {
-    position: absolute;
-    width: 22px; height: 22px;
-    left: -11px; bottom: -11px;
-    overflow: visible;
-    animation: popNode .3s var(--ease) 1.1s both;
-}
-.survey__mark circle { fill: var(--ink); stroke: currentColor; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.survey__mark path { stroke: currentColor; stroke-width: 1; vector-effect: non-scaling-stroke; }
-/* sits to the left of the line's far end — the hero's empty side — so it
-   never crosses the frame edge */
-.survey__label {
-    position: absolute;
-    left: calc(sin(var(--brg)) * var(--len) - 10px);
-    bottom: calc(cos(var(--brg)) * var(--len) - 6px);
-    transform: translateX(-100%);
-    white-space: nowrap;
-    padding: 1px 6px;
-    background: var(--ink);
-    font-size: 9px;
-    letter-spacing: .12em;
-    color: var(--paper-dim);
-    animation: fadeIn .25s var(--ease) 1.9s both;
-}
-/* below 1280px: the Bearing cell carries the mark + label instead */
-.survey__brg {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    margin-top: 4px;
-    font-size: 9px;
-    letter-spacing: .1em;
-    color: var(--paper-dim);
-    animation: fadeIn .25s var(--ease) 1.9s both;
-}
-.survey__brg .survey__mark {
-    position: static;
-    width: 12px; height: 12px;
-    flex: none;
-    color: var(--brass);
-}
-@media (min-width: 1280px) { .survey__brg { display: none; } }
+.mapfig svg { width: 100%; height: 100%; display: block; }
+@media (min-width: 1100px) { .mapfig { display: none; } }
 
-@keyframes surveyNorth { from { transform: scaleY(0); } }
-@keyframes surveyArc   { from { stroke-dashoffset: 1; } }
-@keyframes surveyLine  { from { transform: rotate(var(--brg)) scaleY(0); } }
-@keyframes fadeIn      { from { opacity: 0; translate: 0 3px; } }
+.md-grat path { fill: none; stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.md-arcs path { fill: none; stroke: var(--brass); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; opacity: .7; }
+.md-coast { fill: none; stroke: var(--brass); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .75; }
+.md-route { fill: none; stroke: var(--brass); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.md-pt { fill: var(--ink); stroke: var(--brass); stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; }
+.md-label { fill: var(--paper); font-family: var(--font-mono); font-size: 27px; letter-spacing: .1em; }
+.mapfig .md-label { font-size: 12px; }
+.md-label--km { fill: var(--brass); }
+.md-inst { fill: none; stroke: var(--paper); stroke-width: 1.6; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.md-inst--thin { stroke-width: 1; }
+.md-inst--hinge { fill: var(--ink); }
+.md-inst--fill { fill: rgba(var(--brass-rgb), .25); }
+
+/* line work draws itself (pathLength=1); dash 1 = drawn at rest */
+.md-grat path, .md-coast, .md-route, .md-arcs path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.md-arcs path { stroke-dasharray: 1; }
+.mapdraft .md-grat path { animation: mdInk .45s var(--ease) calc(var(--i, 0) * 12ms) both; }
+.mapdraft .md-arcs path { animation: mdInk .6s var(--ease) .45s both; }
+.mapdraft .md-coast { animation: mdInk 1.05s linear .95s both; }
+.mapdraft .md-route { animation: mdInk .5s var(--ease) 2.45s both; }
+.mapdraft .md-pt { animation: popNode .3s var(--ease) .3s both; }
+.mapdraft .md-pt--paris { animation-delay: 2.85s; }
+.mapdraft .md-label--brg { animation: fadeIn .25s var(--ease) 2.85s both; }
+.mapdraft .md-label--km { animation: mdStamp .16s var(--ease) 2.6s both; transform-box: fill-box; transform-origin: center; }
+
+/* instruments: visible only while drafting; at rest they're lifted away */
+.md-tool { opacity: 0; }
+.mapdraft .md-tool--compass { animation: mdTool 2.8s var(--ease) .3s both; }
+.mapdraft .md-tool--pencil { animation: mdTool 1.2s var(--ease) .88s both; }
+.mapdraft .md-tool--dividers { animation: mdTool 1.05s var(--ease) 1.95s both; }
+.mapdraft .md-compass-arm { animation: mdCompassSweep .6s var(--ease) .45s both; }
+.mapdraft .md-pencil { animation: mdPencilPath 1.05s linear .95s both; }
+.mapdraft .md-dividers { animation: mdDividerSteps .6s linear 2.0s both; }
+
+/* small screens: same line work, simplified, no instruments (≈1.6s) */
+.mapfig .md-grat path { animation: mdInk .4s var(--ease) calc(var(--i, 0) * 15ms) both; }
+.mapfig .md-coast { animation: mdInk .9s linear .3s both; }
+.mapfig .md-route { animation: mdInk .45s var(--ease) 1.1s both; }
+.mapfig .md-pt { animation: popNode .3s var(--ease) 1.05s both; }
+.mapfig .md-label { animation: fadeIn .25s var(--ease) 1.5s both; }
+.mapfig:not(.md-inview):not(.md-still) * { animation-play-state: paused; }
+
+@keyframes mdInk    { from { stroke-dashoffset: 1; } }
+@keyframes mdSettle { from { opacity: 1; } }
+@keyframes mdStamp  { from { opacity: 0; transform: scale(1.08); } }
+@keyframes mdTool {
+    0%   { opacity: 0; transform: translateY(-6px); }
+    8%   { opacity: 1; transform: none; }
+    88%  { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: translateY(-14px); }
+}
+@keyframes fadeIn   { from { opacity: 0; translate: 0 3px; } }
 
 @keyframes dimGrow  { to { transform: scaleX(1); } }
 @keyframes dimGrowY { to { transform: scaleY(1); } }
@@ -2040,13 +2031,13 @@ main.subpage { padding-left: 0; }
 }
 /* narrow cells: the stamp goes under the value instead of beside it */
 @media (max-width: 520px) {
-    .titleblock__stamp-host { padding-bottom: 30px; }
+    .titleblock > .titleblock__stamp-host { padding-bottom: 32px; }
     .titleblock__stamp-host::after { top: auto; bottom: 8px; left: 14px; right: auto; transform: rotate(-5deg); }
     @keyframes stampLand { from { opacity: 0; transform: rotate(-5deg) scale(1.06); } }
 }
 /* lands once at the end of the load sequence and stays stamped; before it
    lands (first load only) the fill holds it blank */
-.titleblock__stamp-host::after { animation: stampLand .16s var(--ease) 2.2s both; }
+.titleblock__stamp-host::after { animation: stampLand .16s var(--ease) 3.2s both; }
 @keyframes stampLand {
     from { opacity: 0; transform: translateY(-50%) rotate(-5deg) scale(1.06); }
 }
@@ -2085,7 +2076,7 @@ main.subpage { padding-left: 0; }
     .origin__dim--top::after { opacity: 1; }
 
     /* survey construction drawn, no stamp landing, iso already apart */
-    .survey *, .survey__brg, .survey__brg * { animation: none !important; }
+    .mapdraft, .mapdraft *, .mapfig * { animation: none !important; }
     .titleblock__stamp-host::after { animation: none !important; }
     .sheet__iso .iso__layer { transition: none !important; }
     .carousel__dots li, .carousel__dots li::before, .carousel__dots li::after { transition: none !important; }
