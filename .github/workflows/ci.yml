@@ -28,6 +28,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - run: npm test
 
       # Runtime dependencies gate the build; dev-only tooling is reported
       # but doesn't block (see SECURITY.md → Known limitations).
