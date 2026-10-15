@@ -77,6 +77,17 @@ OWASP Top 10 (2021):
 - Dependency audits in CI (`npm audit --omit=dev --audit-level=high` blocks;
   the full audit is reported); Dependabot for npm and GitHub Actions.
 - Static analysis: CodeQL, `security-extended` queries.
+- **Known dev-only findings (logged 2026-10-15).** The full audit reports 5 high,
+  all one chain: `eslint-config-next@16.3.8` → `@next/eslint-plugin-next` →
+  `fast-glob@3.3.1` → `micromatch` → `braces@3.0.3`
+  ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm),
+  stack-exhaustion DoS on deeply nested glob patterns). Dev-only: it runs only in
+  `npm run lint` on repo-authored patterns, never in the build output or on
+  Vercel at runtime; the runtime audit (`--omit=dev`, the CI gate) is 0. No fix
+  exists yet: `braces` has no patched release, `eslint-config-next@16.4.1` still
+  pins `fast-glob@3.3.1`, and `npm audit fix` only offers a downgrade to 14.x.
+  Revisit with the ESLint 10 upgrade (ignored as a major in `.github/dependabot.yml`;
+  backlog in CLAUDE.md → Open) or as soon as a patched `braces` ships.
 - `main` is protected: the `verify`, `secret-scan` and `codeql` checks are
   required, no admin bypass.
 - Claude Code permissions: no reading secrets; approval required for installs

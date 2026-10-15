@@ -5,7 +5,9 @@
    Map data: Natural Earth (naturalearthdata.com), 1:110m land — public
    domain — via the world-atlas package (TopoJSON). d3-geo projects it;
    topojson-client decodes it. All three are devDependencies: nothing here
-   ships to the browser except the generated path strings.
+   ships to the browser except the generated path strings. Coastlines are
+   one path per ring, in drawing order (outward from the Origin); the
+   client paces pencil and ink from their vertices.
 
    ORIGIN, PARIS, the bearing and the distance come from content/geo.ts
    (tested in scripts/geo.test.mjs), so the drawing and the labels agree. */
@@ -106,11 +108,20 @@ function build({ w, h, pad, tol, minRing, graticuleStep, extent }) {
   const projection = geoMercator().fitExtent([[pad, pad], [w - pad, h - pad]], extent).clipExtent([[0, 0], [w, h]]);
   const pathOf = geoPath(projection);
 
-  // coastlines: biggest rings first, small islands dropped, simplified
+  // coastlines, simplified, small islands dropped; in drawing order: the ring
+  // nearest the Origin first, each one started at its point nearest the
+  // Origin, so the drawing grows outward from Campina Grande
+  const o = projection([geo.ORIGIN.lon, geo.ORIGIN.lat]);
+  const near = (p) => Math.hypot(p[0] - o[0], p[1] - o[1]);
   const coastRings = rings(pathOf(land))
     .map((r) => ({ ...r, pts: simplifyRing(r.pts, tol) }))
     .filter((r) => ringLength(r.pts) >= minRing)
-    .sort((a, b) => ringLength(b.pts) - ringLength(a.pts));
+    .map((r) => {
+      if (!r.closed) return r;
+      const k = r.pts.reduce((best, p, i) => (near(p) < near(r.pts[best]) ? i : best), 0);
+      return { ...r, pts: [...r.pts.slice(k), ...r.pts.slice(0, k)] };
+    })
+    .sort((a, b) => Math.min(...a.pts.map(near)) - Math.min(...b.pts.map(near)));
 
   // graticule, one path per line so they can be ruled in turn
   const graticule = geoGraticule().step(graticuleStep).extent([[-90, -60], [40, 75]]).lines()
@@ -147,9 +158,6 @@ const compass = {
   arcs: [arc(COMPASS_R, heading - 70, heading + 50), arc(COMPASS_R * 0.55, heading - 40, heading + 30)],
 };
 
-// pencil: follows the coastlines in drawing order (pen lifts between rings)
-const pencil = sample(D.coastRings.map((r) => r.pts), 72);
-
 // dividers: step out the route in 6 equal chords
 const STEPS = 6;
 const stepPts = sample([D.routePts], STEPS);
@@ -164,19 +172,18 @@ const mid = D.routePts[Math.floor(D.routePts.length / 2)];
 const desktop = {
   w: D.w, h: D.h,
   graticule: D.graticule,
-  coast: toD(D.coastRings),
+  coast: D.coastRings.map((r) => toD([r])),
   route: toD(D.routeRings),
   origin: D.origin,
   paris: D.paris,
   compass,
-  pencil,
   dividers,
   distanceAt: [round(mid[0] + 50), round(mid[1] + 6)],
 };
 
 // ---------- mobile: simplified map + route, no instruments ----------
 const M = build({ w: 600, h: 400, pad: 14, tol: 1.6, minRing: 40, graticuleStep: [20, 20], extent: EXTENT_MOBILE });
-const mobile = { w: M.w, h: M.h, graticule: M.graticule, coast: toD(M.coastRings), route: toD(M.routeRings), origin: M.origin, paris: M.paris };
+const mobile = { w: M.w, h: M.h, graticule: M.graticule, coast: M.coastRings.map((r) => toD([r])), route: toD(M.routeRings), origin: M.origin, paris: M.paris };
 
 // Output: static JSON in public/map/, fetched by components/MapDraft.tsx only
 // for the current screen size, after the page has loaded — so the map never
@@ -197,6 +204,6 @@ const size = (o) => {
   const s = JSON.stringify({ meta, ...o });
   return `${(Buffer.byteLength(s) / 1024).toFixed(1)} KB raw, ${(gzipSync(s).length / 1024).toFixed(1)} KB gzip`;
 };
-console.log(`desktop: ${size(desktop)}  (coast rings ${D.coastRings.length}, graticule ${D.graticule.length}, pencil ${pencil.length} pts)`);
+console.log(`desktop: ${size(desktop)}  (coast rings ${D.coastRings.length}, graticule ${D.graticule.length})`);
 console.log(`mobile:  ${size(mobile)}  (coast rings ${M.coastRings.length}, graticule ${M.graticule.length})`);
 console.log(`bearing ${geo.BEARING_TO_PARIS}°, distance ${geo.KM_TO_PARIS} km, screen heading ${round(heading)}°`);

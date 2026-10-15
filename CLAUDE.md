@@ -128,9 +128,14 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - Smoke-test TODO checks on PT pages match `TODO(`/`TODO:` only — "todo" is a Portuguese word.
 - On-load sequence is one set: rail 1.5 s from .3 s, node pops = rail delay + when
   `--ease` over 1.5 s reaches each node's `--at`, hero dims .5–1.9 s, the drafted map
-  (`MapDraft`, ≈3.25 s from when its JSON arrives after `load` + idle; timeline in the
-  globals.css map block), then the AS-BUILT stamp lands once at 3.2 s — change together.
-  It plays once per tab session; later loads get `data-drawn`. Skip = first scroll/tap/key.
+  (`MapDraft`: a Web Animations timeline in `draft()`, ≈7.8 s wide / ≈4 s phone, from when
+  its JSON arrives after `load` + idle; pencil paced per vertex). On wide screens the AS-BUILT
+  stamp waits for it (`md-wait` → `md-landed`); elsewhere it lands at 3.2 s. Once per tab
+  session (`data-drawn`). Skip = any click/tap/key/scroll (phone: scroll the figure away).
+  Prototype variants: `?v=a` (default) / `?v=b` (camera, bold ink, texture, climax).
+- Map line work that draws itself is stroked in user units (`--u`, set by MapDraft), never
+  `vector-effect: non-scaling-stroke`: Chrome then takes the dashes in screen space and the
+  draw-on breaks under a transform (B's camera).
   Bearing (027°) and distance (7,259 km) → Paris are computed in `content/geo.ts` and tested.
 - Map data: `npm run gen:map` → committed `public/map/*.json` (Natural Earth, public domain).
   d3-geo / topojson-client / world-atlas are devDependencies only — never import them in app code.
@@ -149,3 +154,6 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
   mat, `object-fit: contain`) and the live URL. LABNOV live URL missing.
 - Scout full case study (card + CV entry live; backs Docker, pytest, AWS, LightGBM, MLflow).
 - French locale (structure ready; content only).
+- ESLint upgrade: ESLint 9 → 10 (major ignored in dependabot.yml) together with
+  eslint-config-next; clears the dev-only braces/micromatch audit chain once a patched
+  `braces` exists (logged in SECURITY.md → Development safeguards). Its own PR.
