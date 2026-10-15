@@ -1,15 +1,25 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { ORIGIN, PARIS, formatLatLon, intermediatePoint } from "@/content/geo";
 
 /* The hero's first-load moment: the sheet is drafted like a real map of the
-   world being made. Wide screens (≈7.8 s, behind the hero): the graticule is
+   world being made (behind the hero on wide screens): the graticule is
    ruled · a compass pivots on the Origin and sweeps its arcs · the pencil
    inks the coastlines outward from Campina Grande — slow on detailed coasts,
    quick on long straight runs, lifting between strokes · dividers step out
    the route and stamp the distance · the great circle inks and lands on the
    bearing label · the instruments lift away and the drawing settles faint.
    Phones (≈4 s): the same drawing, pencil only, when the figure scrolls in.
+
+   Wide screens (variant C, ≈11.7 s — prototype): A's pencil pacing and
+   pen-lifts at a slower tempo, filmed by a camera that follows the pencil
+   and lingers where it lingers — close on the Origin and the compass, a
+   slow drift up the Brazilian coast, a long pull back across the Atlantic,
+   then Europe; the whole map is in view before the dividers. Bold ink that
+   fades to the background only at the end, hand-drawn texture (line-weight
+   variation, overshooting construction lines, pencil grain) and a climax
+   (coordinates tick along the route, the bearing label stamps).
 
    Weight: the page only carries two empty, fixed-size containers. After the
    page has loaded (browser idle), the data for the current screen size is
@@ -44,23 +54,53 @@ const points = (d: string): Pt[] => {
 const dist = (a: Pt, b: Pt) => Math.hypot(b[0] - a[0], b[1] - a[1]);
 const tr = (p: Pt) => `translate(${p[0].toFixed(1)}px, ${p[1].toFixed(1)}px)`;
 
+/** A deterministic, slight weight change per stroke (wide screens). */
+const weight = (i: number) => 1.1 + ((i * 37) % 9) / 10;
+
 function Drawing({ d, wide, km, bearing }: { d: MapData; wide: boolean; km: string; bearing: string }) {
+  const b = wide; // the full treatment (camera, bold ink, texture, climax) is wide-only
   const [ox, oy] = d.origin, [px, py] = d.paris;
   const r = d.compass?.r ?? 0;
   const half = (d.dividers?.span ?? 0) / 2;
   const s = wide ? 1 : 0.55; // label / instrument scale on the phone viewBox
+  const over = 24 * s; // construction lines overshoot their points
+  const ux = (px - ox) / dist(d.origin, d.paris), uy = (py - oy) / dist(d.origin, d.paris);
   const kmAt = d.distanceAt ?? [(ox + px) / 2 + 10, (oy + py) / 2 + 4];
   return (
-    <svg viewBox={`0 0 ${d.w} ${d.h}`} preserveAspectRatio={wide ? "xMaxYMin meet" : "xMidYMid meet"}>
+    <svg viewBox={`0 0 ${d.w} ${d.h}`} preserveAspectRatio={wide ? "xMaxYMin meet" : "xMidYMid meet"} className={b ? "md-b" : undefined}>
+      {b && (
+        <defs>
+          {/* the camera's frame: zoomed line work never spills outside the map */}
+          <clipPath id="md-frame"><rect width={d.w} height={d.h} /></clipPath>
+          <pattern id="md-grain" width="5" height="5" patternUnits="userSpaceOnUse">
+            <rect className="md-grain-ink" width="5" height="5" />
+            <rect className="md-grain-gap" x="1" y="0" width="1" height="1" />
+            <rect className="md-grain-gap" x="3.4" y="1.8" width="1.1" height="0.9" />
+            <rect className="md-grain-gap" x="0.2" y="3.6" width="0.9" height="1" />
+            <rect className="md-grain-gap" x="2.6" y="4.1" width="1" height="0.8" />
+          </pattern>
+        </defs>
+      )}
+      <g clipPath={b ? "url(#md-frame)" : undefined}>
+      <g className="md-cam">
         <g className="md-grat">{d.graticule.map((g, i) => <path key={i} d={g} pathLength={1} />)}</g>
         {d.compass && <g className="md-arcs">{d.compass.arcs.map((a, i) => <path key={i} d={a} pathLength={1} />)}</g>}
+        {b && (
+          <g className="md-con">
+            <path className="md-con--o" d={`M${ox - 60 * s},${oy}L${ox + 60 * s},${oy}M${ox},${oy - 60 * s}L${ox},${oy + 60 * s}`} pathLength={1} />
+            <path className="md-con--chord" d={`M${ox - ux * over},${oy - uy * over}L${px + ux * over},${py + uy * over}`} pathLength={1} />
+            <path className="md-con--p" d={`M${px - 44 * s},${py}L${px + 44 * s},${py}M${px},${py - 44 * s}L${px},${py + 44 * s}`} pathLength={1} />
+          </g>
+        )}
         <g className="md-coast">
-          {d.coast.map((c, i) => <path key={i} d={c} pathLength={1} />)}
+          {d.coast.map((c, i) => <path key={i} d={c} pathLength={1} style={b ? ({ "--w": weight(i) } as CSSProperties) : undefined} />)}
         </g>
         <path className="md-route" d={d.route} pathLength={1} />
         <circle className="md-pt md-pt--origin" cx={ox} cy={oy} r={4 * s + 1} />
+        <circle className="md-splash" cx={px} cy={py} r={6 * s} />
         <circle className="md-pt md-pt--paris" cx={px} cy={py} r={4 * s + 1} />
         <text className="md-label md-label--brg" x={px - 14 * s} y={py - 16 * s} textAnchor="end">{bearing}</text>
+        {b && <text className="md-label md-label--coords" x={px - 14 * s} y={py - 50 * s} textAnchor="end">{formatLatLon(PARIS)}</text>}
         <text className="md-label md-label--km" x={kmAt[0]} y={kmAt[1]}>{km}</text>
 
         {d.compass && (
@@ -92,6 +132,8 @@ function Drawing({ d, wide, km, bearing }: { d: MapData; wide: boolean; km: stri
             </g>
           </g>
         )}
+      </g>
+      </g>
     </svg>
   );
 }
@@ -99,6 +141,7 @@ function Drawing({ d, wide, km, bearing }: { d: MapData; wide: boolean; km: stri
 /** Builds the drafting timeline (seconds) as Web Animations, all fill "both":
  * before its start each piece is blank, after its end it's the resting style. */
 function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
+  const b = wide;
   const anims: Animation[] = [];
   const $ = (sel: string) => svg.querySelector<SVGElement>(sel);
   const $$ = (sel: string) => [...svg.querySelectorAll<SVGElement>(sel)];
@@ -115,23 +158,26 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
       { opacity: 0, transform: "translateY(-14px)" },
     ], from, to - from);
 
-  // the schedule (s): wide ≈ 7.8, phone ≈ 4
+  // the schedule (s): wide (C) ≈ 11.7 — A's pacing at 3.6/6.0 of the speed,
+  // so the close-up never races; phone (A) ≈ 4. compass: in, out, sweep, sweep length, inner arc
   const T = wide
-    ? { grat: 0, gratDur: 0.32, gratStep: 0.03, origin: 0.35, coast: 1.9, coastDur: 3.6, dividers: 5.45, route: 6.3, routeDur: 0.7, settle: 7.4 }
-    : { grat: 0, gratDur: 0.25, gratStep: 0.025, origin: 0.3, coast: 0.6, coastDur: 2.2, dividers: 2.8, route: 2.95, routeDur: 0.6, settle: 3.7 };
+    ? { grat: 0, gratDur: 0.4, gratStep: 0.035, origin: 0.4, compass: [0.55, 2.6, 0.9, 1.1, 2.0], coast: 2.5, coastDur: 6.0, dividers: 9.0, route: 9.9, routeDur: 0.8, settle: 11.2 }
+    : { grat: 0, gratDur: 0.25, gratStep: 0.025, origin: 0.3, compass: [0, 0, 0, 0, 0], coast: 0.6, coastDur: 2.2, dividers: 2.8, route: 2.95, routeDur: 0.6, settle: 3.7 };
 
   // 1. graticule, ruled line by line
   $$(".md-grat path").forEach((p, i) => ink(p, T.grat + i * T.gratStep, T.gratDur));
   pop($(".md-pt--origin"), T.origin);
+  if (b) ink($(".md-con--o"), T.origin + 0.05, 0.3);
 
   // 2. compass: pivots on the Origin, sweeps the outer arc, inks the inner one
   if (d.compass) {
     const [s0, s1] = d.compass.sweep;
-    tool($(".md-tool--compass"), 0.45, 1.95);
-    go($(".md-compass-arm"), [{ transform: `rotate(${s0}deg)` }, { transform: `rotate(${s1}deg)` }], 0.7, 0.8, IN_OUT);
+    const [cIn, cOut, sweep, sweepDur, inn] = T.compass;
+    tool($(".md-tool--compass"), cIn, cOut);
+    go($(".md-compass-arm"), [{ transform: `rotate(${s0}deg)` }, { transform: `rotate(${s1}deg)` }], sweep, sweepDur, IN_OUT);
     const [outer, inner] = $$(".md-arcs path");
-    ink(outer, 0.7, 0.8, IN_OUT);
-    ink(inner, 1.5, 0.35);
+    ink(outer, sweep, sweepDur, IN_OUT);
+    ink(inner, inn, 0.4);
   }
 
   // 3. the pencil inks the coastlines. Each segment costs its length plus a
@@ -178,20 +224,97 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
   if (d.dividers) {
     const st = d.dividers.steps;
     tool($(".md-tool--dividers"), T.dividers, T.dividers + 1.3);
-    go($(".md-dividers"), st.map(([x, y, a], i) => ({ offset: i / (st.length - 1), transform: `translate(${x}px, ${y}px) rotate(${a}deg)`, easing: IN_OUT })), T.dividers + 0.1, 0.6, "linear");
+    go($(".md-dividers"), st.map(([x, y, a], i) => ({ offset: i / (st.length - 1), transform: `translate(${x}px, ${y}px) rotate(${a}deg)`, easing: IN_OUT })), T.dividers + 0.1, 0.7, "linear");
   }
-  go($(".md-label--km"), [{ opacity: 0, transform: "scale(1.08)" }, { opacity: 1, transform: "none" }], d.dividers ? T.dividers + 0.7 : T.route + 0.3, 0.16);
+  go($(".md-label--km"), [{ opacity: 0, transform: "scale(1.08)" }, { opacity: 1, transform: "none" }], d.dividers ? T.dividers + 0.8 : T.route + 0.3, 0.16);
+  if (b) { ink($(".md-con--chord"), T.dividers + 0.1, 0.35); ink($(".md-con--p"), T.dividers + 0.3, 0.3); }
 
   // 5. the great circle inks in and lands on the bearing label
-  ink($(".md-route"), T.route, T.routeDur);
+  const route = $(".md-route");
+  ink(route, T.route, T.routeDur, b ? IN_OUT : EASE);
   pop($(".md-pt--paris"), T.route + T.routeDur - 0.05);
   const land = T.route + T.routeDur;
-  go($(".md-label--brg"), [{ opacity: 0, translate: "0 3px" }, { opacity: 1, translate: "0 0" }], land, 0.25);
+  if (!b) {
+    go($(".md-label--brg"), [{ opacity: 0, translate: "0 3px" }, { opacity: 1, translate: "0 0" }], land, 0.25);
+  } else {
+    // climax: the label stamps down, a ring of ink, the sheet takes the hit
+    go($(".md-label--brg"), [{ opacity: 0, transform: "scale(1.4)" }, { opacity: 1, transform: "scale(.96)", offset: 0.65 }, { opacity: 1, transform: "none" }], land, 0.24, "cubic-bezier(.5, 0, .75, 0)");
+    go($(".md-splash"), [{ opacity: 0, transform: "scale(1)" }, { opacity: 0.9, transform: "scale(1)", offset: 0.01 }, { opacity: 0, transform: "scale(5)" }], land + 0.15, 0.5, EASE);
+    go(svg, [{ translate: "0 0" }, { translate: "0 2px", offset: 0.3 }, { translate: "0 0" }], land + 0.15, 0.2, EASE);
+    go($(".md-label--coords"), [{ opacity: 0 }, { opacity: 1 }], T.route, 0.2);
+    // bold while drawing (foreground ink, full strength); the faint brass
+    // background only at the end
+    go($(".md-coast"), [{ opacity: 1 }, { opacity: 0.75 }], T.settle, 0.5);
+    go($(".md-grain-ink"), [{ fill: "var(--paper)" }, { fill: "var(--brass)" }], T.settle, 0.5);
+  }
 
   // 6. settle: the drawing fades back behind the hero (wide)
   if (wide) go(svg, [{ opacity: 1 }, { opacity: 0.7 }], T.settle, 0.5);
 
-  return anims;
+  // the camera (wide): follows the pencil and lingers where it lingers. Its
+  // zoom is keyed to the drawing's stages (by cost, so the drawing sets the
+  // pace): close on the Origin and compass, drifting up the Brazilian coast
+  // (ring 0), a long pull back across the Atlantic into Africa (ring 1),
+  // Europe (to ring 4), then the whole map before the dividers. Centre and
+  // zoom trail their targets through a two-stage low-pass, so the camera
+  // settles where the pencil dwells and glides over its lifts. Transform on
+  // the SVG group only, clipped to the map.
+  if (b) {
+    const W = d.w, H = d.h, FPS = 30, end = T.dividers, N = Math.round(end * FPS);
+    const times = steps.map((st) => timeOf(st.cost));
+    const posAt = (t: number): Pt => {
+      if (t < T.coast) return d.origin;
+      const i = times.findIndex((x) => x >= t);
+      if (i <= 0) return i < 0 ? steps.at(-1)!.p : steps[0].p;
+      const f = (t - times[i - 1]) / (times[i] - times[i - 1] || 1), [a, z] = [steps[i - 1].p, steps[i].p];
+      return [a[0] + (z[0] - a[0]) * f, a[1] + (z[1] - a[1]) * f];
+    };
+    // zoom by stage: [cost fraction, scale]
+    let n0 = 0;
+    const ringEnd = rings.map((pts) => steps[(n0 += pts.length) - 1].cost / total);
+    const stops: [number, number][] = [[0, 2.9], [ringEnd[0], 2.4], [ringEnd[1], 1.6], [ringEnd[Math.min(4, rings.length - 1)], 1.35], [1, 1]];
+    const zoomAt = (t: number) => {
+      if (t < T.coast) return 3;
+      const p = Math.min(1, (t - T.coast) / T.coastDur);
+      const i = stops.findIndex(([q]) => q >= p);
+      if (i <= 0) return stops[0][1];
+      const [[p0, z0], [p1, z1]] = [stops[i - 1], stops[i]];
+      return z0 + (z1 - z0) * ((p - p0) / (p1 - p0 || 1));
+    };
+    const lag = (tau: number) => 1 - Math.exp(-1 / FPS / tau);
+    const [aC, aS] = [lag(0.35), lag(0.6)];
+    let [x1, y1] = d.origin, [x2, y2] = d.origin, s1 = 3, s2 = 3;
+    const kf: Keyframe[] = [];
+    for (let n = 0; n <= N; n++) {
+      const t = n / FPS;
+      const [x, y] = posAt(t), sc = zoomAt(t);
+      x1 += (x - x1) * aC; y1 += (y - y1) * aC; x2 += (x1 - x2) * aC; y2 += (y1 - y2) * aC;
+      s1 += (sc - s1) * aS; s2 += (s1 - s2) * aS;
+      // last stretch: ease into the whole map, exactly identity at the end
+      const e = Math.min(1, Math.max(0, (t - (end - 0.8)) / 0.8)), w = e * e * (3 - 2 * e);
+      const S = s2 + (1 - s2) * w;
+      const tx = Math.min(0, Math.max(W - S * W, W / 2 - S * x2)) * (1 - w);
+      const ty = Math.min(0, Math.max(H - S * H, H / 2 - S * y2)) * (1 - w);
+      kf.push({ offset: n / N, transform: `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${S.toFixed(3)})` });
+    }
+    go($(".md-cam"), kf, 0, end, "linear");
+  }
+
+  // coordinates tick along the great circle while the route inks
+  let raf = 0;
+  const coords = b ? svg.querySelector(".md-label--coords") : null;
+  const routeAnim = anims.find((a) => (a.effect as KeyframeEffect).target === route);
+  if (coords && routeAnim) {
+    let last = "";
+    const tick = () => {
+      const f = routeAnim.playState === "finished" ? 1 : (routeAnim.effect!.getComputedTiming().progress ?? 0);
+      const text = formatLatLon(intermediatePoint(ORIGIN, PARIS, f));
+      if (text !== last) coords.textContent = last = text;
+      if (f < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+  }
+  return { anims, stop: () => cancelAnimationFrame(raf) };
 }
 
 export default function MapDraft({ km, bearing }: { km: string; bearing: string }) {
@@ -229,7 +352,7 @@ export default function MapDraft({ km, bearing }: { km: string; bearing: string 
     svg.style.setProperty("--u", Math.max(data.d.w / svg.clientWidth, data.d.h / svg.clientHeight).toFixed(3));
     if (data.still) return;
     const root = document.documentElement;
-    const anims = draft(svg, data.d, data.wide);
+    const { anims, stop } = draft(svg, data.d, data.wide);
     const finish = () => anims.forEach((a) => a.playState !== "finished" && a.finish());
 
     // wide: the AS-BUILT stamp waits for the drawing (unless it already landed)
@@ -257,6 +380,7 @@ export default function MapDraft({ km, bearing }: { km: string; bearing: string 
     }
     return () => {
       live = false;
+      stop();
       io?.disconnect();
       events.forEach((e) => window.removeEventListener(e, finish));
       anims.forEach((a) => a.cancel());

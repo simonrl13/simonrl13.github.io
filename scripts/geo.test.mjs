@@ -44,3 +44,11 @@ test("ORIGIN matches the title block's Origin coordinates", () => {
   assert.equal(geo.ORIGIN.lat, -(7 + 13 / 60));
   assert.equal(geo.ORIGIN.lon, -(35 + 53 / 60));
 });
+
+test("great-circle midpoint ticker: ends on ORIGIN and Paris, in the title block's format", () => {
+  assert.equal(geo.formatLatLon(geo.intermediatePoint(geo.ORIGIN, geo.PARIS, 0)), "07°13′S 35°53′W");
+  assert.equal(geo.formatLatLon(geo.intermediatePoint(geo.ORIGIN, geo.PARIS, 1)), "48°51′N 02°21′E");
+  // halfway point is equidistant from both ends
+  const mid = geo.intermediatePoint(geo.ORIGIN, geo.PARIS, 0.5);
+  assert.ok(Math.abs(geo.greatCircleKm(geo.ORIGIN, mid) - geo.greatCircleKm(mid, geo.PARIS)) < 0.01);
+});
