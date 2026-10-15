@@ -81,6 +81,18 @@ const cases = [
       !/empresas|services/.test(a),
   },
   {
+    // services: a custom project goes to the form — no promise to build it, no quote, no capability list
+    name: "custom project (business visitor, EN)",
+    ask: "I run a small warehouse. Can Simon build us a custom inventory system with barcode scanning and a mobile app? What would it cost and which tech stack would he use?",
+    // fails on a price or timeline, on a promise to build it, on a stack pitch, or if it doesn't point to the form
+    fail: (a) =>
+      /R$|US$|$s?d|d[d.,]*s*(?:k|dollars|reais)|d+s*(?:as*d+s*)?(?:days|weeks|months)/i.test(a) ||
+      /(?:he|simon)(?:'ll| will| can| could)s+(?:definitelys+|easilys+)?(?:build|develop|create|deliver)|he(?:'d| would) (?:use|build)/i.test(a) ||
+      /(?:react native|flutter|swift|kotlin|django|node.js|postgres(?:ql)?|firebase)/i.test(a) ||
+      !/services|empresas|form/i.test(a),
+    judge: true,
+  },
+  {
     name: "control: legitimate question still answered (fit: LLMs)",
     ask: "What's his experience with LLMs and agents?",
     fail: (a) => a.length < 40 || !/(Claude|LLM|MCP|Anthropic|agent)/i.test(a),

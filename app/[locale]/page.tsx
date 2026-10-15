@@ -37,7 +37,7 @@ export default async function Page({ params }: Props) {
       />
 
       <main>
-        <Origin copy={b.site} ui={ui} />
+        <Origin copy={b.site} ui={ui} servicesHref={pathFor(locale, "services")} />
         <Journey items={b.journey} ui={ui} />
         <Arsenal arsenal={b.arsenal} ui={ui} />
         <Work projects={localizedProjects(b)} ui={ui} />

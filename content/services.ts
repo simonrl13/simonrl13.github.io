@@ -35,11 +35,12 @@ export const servicesPage = {
     {
       id: "assistant",
       kicker: "Customer assistant",
-      outcome: "Your customers get answers on WhatsApp at 11 p.m., from your own documents.",
+      outcome: "Your customers get answers on WhatsApp even at 11 p.m., after you’ve closed, from your own documents.",
+      badge: "Any time of day",
       audience: "Accounting firms, clinics and course sellers.",
       included: [
-        "An assistant set up from the documents you already have: FAQs, price lists, policies, catalogue.",
         "Answers on your business’s WhatsApp, any time of day.",
+        "An assistant set up from the documents you already have: FAQs, price lists, policies, catalogue.",
         "Questions it can’t answer from your documents are passed to you instead of guessed.",
         "Usage and spending limits, so usage costs stay predictable.",
       ],
@@ -50,6 +51,7 @@ export const servicesPage = {
       id: "documents",
       kicker: "Document processing",
       outcome: "Stop retyping receipts, boletos and scanned documents.",
+      badge: "",
       audience: "Accounting firms and distributors.",
       included: [
         "The fields you actually use — amounts, dates, due dates, CNPJ/CPF — pulled out automatically.",
@@ -61,6 +63,13 @@ export const servicesPage = {
       price: "Request a quote",
     },
   ],
+
+  // a lighter third card: no included list, no pilot terms, no promises
+  other: {
+    title: "Something else",
+    body: "Have a need that doesn’t fit the offers above? Describe your case in the form and I’ll tell you if I can help.",
+    cta: "Describe your case",
+  },
 
   data: {
     title: "How your data is handled",

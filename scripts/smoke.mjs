@@ -153,12 +153,13 @@ for (const [path, h1] of [["/pt/nada/", "Fora do desenho"], ["/nothing-here/", "
   if (!r || r.status() !== 404 || got !== h1) fails.push(`${path}: ${r && r.status()} "${got}"`);
 }
 
-// 11. services: /pt/empresas (PT nav) and /services (EN footer only), placeholders visible
+// 11. services: /pt/empresas and /services in the nav, footer and hero link; placeholders visible
 await page.goto(url("/pt/"), { waitUntil: "networkidle0" });
 if (!(await page.$(".nav__list a[href='/pt/empresas/']"))) fails.push("/pt/ nav has no Para empresas link");
 if (!(await page.$(".foot a[href='/pt/empresas/']"))) fails.push("/pt/ footer has no services link");
 await page.goto(url("/"), { waitUntil: "networkidle0" });
-if (await page.$(".nav__list a[href='/services/']")) fails.push("EN nav should not link /services/");
+if (!(await page.$(".nav__list a[href='/services/']"))) fails.push("EN nav has no /services/ link");
+if (!(await page.$(".origin__svc[href='/services/']"))) fails.push("EN hero has no services link");
 if (!(await page.$(".foot a[href='/services/']"))) fails.push("EN footer has no /services/ link");
 for (const [path, h1] of [["/pt/empresas/", "Projetos para empresas"], ["/services/", "Project work for businesses"]]) {
   const r = await page.goto(url(path), { waitUntil: "networkidle0" });

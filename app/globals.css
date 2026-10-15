@@ -588,6 +588,23 @@ main { padding-left: var(--rail-w); }
 .btn--solid:hover { background: var(--gold); border-color: var(--gold); }
 .btn--ghost { background: transparent; color: var(--paper); }
 .btn--ghost:hover { background: rgba(var(--brass-rgb),.12); }
+/* services: a text link beside the CV button — copper and prominent in PT
+   (the primary audience for /pt/empresas), quiet in EN so the hero stays job-first */
+.origin__svc {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: .4em;
+    min-height: 44px;
+    padding: 0 4px;
+    border-bottom: 1px solid transparent;
+}
+.origin__svc--strong { color: var(--brass); font-weight: 600; }
+.origin__svc--quiet { color: var(--paper-dim); font-size: .9rem; }
+@media (hover: hover) and (pointer: fine) {
+    .origin__svc:hover { color: var(--gold); }
+}
+.origin__svc:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
 .btn .mono { color: inherit; opacity: .7; }
 
 /* title block strip, along the foot of the drawing */
@@ -1428,6 +1445,29 @@ main.subpage { padding-left: 0; }
 .offer__terms a { color: var(--brass); border-bottom: 1px solid currentColor; }
 .offer__terms a:hover { color: var(--gold); }
 .offers__pilot { margin-bottom: 18px; }
+/* a label in the theme's stamp style: mono caps in a thin copper box */
+.offer__badge {
+    align-self: flex-start;
+    margin-top: -4px;
+    padding: 2px 8px;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--brass);
+    border: 1px solid var(--brass);
+}
+/* the third, lighter card: no fill, a dashed rule, just a pointer to the form */
+.offer-other {
+    margin-top: 18px;
+    padding: clamp(18px, 3vw, 26px);
+    border: 1px dashed var(--line);
+    display: grid;
+    gap: 8px;
+}
+.offer-other h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; color: var(--paper); }
+.offer-other p { font-size: .92rem; max-width: 62ch; }
+.offer-other a { justify-self: start; color: var(--brass); border-bottom: 1px solid currentColor; font-size: .92rem; }
+@media (hover: hover) and (pointer: fine) { .offer-other a:hover { color: var(--gold); } }
 
 .cform {
     display: grid;

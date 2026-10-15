@@ -10,8 +10,8 @@ export const enUi = {
   skipLink: "Skip to content",
   navLabel: "Section index",
   nav: { journey: "Journey", arsenal: "Arsenal", work: "Work", languages: "Languages", contact: "Contact" },
-  /** nav link to the services page; empty = footer link only (English) */
-  navServices: "",
+  /** nav link to the services page */
+  navServices: "Services",
   rail: { origin: "Origin", journey: "Journey", arsenal: "Arsenal", work: "Work", pipeline: "Detail", languages: "Languages", contact: "Contact" },
   menu: { open: "Open menu", close: "Close menu" },
   theme: { toLight: "Switch to whiteprint (light)", toDark: "Switch to blueprint (dark)", lightTitle: "Whiteprint", darkTitle: "Blueprint" },
@@ -22,6 +22,9 @@ export const enUi = {
     cta: "Start a conversation",
     cv: "Download CV",
     cvNote: "(PDF)",
+    /** text link beside the CV button; "quiet" keeps the English hero job-first */
+    servicesLink: "Services for businesses",
+    servicesLinkStyle: "quiet",
     titleBlockLabel: "Drawing title block",
     languagesLabel: "Spoken languages",
     dimLabel: "SHEET 1 / 1 — SCALE 1:1",
