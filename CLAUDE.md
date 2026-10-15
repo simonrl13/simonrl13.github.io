@@ -129,7 +129,8 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - On-load sequence is one set: rail 1.5 s from .3 s, node pops = rail delay + when
   `--ease` over 1.5 s reaches each node's `--at`, hero dims .5–1.9 s, the drafted map
   (`MapDraft`: a Web Animations timeline in `draft()`, ≈7.8 s wide / ≈4 s phone, from when
-  its JSON arrives after `load` + idle; pencil paced per vertex). On wide screens the AS-BUILT
+  its JSON arrives after `load` + idle; pencil paced per vertex). Wide = variant C (≈11.7 s:
+  camera following the pencil, bold ink, texture, climax); phones = A. On wide screens the AS-BUILT
   stamp waits for it (`md-wait` → `md-landed`); elsewhere it lands at 3.2 s. Once per tab
   session (`data-drawn`). Skip = any click/tap/key/scroll (phone: scroll the figure away).
 - Map line work that draws itself is stroked in user units (`--u`, set by MapDraft), never
