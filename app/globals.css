@@ -526,30 +526,29 @@ main { padding-left: var(--rail-w); }
     max-width: 54ch;
 }
 
+/* the "now" line, labelled like the drawing number: mono caps in copper
+   with a small copper dot; the details below in the subtitle's muted cream */
 .origin__status {
-    margin-top: 20px;
-    display: inline-flex;
-    max-width: 100%;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px 10px;
-    padding: 9px 14px;
-    border: 1px solid var(--line);
-    background: rgba(var(--green-rgb),.08);
-    font-size: .82rem;
-    color: var(--paper);
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
-.origin__status::before {
-    content: "";
-    width: 7px; height: 7px;
+.origin__status-label {
+    color: var(--brass);
+    font-size: .8rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.origin__status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    margin: 0 4px;
     border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 0 3px rgba(var(--green-rgb),.25);
-    flex: none;
+    background: var(--brass);
+    vertical-align: .12em;
 }
-.origin__status-label { font-weight: 600; }
-.origin__status-detail { color: var(--green); }
-.origin__status-detail::before { content: "— "; }
+.origin__status-detail { color: var(--paper-dim); font-size: .9rem; }
 
 /* right to work — a plain note under the status line */
 .origin__rights {
@@ -559,11 +558,6 @@ main { padding-left: var(--rail-w); }
     color: var(--paper);
 }
 
-@media (max-width: 600px) {
-    .origin__status { align-items: flex-start; }
-    .origin__status-detail { flex-basis: 100%; }
-    .origin__status-detail::before { content: ""; }
-}
 
 .origin__actions {
     display: flex;
@@ -1844,7 +1838,8 @@ main.subpage { padding-left: 0; }
     animation-delay: 0s;
 }
 /* the stamp's landing belongs to the first load only: later loads show it stamped */
-:root[data-drawn] .titleblock__stamp-host::after { animation: none; }
+:root[data-drawn] .titleblock__stamp-host::after,
+:root[data-drawn] .titleblock__sign { animation: none; }
 
 /* ---- hero: the drafted map (components/MapDraft.tsx) — end of the load set ----
    These are the resting styles: the finished, settled drawing. The drafting
@@ -1899,6 +1894,8 @@ main.subpage { padding-left: 0; }
 .md-pt, .md-label, .md-splash { transform-box: fill-box; transform-origin: center; }
 .md-splash { fill: none; stroke: var(--brass); stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: 0; }
 .md-label { fill: var(--paper); font-family: var(--font-mono); font-size: 27px; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
+/* knocked out of the grid and coastlines like a dimension label: a halo in the sheet's own ink */
+.md-label { paint-order: stroke; stroke: var(--ink); stroke-width: calc(var(--u, 1.7) * 5); stroke-linejoin: round; }
 .mapfig .md-label { font-size: 20px; }
 .md-label--km { fill: var(--brass); }
 .md-label--coords { fill: var(--paper-dim); font-size: 20px; }
@@ -2014,13 +2011,37 @@ main.subpage { padding-left: 0; }
     .titleblock__stamp-host::after { top: auto; bottom: 8px; left: 14px; right: auto; transform: rotate(-5deg); }
     @keyframes stampLand { from { opacity: 0; transform: rotate(-5deg) scale(1.06); } }
 }
-/* lands once at the end of the load sequence and stays stamped; before it
-   lands (first load only) the fill holds it blank */
+/* "Drawn by": the name is signed in as a stamp in the same ink, tilt and
+   border, a little larger since it's alone in its cell. The text is in the
+   DOM from the start; only opacity/transform animate, so the cell never moves */
+.titleblock__sign {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 2px 8px;
+    font-family: var(--font-mono);
+    font-size: .74rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--brass);
+    border: 1.5px solid var(--brass);
+    transform: rotate(-4deg);
+    opacity: .85;
+}
+@keyframes signLand { from { opacity: 0; transform: rotate(-4deg) scale(1.08); } }
+
+/* signed, then approved: both land once at the end of the load sequence and
+   stay stamped; before that (first load only) the fill holds them blank.
+   Without the map: 2.85 s / 3.2 s. While the map drafts (MapDraft sets
+   md-wait, wide and phone) they wait, then land right after it settles
+   (md-landed); a skip (md-skip) shows them already stamped */
+.titleblock__sign { animation: signLand .18s var(--ease) 2.85s both; }
 .titleblock__stamp-host::after { animation: stampLand .16s var(--ease) 3.2s both; }
-/* wide screens: while the map drafts (MapDraft sets md-wait) the stamp waits,
-   then lands right after the drawing settles or is skipped (md-landed) */
+:root.md-wait .titleblock__sign,
 :root.md-wait .titleblock__stamp-host::after { animation: none; opacity: 0; }
-:root.md-landed .titleblock__stamp-host::after { animation-delay: .15s; }
+:root.md-landed .titleblock__sign { animation-delay: .1s; }
+:root.md-landed .titleblock__stamp-host::after { animation-delay: .5s; }
+:root.md-skip .titleblock__sign,
+:root.md-skip .titleblock__stamp-host::after { animation: none; }
 @keyframes stampLand {
     from { opacity: 0; transform: translateY(-50%) rotate(-5deg) scale(1.06); }
 }
@@ -2059,7 +2080,7 @@ main.subpage { padding-left: 0; }
     .origin__dim--top::after { opacity: 1; }
 
     /* survey construction drawn, no stamp landing, iso already apart */
-    .titleblock__stamp-host::after { animation: none !important; }
+    .titleblock__stamp-host::after, .titleblock__sign { animation: none !important; }
     .sheet__iso .iso__layer { transition: none !important; }
     .carousel__dots li, .carousel__dots li::before, .carousel__dots li::after { transition: none !important; }
 }

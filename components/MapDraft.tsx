@@ -353,10 +353,14 @@ export default function MapDraft({ km, bearing }: { km: string; bearing: string 
     if (data.still) return;
     const root = document.documentElement;
     const { anims, stop } = draft(svg, data.d, data.wide);
-    const finish = () => anims.forEach((a) => a.playState !== "finished" && a.finish());
+    const finish = () => {
+      if (root.classList.contains("md-wait")) root.classList.add("md-skip");
+      anims.forEach((a) => a.playState !== "finished" && a.finish());
+    };
 
-    // wide: the AS-BUILT stamp waits for the drawing (unless it already landed)
-    if (data.wide && (document.timeline.currentTime as number) < 3200) root.classList.add("md-wait");
+    // the title block's stamps (signature, then AS-BUILT) wait for the drawing
+    // (unless they already landed); a skip shows them stamped at once
+    if ((document.timeline.currentTime as number) < 2800) root.classList.add("md-wait");
     let live = true;
     Promise.all(anims.map((a) => a.finished)).then(
       () => { if (live && root.classList.contains("md-wait")) { root.classList.remove("md-wait"); root.classList.add("md-landed"); } },

@@ -23,6 +23,7 @@ export const pt: Bundle = {
 
     origin: {
       eyebrow: "DESENHO",
+      statusKey: "STATUS",
       cta: "Vamos conversar",
       cv: "Baixar CV",
       cvNote: "(PDF, em inglês)",
@@ -133,7 +134,7 @@ export const pt: Bundle = {
         "Privacidade: suas perguntas são enviadas à API Claude, da Anthropic, para gerar as respostas. Este site não salva conversas; seu endereço IP fica guardado por até 10 minutos para limitar o uso.",
     },
     titleBlock: [
-      { dt: "Desenhado por", dd: "S. Laborde", mono: false },
+      { dt: "Desenhado por", dd: "S. Laborde", mono: false, sign: true },
       { dt: "Origem", dd: "07°13′S 35°53′W", mono: true },
       { dt: "Rumo", dd: "Brasil → Europa", mono: false },
       { dt: "Revisão", dd: "2026.5", mono: true, stamp: true },

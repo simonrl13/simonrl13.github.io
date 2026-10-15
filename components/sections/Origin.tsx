@@ -26,11 +26,10 @@ export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle[
         <p className="origin__thesis" dangerouslySetInnerHTML={{ __html: copy.thesis }} />
 
         <p className="origin__status">
-          <span className="origin__status-label">{copy.status.label}</span>
-          <span
-            className="mono origin__status-detail"
-            dangerouslySetInnerHTML={{ __html: copy.status.detail }}
-          />
+          <span className="mono origin__status-label">
+            {ui.origin.statusKey} <span className="origin__status-dot" aria-hidden="true" /> {copy.status.label}
+          </span>
+          <span className="origin__status-detail" dangerouslySetInnerHTML={{ __html: copy.status.detail }} />
         </p>
 
         <p className="origin__rights">{copy.workRights}</p>
@@ -57,7 +56,7 @@ export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle[
               className={row.stamp ? "titleblock__stamp-host" : undefined}
             >
               <dt>{row.dt}</dt>
-              <dd className={row.mono ? "mono" : undefined}>{row.dd}</dd>
+              <dd className={row.sign ? "titleblock__sign" : row.mono ? "mono" : undefined}>{row.dd}</dd>
             </div>
           ))}
         </dl>

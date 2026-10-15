@@ -19,6 +19,7 @@ export const enUi = {
 
   origin: {
     eyebrow: "DRAWING",
+    statusKey: "STATUS",
     cta: "Start a conversation",
     cv: "Download CV",
     cvNote: "(PDF)",
