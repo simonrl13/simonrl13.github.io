@@ -82,8 +82,15 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
   Brazil, open to remote work and relocation.
 - Accenture title: **Custom Software Engineer** (Jun 2022 – Jun 2023).
 - LABNOV = a site Simon built as independent/freelance work — **not** a research role.
-- NutriQuest = a **personal project** — never list it as freelance or client work.
-- MedHelp: only "92% accuracy on clinical terminology normalization". No recall claim.
+- NutriQuest = a **personal project** — never list it as freelance or client work. Status: "In
+  development (redesign in progress)" / "Em desenvolvimento (redesign em andamento)" — never
+  shipped, released, live or published. Describe only what its current code does
+  (C:\Projetos\Webpage\nutriquest): no sync or backend; leaderboard on sample data; photo logging planned.
+- MedHelp: designed for SUS, built and evaluated on **synthetic data**, never real patient records
+  or a real SUS system. Only figure: "92% (23 of 25 terms) on clinical terminology normalization,
+  evaluated on synthetic data in the thesis (chapter 4.3)" (short: "92% (23/25 terms, synthetic
+  data)") — never cite the repo's 8-case gold set as its source. No recall claim. Stack: a
+  rule-based FastAPI service (C:\Projetos\Medhelper) — no scikit-learn, pandas or NumPy.
   Role line: "Undergraduate thesis project".
 - Accenture: no "improved data accuracy" claim.
 - LinkedIn: linkedin.com/in/simonrodrigueslaborde (the old -2131861bb URL is obsolete).
@@ -100,7 +107,10 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
   clinical decision support — never generative AI or LLM work. Graded 10/10, the maximum grade
   ("aprovado com nota máxima (10)").
 - Certifications (exam-based): AI-900, SFC, EF SET C2 (77/100). Training (courses):
-  5 × Anthropic Academy, Accenture Academy (Oracle BRM). Never call training a certification.
+  Accenture Academy (Oracle BRM) and exactly these 5 Anthropic Academy courses: AI Fluency:
+  Framework & Foundations (Mar 2026); Claude Code in Action (Mar 2026); Building with the Claude
+  API (Jul 2026); Introduction to Model Context Protocol (Aug 2026); Model Context Protocol:
+  Advanced Topics (Aug 2026). Never call training a certification.
 - Skills: no Kubernetes, JMeter, Vue or Flask. Docker, pytest and AWS stay (Scout project
   case study coming).
 - Languages: PT native, EN C2, FR C1, ES B1.

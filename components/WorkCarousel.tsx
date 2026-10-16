@@ -72,6 +72,7 @@ function Skin({ skin }: { skin: Project["skin"] }) {
               </li>
             ))}
           </ol>
+          <p className="plate__caption mono">{skin.caption}</p>
         </>
       );
     case "term":
