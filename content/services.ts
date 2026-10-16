@@ -63,7 +63,7 @@ export const servicesPage = {
   ],
 
   data: {
-    title: "How your data is handled",
+    title: "How I handle your data",
     intro: "In plain language — and written into the project agreement.",
     items: [
       // TODO(simon): per-tenant isolation test required before the first pilot.
@@ -92,7 +92,7 @@ export const servicesPage = {
     email: "Email",
     message: "What would you like to solve?",
     consent:
-      "I agree that this information is used to reply to my message, as described in “How your data is handled”.",
+      "I agree that this information is used to reply to my message, as described in “How I handle your data”.",
     submit: "Send",
     sending: "Sending…",
     sent: "Thanks — your message was sent. I’ll reply by email.",

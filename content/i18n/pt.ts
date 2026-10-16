@@ -219,11 +219,11 @@ export const pt: Bundle = {
     },
     medhelp: {
       tag: "02 · Apoio à decisão clínica com IA",
-      lead: "Uma ferramenta de NLP para o PEC, o prontuário eletrônico da rede pública: normaliza anotações clínicas, adapta a linguagem a cada público e sinaliza exames preventivos a partir do perfil e do histórico do paciente.",
-      layers: ["Recomendação de exames", "Normalização com NLP", "Notas clínicas do PEC"],
+      lead: "Uma ferramenta de NLP projetada para o SUS, desenvolvida e avaliada com dados sintéticos, não com prontuários reais: normaliza anotações clínicas e sinaliza exames preventivos a partir do perfil e do histórico do paciente.",
+      layers: ["Recomendação de exames", "Normalização com NLP", "Notas clínicas (sintéticas)"],
       skin: {
         vitals: [
-          { dt: "Acurácia em terminologia clínica", value: "92", unit: "%" },
+          { dt: "Normalização de terminologia (23/25 termos, dados sintéticos)", value: "92", unit: "%" },
           { dt: "Superfície do modelo", value: "NLP" },
         ],
       },
@@ -239,8 +239,9 @@ export const pt: Bundle = {
     },
     nutriquest: {
       tag: "04 · App de nutrição gamificado",
-      lead: "Um app mobile multiplataforma que transforma o acompanhamento nutricional em jogo — missões diárias, sequências e um ranking competitivo, todo localizado para o público brasileiro.",
-      layers: ["UI mobile · missões e XP", "Dados locais offline-first", "Sync em segundo plano"],
+      status: "Em desenvolvimento (redesign em andamento)",
+      lead: "Um app mobile que transforma o registro de refeições em jogo — sequências, níveis de XP e desafios semanais, em português do Brasil.",
+      layers: ["UI mobile · XP e desafios", "Busca de alimentos · tabela TACO", "Dados no aparelho"],
       skin: {
         xpMeta: "Nível 7 · Nutricionista em formação",
         xpAmount: "1.840 / 2.400 XP",
@@ -249,6 +250,7 @@ export const pt: Bundle = {
           { pos: "2", name: "você", pts: "1.840", you: true },
           { pos: "3", name: "tiago.rn", pts: "1.610" },
         ],
+        caption: "Prévia da interface · dados de exemplo",
       },
     },
     labnov: {
@@ -385,7 +387,7 @@ export const pt: Bundle = {
     ],
 
     data: {
-      title: "Como tratamos seus dados",
+      title: "Como trato seus dados",
       intro: "Em linguagem simples — e por escrito no contrato do projeto.",
       items: [
         // TODO(simon): teste de isolamento por cliente obrigatório antes do primeiro piloto.
@@ -414,7 +416,7 @@ export const pt: Bundle = {
       email: "E-mail",
       message: "O que você gostaria de resolver?",
       consent:
-        "Concordo com o uso destas informações para responder à minha mensagem, como descrito em “Como tratamos seus dados”.",
+        "Concordo com o uso destas informações para responder à minha mensagem, como descrito em “Como trato seus dados”.",
       submit: "Enviar",
       sending: "Enviando…",
       sent: "Obrigado — sua mensagem foi enviada. Eu respondo por e-mail.",

@@ -16,6 +16,7 @@ type SkinGame = {
   xpAmount: string;
   xpPercent: number;
   board: { pos: string; name: string; pts: string; you?: boolean }[];
+  caption: string;
 };
 
 type SkinLab = {
@@ -119,24 +120,26 @@ export const projects: Project[] = [
     id: "medhelp",
     tag: "02 · AI clinical decision support",
     title: "MedHelp",
-    lead: "An NLP tool for Brazil’s public health record system (PEC): it normalizes clinical notes, adapts language per audience, and flags preventive exams from patient demographics and history.",
+    lead: "An NLP tool designed for Brazil’s public health system (SUS), built and evaluated on synthetic data, not real patient records: it normalizes clinical notes and flags preventive exams from patient demographics and history.",
     skinClass: "pcard--clinical",
-    layers: ["Exam-recommendation output", "NLP normalisation layer", "PEC clinical-note input"],
+    layers: ["Exam-recommendation output", "NLP normalisation layer", "Clinical-note input (synthetic)"],
     skin: {
       kind: "clinical",
       vitals: [
-        { dt: "Clinical terminology accuracy", value: "92", unit: "%" },
+        { dt: "Terminology normalization (23/25 terms, synthetic data)", value: "92", unit: "%" },
         { dt: "Model surface", value: "NLP" },
       ],
       ecgPath:
         "M0 20 H120 l6 -14 l6 28 l6 -20 l5 6 H180 l8 -22 l7 34 l6 -12 H320",
     },
     detail: {
-      body: "A Python NLP tool built for Brazil’s public health record system (PEC). It reads free-text clinical notes, normalizes inconsistent terminology, rewrites explanations for the intended audience (clinician vs. patient), and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on natural language processing (NLP) for clinical decision support.",
+      body: "A Python NLP tool designed for Brazil’s public health system (SUS), built and evaluated on synthetic data, not real patient records. It reads free-text clinical notes, normalizes inconsistent terminology, and recommends preventive exams from patient demographics and medical history. Grew directly out of my undergraduate thesis on natural language processing (NLP) for clinical decision support.",
       role: "Undergraduate thesis project",
       outcome:
-        "92% accuracy on clinical terminology normalization",
-      stack: "Python · pandas · scikit-learn · NumPy · NLP · healthcare data (PEC)",
+        "92% (23 of 25 terms) on clinical terminology normalization, evaluated on synthetic data in the thesis (chapter 4.3)",
+      // the repo (C:\Projetos\Medhelper): a rule-based FastAPI service; pandas and
+      // matplotlib appear only in its evaluation scripts
+      stack: "Python · FastAPI · Pydantic · Uvicorn · rule-based guideline engine (MS/INCA, medical societies) · synthetic patient data",
     },
   },
   {
@@ -173,9 +176,10 @@ export const projects: Project[] = [
     tag: "04 · gamified nutrition tracker",
     title: "NutriQuest",
     accentTitle: true,
-    lead: "A cross-platform mobile app that turns nutrition tracking into a game — daily quests, streaks, and a competitive leaderboard, fully localized for Brazilian users.",
+    status: "In development (redesign in progress)",
+    lead: "A mobile app that turns meal logging into a game — streaks, XP levels and weekly challenges, in Brazilian Portuguese.",
     skinClass: "pcard--game",
-    layers: ["Mobile UI · quests, streaks, XP", "Offline-first local store", "Background sync engine"],
+    layers: ["Mobile UI · streaks, XP, challenges", "Food search · TACO table", "On-device storage"],
     skin: {
       kind: "game",
       xpMeta: "Level 7 · Nutritionist-in-training",
@@ -186,14 +190,16 @@ export const projects: Project[] = [
         { pos: "2", name: "you", pts: "1,840", you: true },
         { pos: "3", name: "tiago.rn", pts: "1,610" },
       ],
+      caption: "UI preview · sample data",
     },
     detail: {
-      body: "A cross-platform mobile app that reframes nutrition tracking as a game. Real-time nutritional dashboards, daily and weekly quests, streaks, a competitive leaderboard, food search with macro calculation, photo upload, and full profile management — all localized in Brazilian Portuguese. Built offline-first with custom state management so it stays usable without a connection.",
+      // only what the current code does: no sync, no backend, the leaderboard
+      // runs on sample data and photo logging is planned
+      body: "A mobile app that turns meal logging into a game, in Brazilian Portuguese, now being redesigned. In the current code, meals are logged by searching a Brazilian food-composition table (TACO) with calories and macros per portion, and a daily goal, streaks, XP levels, weekly challenges and achievements are derived from what is logged. Data is stored on the device; there is no backend or account yet.",
       // personal project — not freelance/client work; keep it that way
-      role: "Personal project — architecture, UI, localization",
-      outcome:
-        "Shipped cross-platform from a single codebase with offline-first sync",
-      stack: "React Native · Expo · i18n · custom state management",
+      role: "Personal project — architecture and UI",
+      outcome: "In development (redesign in progress)",
+      stack: "React Native · Expo · Expo Router · TypeScript · Reanimated · on-device storage (AsyncStorage)",
     },
   },
   {

@@ -27,9 +27,11 @@ import { ORIGIN, PARIS, formatLatLon, intermediatePoint } from "@/content/geo";
    domain) and drawn with React elements; the motion is a Web Animations
    timeline built from the vertices. Nothing can shift layout.
 
-   Static (the finished drawing, no drafting): later loads this tab session
-   (data-drawn), reduced motion, or a skip — any click, tap, key press or
-   scroll (on phones: scrolling the figure out of view) finishes it at once.
+   Static (the finished drawing, no drafting): once the drawing has started
+   this tab session (its own sessionStorage flag, set when it starts — not on
+   load, so a phone visitor who never scrolled to it still sees it drawn),
+   reduced motion, or a skip — any click, tap, key press or scroll (on phones:
+   a tap, or scrolling the figure fully out of view) finishes it at once.
    Decorative throughout (aria-hidden): the title block states Origin and
    Bearing as text. */
 
@@ -317,6 +319,9 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
   return { anims, stop: () => cancelAnimationFrame(raf) };
 }
 
+// set when the drawing starts, so it plays once per tab session
+const DRAWN = "map-drawn";
+
 export default function MapDraft({ km, bearing }: { km: string; bearing: string }) {
   const [data, setData] = useState<{ d: MapData; wide: boolean; still: boolean } | null>(null);
   const host = useRef<HTMLDivElement>(null);
@@ -324,7 +329,9 @@ export default function MapDraft({ km, bearing }: { km: string; bearing: string 
 
   // load the data for this screen size once the page is idle
   useEffect(() => {
-    const still = document.documentElement.hasAttribute("data-drawn") || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let drawn = false;
+    try { drawn = !!sessionStorage.getItem(DRAWN); } catch {}
+    const still = drawn || matchMedia("(prefers-reduced-motion: reduce)").matches;
     const wide = matchMedia(WIDE).matches;
     let cancelled = false;
     const load = () =>
@@ -359,27 +366,32 @@ export default function MapDraft({ km, bearing }: { km: string; bearing: string 
     };
 
     // the title block's stamps (signature, then AS-BUILT) wait for the drawing
-    // (unless they already landed); a skip shows them stamped at once
-    if ((document.timeline.currentTime as number) < 2800) root.classList.add("md-wait");
+    // (unless they already landed, or a revisit shows them stamped); a skip
+    // shows them stamped at once
+    if (!root.hasAttribute("data-drawn") && (document.timeline.currentTime as number) < 2800) root.classList.add("md-wait");
+    const started = () => { try { sessionStorage.setItem(DRAWN, "1"); } catch {} };
     let live = true;
     Promise.all(anims.map((a) => a.finished)).then(
       () => { if (live && root.classList.contains("md-wait")) { root.classList.remove("md-wait"); root.classList.add("md-landed"); } },
       () => {},
     );
 
-    // skip: wide — any click, tap, key, wheel or scroll; phone — a tap, click
-    // or key, or scrolling the figure out of view (it starts when scrolled in)
-    const events = data.wide ? (["scroll", "wheel", "touchstart", "pointerdown", "keydown"] as const) : (["pointerdown", "keydown"] as const);
+    // skip: wide — any click, tap, key, wheel or scroll; phone — a tap (click:
+    // a finger scroll also fires pointerdown, so that would skip on the first
+    // swipe) or key, or scrolling the figure fully out of view. On phones it
+    // starts once 60% of the figure is on screen (isIntersecting is true from
+    // the first pixel, so the ratio decides).
+    const events = data.wide ? (["scroll", "wheel", "touchstart", "pointerdown", "keydown"] as const) : (["click", "keydown"] as const);
     const arm = () => events.forEach((e) => window.addEventListener(e, finish, { passive: true, once: true }));
     let io: IntersectionObserver | undefined;
-    if (data.wide) arm();
+    if (data.wide) { arm(); started(); }
     else {
       anims.forEach((a) => a.pause());
-      let started = false;
+      let playing = false;
       io = new IntersectionObserver(([e]) => {
-        if (e.isIntersecting && !started) { started = true; anims.forEach((a) => a.play()); arm(); }
-        else if (!e.isIntersecting && started) { finish(); io?.disconnect(); }
-      }, { threshold: 0.5 });
+        if (!playing && e.intersectionRatio >= 0.6) { playing = true; anims.forEach((a) => a.play()); arm(); started(); }
+        else if (playing && !e.isIntersecting) { finish(); io?.disconnect(); }
+      }, { threshold: [0, 0.6] });
       io.observe(fig.current!);
     }
     return () => {
