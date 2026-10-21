@@ -6,6 +6,8 @@ import SheetFrame from "@/components/SheetFrame";
 import ContactForm from "@/components/ContactForm";
 import { alternatesFor, fill, getBundle, languageAlternates, type Bundle } from "@/content/i18n";
 import { locales, pageForSlug, pageSlugs, pathFor, type PageKey } from "@/content/i18n/routes";
+import { PROBES_PASSED_ON } from "@/content/security";
+import { latestProbePass } from "@/lib/probe-pass";
 
 /* Sub-pages, by localized slug (/security/, /pt/seguranca/). Every page in
    routes.ts has a slug in every locale; anything else 404s. */
@@ -39,6 +41,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SubPage({ params }: Props) {
   const { locale, page, b } = await resolve(params);
   const home = pathFor(locale);
+  // /security: the latest full probe pass (refreshed daily from the probes workflow)
+  const passed = page === "security" ? await latestProbePass(PROBES_PASSED_ON) : "";
 
   return (
     <>
@@ -57,7 +61,7 @@ export default async function SubPage({ params }: Props) {
         </div>
       </header>
 
-      <main className="subpage">{BODIES[page](b)}</main>
+      <main className="subpage">{BODIES[page](b, passed)}</main>
 
       <footer className="foot foot--sub">
         <p>
@@ -68,7 +72,7 @@ export default async function SubPage({ params }: Props) {
   );
 }
 
-const BODIES: Record<PageKey, (b: Bundle) => React.ReactNode> = {
+const BODIES: Record<PageKey, (b: Bundle, passed: string) => React.ReactNode> = {
   security: SecurityBody,
   services: ServicesBody,
 };
@@ -142,7 +146,9 @@ function ServicesBody({ services: s, locale }: Bundle) {
   );
 }
 
-function SecurityBody({ security: s, ui }: Bundle) {
+function SecurityBody({ security: s, ui, locale }: Bundle, passed: string) {
+  const date = new Intl.DateTimeFormat(locale === "pt" ? "pt-BR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+    .format(new Date(`${passed}T00:00:00Z`));
   return (
     <section className="section" aria-labelledby="security-title">
       <header className="sec-head">
@@ -161,7 +167,7 @@ function SecurityBody({ security: s, ui }: Bundle) {
             </span>
             <div className="legend__def">
               <h2>{item.title}</h2>
-              <p>{item.body}</p>
+              <p>{item.body.replace("{date}", date)}</p>
               {"link" in item && item.link && (
                 <p>
                   <a href={item.link.href} target="_blank" rel="noopener noreferrer">

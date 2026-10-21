@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "node --test scripts/grounding.test.mjs scripts/geo.test.mjs",
+    "test": "node --test scripts/grounding.test.mjs scripts/geo.test.mjs scripts/ci-wait.test.mjs",
     "gen:assets": "node scripts/gen-assets.mjs",
     "shots": "node scripts/shots.mjs",
     "smoke": "node scripts/smoke.mjs",

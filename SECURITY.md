@@ -14,6 +14,11 @@ A plain-language summary for visitors lives at
 - **The Anthropic API key and the spend behind it.** A dedicated "portfolio"
   workspace with its own key and a monthly Console spend limit; the key is
   scoped to Vercel *Production* only.
+- **The probes judge key.** `PROBES_ANTHROPIC_API_KEY`, a GitHub Actions
+  repository secret used only by the probes workflow to judge answers: a
+  separate key with its own Console spend limit, never the production key and
+  never in Vercel. For local runs the same role is `ANTHROPIC_API_KEY` in the
+  gitignored `.env.local`.
 - **The Upstash Redis credentials** that back the rate limits.
 - **The Resend API key** (email delivery for the contact form) and Simon's
   inbox, which receives the form. The destination address lives only in the
@@ -89,7 +94,32 @@ OWASP Top 10 (2021):
   Revisit with the ESLint 10 upgrade (ignored as a major in `.github/dependabot.yml`;
   backlog in CLAUDE.md → Open) or as soon as a patched `braces` ships.
 - `main` is protected: the `verify`, `secret-scan` and `codeql` checks are
-  required, no admin bypass.
+  required, no admin bypass. `node scripts/ci-wait.mjs <sha>` waits until every
+  check run on a commit has completed and reports their final conclusions
+  (tested in `scripts/ci-wait.test.mjs`); a timeout or an API error is
+  reported as such, never as a result.
+- **Probe policy.** The full prompt-injection and grounding suite
+  (`scripts/redteam.mjs`) runs in `.github/workflows/probes.yml` against
+  production: weekly (Mondays 06:00 UTC), by hand, and after a push to `main`
+  that changes a chat-relevant file — `content/assistant-context.ts` (the prompt, `<facts>`, `<services>`, `<security>`), the content they're built from (`content/site.ts`, `content/projects.ts`, `content/pipeline.ts`, `content/services.ts`, `content/security.ts`), `content/i18n/**` and `locales.json` (the route's fallback and error messages, URLs), `app/api/chat/**` (route, checker, model config), `lib/rate-limit.ts`, and `scripts/redteam.mjs` itself. After such a push it first waits
+  for that commit's production deploy. Each run keeps every answer as a 90-day
+  workflow artifact: probe questions, answers and verdicts only — no headers,
+  keys, IPs or Upstash identifiers; an Anthropic API error prints only its HTTP
+  status and error type, never the request_id. The workflow runs only on
+  `push`, `schedule` and `workflow_dispatch` (never `pull_request` or
+  `pull_request_target`, so PR code never sees the key), exits non-zero on any
+  probe failure (blocklist hits included), and pins every action to a SHA. Its
+  token has two read-only permissions: `contents: read` (checkout) and
+  `deployments: read` (to wait until Vercel reports the pushed commit's
+  production deploy, so the suite tests the new code, not the old deploy).
+  Every successful
+  production deploy also runs `.github/workflows/deploy-smoke.yml`: one
+  question to the live chat (`scripts/chat-smoke.mjs`, no key) that fails on a
+  5xx or the safe fallback. /security shows the date of the latest successful
+  probes run, read on the server from GitHub's public API at most once a day
+  (`lib/probe-pass.ts`, no token, no visitor data; if GitHub is unreachable it
+  shows the last pass recorded in `content/security.ts`). `PROBES_PASSED_ON`
+  changes only after a full pass; the probe judge sees `<facts>` and `<services>`.
 - Claude Code permissions: no reading secrets; approval required for installs
   and network commands.
 

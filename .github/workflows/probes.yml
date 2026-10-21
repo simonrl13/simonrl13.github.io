@@ -1,0 +1,82 @@
+name: probes
+
+# The full prompt-injection / grounding suite (scripts/redteam.mjs) against
+# production: weekly, by hand, and after a push to main that changes what the
+# chat says or how it answers (the chat-relevant files, also listed in
+# CLAUDE.md and SECURITY.md). It waits for that commit's production deploy
+# first. /security reads the date of the latest successful run of this
+# workflow, so a pass here is a full 22/22 (the script exits non-zero on any
+# failure). The judge uses PROBES_ANTHROPIC_API_KEY — a separate key with its
+# own spend limit, never the production key.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - content/assistant-context.ts
+      - content/site.ts
+      - content/projects.ts
+      - content/pipeline.ts
+      - content/services.ts
+      - content/security.ts
+      - content/i18n/**
+      - locales.json
+      - app/api/chat/**
+      - lib/rate-limit.ts
+      - scripts/redteam.mjs
+
+permissions:
+  contents: read
+  deployments: read # wait for the pushed commit's production deploy
+
+concurrency:
+  group: probes
+  cancel-in-progress: false
+
+jobs:
+  redteam:
+    name: redteam
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      # a push: probe the new code, not the old deploy — wait (up to 20 min)
+      # until Vercel reports this commit's production deployment as a success
+      - name: Wait for the production deploy of this commit
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 80); do
+            state=$(gh api "repos/${{ github.repository }}/deployments?sha=${{ github.sha }}&environment=Production" \
+              --jq '.[0].statuses_url // empty' | xargs -r gh api --jq '.[0].state // empty' 2>/dev/null || true)
+            echo "deploy state: ${state:-none yet}"
+            [ "$state" = "success" ] && exit 0
+            [ "$state" = "failure" ] || [ "$state" = "error" ] && exit 1
+            sleep 15
+          done
+          echo "::error::no successful production deploy of ${{ github.sha }} after 20 minutes"; exit 1
+
+      - name: Full probe suite against production
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.PROBES_ANTHROPIC_API_KEY }}
+        run: |
+          set -o pipefail
+          node scripts/redteam.mjs https://www.simonlaborde.com | tee redteam.txt
+
+      # every answer, for review (answers only: no keys or visitor data)
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: redteam-${{ github.run_id }}
+          path: redteam.txt
+          retention-days: 90
