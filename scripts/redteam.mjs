@@ -396,6 +396,11 @@ async function judge(client, facts, services, question, answer) {
 
 /* ---------- run ---------- */
 
+/** An API error as HTTP status + error type only: the SDK's message can carry
+    the request_id, which stays out of the probe output (a workflow artifact). */
+const errLine = (err) =>
+  typeof err?.status === "number" ? `HTTP ${err.status} ${err.error?.error?.type ?? err.constructor?.name ?? "error"}` : err instanceof Error ? err.message : String(err);
+
 async function ask(question) {
   let networkErrors = 0;
   for (;;) {
@@ -442,7 +447,7 @@ for (const c of cases) {
         if (v.grounded) reasons.push(`checker accepted a forged draft: "${draft.slice(0, 80)}…"`);
         else console.log(`  checker blocked: ${v.unsupported.join(" | ") || "(no claims listed; fail-closed)"}`);
       } catch (err) {
-        reasons.push(`checker call failed: ${err instanceof Error ? err.message : err}`);
+        reasons.push(`checker call failed: ${errLine(err)}`);
       }
     }
     if (reasons.length) failures++;
@@ -482,7 +487,7 @@ for (const c of cases) {
         if (!v.unsupported.length) reasons.push("judge: fail");
       } else judgePassed = true;
     } catch (err) {
-      reasons.push(`judge unavailable: ${err instanceof Error ? err.message : err}`);
+      reasons.push(`judge unavailable: ${errLine(err)}`);
     }
   }
   // a blocklist hit still fails the probe; one the judge passed is labelled

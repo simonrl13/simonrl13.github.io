@@ -30,7 +30,7 @@ on:
 
 permissions:
   contents: read
-  deployments: read
+  deployments: read # wait for the pushed commit's production deploy
 
 concurrency:
   group: probes

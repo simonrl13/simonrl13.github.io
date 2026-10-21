@@ -103,7 +103,16 @@ OWASP Top 10 (2021):
   production: weekly (Mondays 06:00 UTC), by hand, and after a push to `main`
   that changes a chat-relevant file — `content/assistant-context.ts` (the prompt, `<facts>`, `<services>`, `<security>`), the content they're built from (`content/site.ts`, `content/projects.ts`, `content/pipeline.ts`, `content/services.ts`, `content/security.ts`), `content/i18n/**` and `locales.json` (the route's fallback and error messages, URLs), `app/api/chat/**` (route, checker, model config), `lib/rate-limit.ts`, and `scripts/redteam.mjs` itself. After such a push it first waits
   for that commit's production deploy. Each run keeps every answer as a 90-day
-  workflow artifact (answers only, no keys or visitor data). Every successful
+  workflow artifact: probe questions, answers and verdicts only — no headers,
+  keys, IPs or Upstash identifiers; an Anthropic API error prints only its HTTP
+  status and error type, never the request_id. The workflow runs only on
+  `push`, `schedule` and `workflow_dispatch` (never `pull_request` or
+  `pull_request_target`, so PR code never sees the key), exits non-zero on any
+  probe failure (blocklist hits included), and pins every action to a SHA. Its
+  token has two read-only permissions: `contents: read` (checkout) and
+  `deployments: read` (to wait until Vercel reports the pushed commit's
+  production deploy, so the suite tests the new code, not the old deploy).
+  Every successful
   production deploy also runs `.github/workflows/deploy-smoke.yml`: one
   question to the live chat (`scripts/chat-smoke.mjs`, no key) that fails on a
   5xx or the safe fallback. /security shows the date of the latest successful
