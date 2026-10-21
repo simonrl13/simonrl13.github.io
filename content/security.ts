@@ -10,6 +10,10 @@ export type SecurityItem = {
   link?: { label: string; href: string };
 };
 
+/** Last full probe pass recorded here; /security shows a later one from
+    .github/workflows/probes.yml if GitHub reports it (lib/probe-pass.ts). */
+export const PROBES_PASSED_ON = "2026-10-14";
+
 export const securityPage = {
   title: "How this site is secured",
   eyebrow: "Detail — security",
@@ -33,7 +37,7 @@ export const securityPage = {
     },
     {
       title: "Prompt-injection tests",
-      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model, and a third tries to talk the answer checker into approving false claims. All 17 passed against the live site on 14 October 2026. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
+      body: "Probes try to override the instructions, extract the system prompt, swap the assistant’s persona, smuggle instructions in through pasted text, pressure it into sharing private details and push it to quote a price or a timeline; a second set checks that every answer about my experience matches my profile, judged by a separate AI model, and a third tries to talk the answer checker into approving false claims. The latest full run against the live site passed every probe, on {date}. The assistant has no tools, takes no actions and only sees this site’s public content; its answers are shown as plain text, never as HTML.",
     },
     {
       title: "Every answer is checked before you see it",

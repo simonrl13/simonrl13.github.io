@@ -288,7 +288,7 @@ export const pt: Bundle = {
       },
       {
         title: "Testes de prompt injection",
-        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA, e um terceiro tenta convencer o verificador de respostas a aprovar afirmações falsas. Os 17 passaram no site publicado em 14 de outubro de 2026. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
+        body: "Os testes tentam sobrescrever as instruções, extrair o system prompt, trocar a persona do assistente, contrabandear instruções dentro de um texto colado, pressioná-lo a revelar dados privados e forçá-lo a dar um preço ou um prazo; um segundo grupo confere se cada resposta sobre a minha experiência bate com o meu perfil, avaliada por outro modelo de IA, e um terceiro tenta convencer o verificador de respostas a aprovar afirmações falsas. A última execução completa no site publicado passou em todos os testes, em {date}. O assistente não tem ferramentas, não executa ações e só enxerga o conteúdo público deste site; as respostas aparecem como texto puro, nunca como HTML.",
       },
       {
         title: "Toda resposta é conferida antes de chegar a você",

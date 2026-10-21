@@ -11,7 +11,9 @@
 
 ## Security rules (every change)
 - **No secrets** in code, logs, commits, prompts or fixtures. Keys live only in Vercel env
-  vars (Production scope) or a gitignored `.env.local`. Never read `.env*` files.
+  vars (Production scope), a gitignored `.env.local`, or — the probes judge key only — the
+  GitHub secret `PROBES_ANTHROPIC_API_KEY` (separate, spend-limited, never the production
+  key). Never read `.env*` files.
 - **Validate every input** at the trust boundary (type, length, shape) before using it —
   see `app/api/chat/route.ts`: size cap → JSON → shape → limits → model.
 - **Model output is rendered as text only.** `dangerouslySetInnerHTML` is allowed solely
@@ -19,7 +21,15 @@
 - **Ask before adding any dependency or external service.** Before installing, check the
   package exists on npm and is established (age, weekly downloads, maintainers).
 - **Chat spend controls stay on:** per-IP + daily cap in Upstash, fail closed, limits in
-  `app/api/chat/config.ts`. Run `npm run redteam <url>` after changing the prompt.
+  `app/api/chat/config.ts`.
+- **Probe policy:** the full suite runs in `.github/workflows/probes.yml` — weekly, by hand,
+  and after a push to `main` touching a chat-relevant file (it waits for that deploy):
+  `content/assistant-context.ts`, `content/{site,projects,pipeline,services,security}.ts`,
+  `content/i18n/**`, `locales.json`, `app/api/chat/**`, `lib/rate-limit.ts`,
+  `scripts/redteam.mjs`. Keep that `paths:` list, this one and SECURITY.md in sync. Every
+  production deploy runs `deploy-smoke.yml` (one question; fails on 5xx or the fallback).
+  /security shows the latest successful probes run (`lib/probe-pass.ts`); change
+  `PROBES_PASSED_ON` only after a full pass (the copy states no probe count). Locally: `npm run redteam <url>`.
 - **Every change goes through a PR and passes CI** (`verify`, `secret-scan`, `codeql`);
   `main` is protected with no admin bypass.
 - **Update `SECURITY.md`** (and the /security page copy) whenever the attack surface or
@@ -118,7 +128,8 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 
 ## Workflow
 - Branch → commit → push → PR → CI green → merge (GitHub API, token from
-  `git credential fill`; no `gh` CLI). One PR per change.
+  `git credential fill`; no `gh` CLI). One PR per change. Wait for CI with
+  `node scripts/ci-wait.mjs <sha>` (every check completed; exit 0 green, 1 failed, 2 timeout/API error).
 - Once per clone: `git config core.hooksPath .githooks` (gitleaks pre-commit).
 - Verify: `npm run lint`, `npm run build`, `npm run start` (port 3000), `npm run smoke`,
   `npm run shots`. Puppeteer scripts must live in `scripts/` to resolve node_modules.
