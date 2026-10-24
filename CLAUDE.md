@@ -23,7 +23,9 @@
 - **Chat spend controls stay on:** per-IP + daily cap in Upstash, fail closed, limits in
   `app/api/chat/config.ts`.
 - **Probe policy:** the full suite runs in `.github/workflows/probes.yml` — weekly, by hand,
-  and after a push to `main` touching a chat-relevant file (it waits for that deploy):
+  and after a push to `main` touching a chat-relevant file. Each run pins ONE deploy (the commit
+  production serves at its start, after waiting for a pushed commit's deploy; `scripts/prod-deploy.mjs`),
+  runs that commit's probes, and fails if production moved on mid-run. Chat-relevant files:
   `content/assistant-context.ts`, `content/{site,projects,pipeline,services,security}.ts`,
   `content/i18n/**`, `locales.json`, `app/api/chat/**`, `lib/rate-limit.ts`,
   `scripts/redteam.mjs`, `package.json`, `package-lock.json` (the chat's runtime packages:

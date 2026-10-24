@@ -3,11 +3,14 @@ name: probes
 # The full prompt-injection / grounding suite (scripts/redteam.mjs) against
 # production: weekly, by hand, and after a push to main that changes what the
 # chat says or how it answers (the chat-relevant files, also listed in
-# CLAUDE.md and SECURITY.md). It waits for that commit's production deploy
-# first. /security reads the date of the latest successful run of this
-# workflow, so a pass here is a full 22/22 (the script exits non-zero on any
-# failure). The judge uses PROBES_ANTHROPIC_API_KEY — a separate key with its
-# own spend limit, never the production key.
+# CLAUDE.md and SECURITY.md). Each run tests ONE deploy from start to finish:
+# it pins the commit production serves when it starts (after a push, once that
+# commit's deploy has succeeded), runs that commit's probes, and fails if
+# production serves a different commit at the end. /security reads the date of
+# the latest successful run of this workflow, so a pass here is a full pass of
+# one deploy (the script exits non-zero on any failure). The judge uses
+# PROBES_ANTHROPIC_API_KEY — a separate key with its own spend limit, never the
+# production key.
 
 on:
   schedule:
@@ -36,6 +39,9 @@ permissions:
   contents: read
   deployments: read # wait for the pushed commit's production deploy
 
+# one run at a time, never cancelled mid-run. GitHub keeps at most one pending
+# run per group: a newer one replaces it, and covers it, since it pins a deploy
+# at least as new.
 concurrency:
   group: probes
   cancel-in-progress: false
@@ -47,35 +53,49 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the pinned deploy may be another commit
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
 
-      # a push: probe the new code, not the old deploy — wait (up to 20 min)
-      # until Vercel reports this commit's production deployment as a success
-      - name: Wait for the production deploy of this commit
-        if: github.event_name == 'push'
+      # Pin ONE deploy for the whole run. After a push, first wait (≤ 20 min)
+      # for that commit's production deploy; then take the commit production
+      # serves now and check it out, so the probes match the deployed code.
+      # The helper is copied out first: an older pinned commit may not have it.
+      - name: Pin the production deploy
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          for i in $(seq 1 80); do
-            state=$(gh api "repos/${{ github.repository }}/deployments?sha=${{ github.sha }}&environment=Production" \
-              --jq '.[0].statuses_url // empty' | xargs -r gh api --jq '.[0].state // empty' 2>/dev/null || true)
-            echo "deploy state: ${state:-none yet}"
-            [ "$state" = "success" ] && exit 0
-            [ "$state" = "failure" ] || [ "$state" = "error" ] && exit 1
-            sleep 15
-          done
-          echo "::error::no successful production deploy of ${{ github.sha }} after 20 minutes"; exit 1
+          cp scripts/prod-deploy.mjs "$RUNNER_TEMP/prod-deploy.mjs"
+          if [ "${{ github.event_name }}" = push ]; then
+            node "$RUNNER_TEMP/prod-deploy.mjs" --wait "${{ github.sha }}"
+          fi
+          pinned=$(node "$RUNNER_TEMP/prod-deploy.mjs")
+          echo "PINNED=$pinned" >> "$GITHUB_ENV"
+          git checkout --quiet "$pinned"
+          echo "testing the production deploy of $pinned"
+      - run: npm ci
 
       - name: Full probe suite against production
         env:
           ANTHROPIC_API_KEY: ${{ secrets.PROBES_ANTHROPIC_API_KEY }}
         run: |
           set -o pipefail
-          node scripts/redteam.mjs https://www.simonlaborde.com | tee redteam.txt
+          { echo "deploy: $PINNED"; node scripts/redteam.mjs https://www.simonlaborde.com; } | tee redteam.txt
+
+      # a pass must be one deploy start to finish: if production moved on
+      # mid-run, the answers mix two deploys and the run fails
+      - name: Production still serves the pinned deploy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          now=$(node "$RUNNER_TEMP/prod-deploy.mjs")
+          if [ "$now" != "$PINNED" ]; then
+            echo "::error::production moved from $PINNED to $now during the run; not a pass. Run the workflow again by hand."
+            exit 1
+          fi
 
       # every answer, for review (answers only: no keys or visitor data)
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
