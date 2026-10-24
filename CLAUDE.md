@@ -26,7 +26,8 @@
   and after a push to `main` touching a chat-relevant file (it waits for that deploy):
   `content/assistant-context.ts`, `content/{site,projects,pipeline,services,security}.ts`,
   `content/i18n/**`, `locales.json`, `app/api/chat/**`, `lib/rate-limit.ts`,
-  `scripts/redteam.mjs`. Keep that `paths:` list, this one and SECURITY.md in sync. Every
+  `scripts/redteam.mjs`, `package.json`, `package-lock.json` (the chat's runtime packages:
+  `@anthropic-ai/sdk`, `next`, `@upstash/*`; any dependency change triggers it). Keep that `paths:` list, this one and SECURITY.md in sync. Every
   production deploy runs `deploy-smoke.yml` (one question; fails on 5xx or the fallback).
   /security shows the latest successful probes run (`lib/probe-pass.ts`); change
   `PROBES_PASSED_ON` only after a full pass (the copy states no probe count). Locally: `npm run redteam <url>`.

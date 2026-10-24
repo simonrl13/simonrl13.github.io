@@ -101,7 +101,7 @@ OWASP Top 10 (2021):
 - **Probe policy.** The full prompt-injection and grounding suite
   (`scripts/redteam.mjs`) runs in `.github/workflows/probes.yml` against
   production: weekly (Mondays 06:00 UTC), by hand, and after a push to `main`
-  that changes a chat-relevant file — `content/assistant-context.ts` (the prompt, `<facts>`, `<services>`, `<security>`), the content they're built from (`content/site.ts`, `content/projects.ts`, `content/pipeline.ts`, `content/services.ts`, `content/security.ts`), `content/i18n/**` and `locales.json` (the route's fallback and error messages, URLs), `app/api/chat/**` (route, checker, model config), `lib/rate-limit.ts`, and `scripts/redteam.mjs` itself. After such a push it first waits
+  that changes a chat-relevant file — `content/assistant-context.ts` (the prompt, `<facts>`, `<services>`, `<security>`), the content they're built from (`content/site.ts`, `content/projects.ts`, `content/pipeline.ts`, `content/services.ts`, `content/security.ts`), `content/i18n/**` and `locales.json` (the route's fallback and error messages, URLs), `app/api/chat/**` (route, checker, model config), `lib/rate-limit.ts`, `scripts/redteam.mjs` itself, and `package.json` / `package-lock.json` (the chat's runtime packages — `@anthropic-ai/sdk`, `next`, `@upstash/ratelimit`, `@upstash/redis`; a path filter can't tell which package changed, so any dependency change runs the suite). After such a push it first waits
   for that commit's production deploy. Each run keeps every answer as a 90-day
   workflow artifact: probe questions, answers and verdicts only — no headers,
   keys, IPs or Upstash identifiers; an Anthropic API error prints only its HTTP
