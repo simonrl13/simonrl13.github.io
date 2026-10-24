@@ -5,9 +5,16 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # one weekly PR for every npm update (major, minor, patch), so each batch
+    # triggers one probe run (package.json / package-lock.json are probe paths).
+    # Security updates come as soon as an advisory lands, also as one group.
     groups:
-      minor-and-patch:
-        update-types: [minor, patch]
+      npm-weekly:
+        applies-to: version-updates
+        patterns: ["*"]
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
     ignore:
       # Major upgrades need a planned migration (they fail `verify` as-is).
       # Remove an entry when that migration is scheduled.
