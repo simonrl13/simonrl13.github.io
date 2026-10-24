@@ -27,6 +27,10 @@ on:
       - app/api/chat/**
       - lib/rate-limit.ts
       - scripts/redteam.mjs
+      # the chat's runtime packages (@anthropic-ai/sdk, next, @upstash/*): a path
+      # filter can't see which package changed, so any dependency change runs it
+      - package.json
+      - package-lock.json
 
 permissions:
   contents: read

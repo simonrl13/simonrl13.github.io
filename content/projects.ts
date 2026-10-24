@@ -67,7 +67,11 @@ export type Project = {
   // system layers, top (what the user touches) → bottom (foundation);
   // rendered as an exploded isometric stack. Keep labels ≤ ~26 chars.
   layers: string[];
-  links?: { label: string; href: string }[];
+  /** `note` is shown under the link row in the dialog */
+  links?: { label: string; href: string; note?: string }[];
+  /** YouTube video in the dialog, behind a click-to-load poster
+      (public/assets/video/): nothing loads from YouTube before the click */
+  video?: { id: string; poster: string; seconds: number };
   detail: {
     body: string;
     role: string;
@@ -82,14 +86,16 @@ export const projects: Project[] = [
     // docs/TEST_LOG.md; checked 2026-10-14): 8,190 players; test MAE 0.357 vs
     // 0.410 no-change and 0.359 linear (does NOT beat linear); 80% intervals at
     // 82.2% coverage on 2023–24. Agent (M4) and MCP server (M5a) are built:
-    // 19/20 held-out, 2/2 injection resisted. Extraction done (24,260 docs, $2.77;
-    // move precision 19/19 in pilot 2, 94% = 3,589/3,828 in the full run). M3
-    // (public-text features) still open. Deploy next.
+    // 19/20 held-out, 2/2 injection resisted. Two pre-registered feature passes
+    // were negative. M3 (public-text features) still open. Live demo on Cloud Run
+    // (europe-west1, Neon Postgres) until 2027-01-01; before then the links,
+    // status, chat facts, Scout probe and CV switch to the video (CLAUDE.md).
+    // The retrieval result (4/36 → 24/36) waits for footballscout#41.
     id: "scout",
     tag: "01 · ML forecasting + Claude agent",
     title: "Scout",
     dialogTitle: "Scout — player market-value forecasting",
-    status: "In progress",
+    status: "Live demo, until 1 January 2027",
     lead: "Forecasts 12-month changes in Transfermarkt market value for 8,190 players across 7 European leagues (2013–2024), with a Claude agent and an MCP server on top — point-in-time, leakage-tested, with a sealed, logged test set.",
     skinClass: "pcard--data",
     layers: [
@@ -107,13 +113,21 @@ export const projects: Project[] = [
         { dt: "Agent, held-out evals", value: "19/20" },
       ],
     },
-    links: [{ label: "GitHub", href: "https://github.com/simonrl13/footballscout" }],
+    links: [
+      {
+        label: "Try the live demo",
+        href: "https://scout-246528398633.europe-west1.run.app",
+        note: "The first question after a quiet period takes about 20 s while the demo wakes up. Live until 1 January 2027.",
+      },
+      { label: "Source on GitHub", href: "https://github.com/simonrl13/footballscout" },
+    ],
+    video: { id: "nnWtgHnnf54", poster: "/assets/video/scout.webp", seconds: 25 },
     detail: {
-      body: "Forecasts how a player’s Transfermarkt market value — a crowd-sourced estimate, not a transfer fee — will change over the next 12 months, for 8,190 players across 7 European leagues from 2013 to 2024. Every feature is built point-in-time and checked by automated leakage tests, and the 2023–24 test set is reachable only through one gated, logged path. The forecasting model is complete: on the 2023–24 test seasons, LightGBM has an MAE of 0.357 against 0.410 for a no-change baseline, and its split-conformal 80% prediction intervals cover 82.2%. It does not beat a linear (ridge) baseline (MAE 0.359). Built on top: a Claude agent over read-only tools that also searches the players’ Wikipedia pages and cites the exact revision, and an MCP server exposing the same tools. The agent runs on Claude Haiku 5.5, about 8x cheaper per question than Haiku 4.5 with the same dev-set result. It passes 19/20 held-out evals (deterministic checks) and resisted 2/2 injection attempts. LLM extraction is done: 24,260 player-year Wikipedia documents processed with Claude Haiku 5.5 on the Batch API for US$2.77, and every kept event is backed by a verbatim quote and a checked date. Precision of extracted transfers and loans against Transfermarkt's transfer table: 19 of 19 in the second pilot and 94% (3,589 of 3,828) in the full run; the pre-registered test of the extracted text as forecast features was negative, so the model is unchanged. Milestone M3 (public-text features) is still open: further text-feature work, an optional GDELT track and the final comparison on validation. Next: deployment. A full case study is coming.",
-      role: "Independent project — in progress",
+      body: "Scout forecasts how footballers’ Transfermarkt market values will change over 12 months, with a Claude agent that answers questions about the forecasts. Every number in an agent answer must match the data its tools returned; an answer that doesn’t is retried, then blocked. Wikipedia claims cite the exact page revision. Trained on 8,190 players across seven European leagues (2013–2024). LightGBM beat the no-change baseline by ~13% MAE (0.357 vs 0.410) and tied a linear model; 82.2% coverage on 80% intervals; 19/20 on a held-out agent eval. Two pre-registered experiments are reported as negative results. The agent runs on Claude Haiku 5.5, about 8x cheaper per question than Haiku 4.5 with the same dev-set result. Milestone M3 (public-text features) is still open.",
+      role: "Independent project — live demo",
       outcome:
         "On the 2023–24 test seasons: MAE 0.357 vs 0.410 for a no-change baseline (no gain over a linear baseline) and 82.2% coverage for 80% prediction intervals; agent at 19/20 held-out evals with 2/2 injection attempts resisted; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",
-      stack: "Python · pandas · LightGBM · scikit-learn · MLflow · FastAPI · PostgreSQL · Docker · pytest · Claude API",
+      stack: "Python · LightGBM · FastAPI · Postgres · Claude API · RAG · Cloud Run",
     },
   },
   {
@@ -195,12 +209,13 @@ export const projects: Project[] = [
     detail: {
       // only what the current code does: no sync, no backend, the leaderboard
       // runs on sample data and photo logging is planned
-      body: "A mobile app that turns meal logging into a game, in Brazilian Portuguese, now being redesigned. In the current code, meals are logged by searching a Brazilian food-composition table (TACO) with calories and macros per portion, and a daily goal, streaks, XP levels, weekly challenges and achievements are derived from what is logged. Data is stored on the device; there is no backend or account yet.",
+      body: "A mobile app that turns meal logging into a game, in Brazilian Portuguese, now being redesigned. In the current code, meals are logged by searching a food-composition table (Brazil’s TACO, plus two milk entries from USDA FoodData Central) with calories and macros per portion, and a daily goal, streaks, XP levels, weekly challenges and achievements are derived from what is logged. Data is stored on the device; there is no backend or account yet.",
       // personal project — not freelance/client work; keep it that way
       role: "Personal project — architecture and UI",
       outcome: "In development (redesign in progress)",
       stack: "React Native · Expo · Expo Router · TypeScript · Reanimated · on-device storage (AsyncStorage)",
     },
+    video: { id: "-yoaS_WkRfY", poster: "/assets/video/nutriquest.webp", seconds: 21 },
   },
   {
     id: "labnov",

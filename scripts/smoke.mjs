@@ -23,6 +23,11 @@ page.on("console", (m) => {
   }
 });
 page.on("pageerror", (e) => fails.push("pageerror: " + e.message));
+// project videos are click-to-load: nothing may reach YouTube before play is pressed
+const youtube = [];
+page.on("request", (r) => {
+  if (/youtube|ytimg|googlevideo/i.test(new URL(r.url()).hostname)) youtube.push(r.url());
+});
 
 await page.setViewport({ width: 1440, height: 900 });
 await page.goto(BASE, { waitUntil: "networkidle0" });
@@ -48,6 +53,19 @@ for (const id of await page.$eval(".pcard", (cs) => Array.from(cs, (c) => c.id))
   await page.waitForFunction(() => !document.querySelector("dialog.sheet[open]"), { timeout: 2000 });
 }
 if (/TODO/i.test(await page.$eval("main", (el) => el.textContent))) fails.push("page body shows a TODO note");
+
+// 1c. video facade: no YouTube request after loading the page and opening every
+// dialog; pressing play injects the youtube-nocookie player, closing removes it
+if (youtube.length) fails.push(`YouTube contacted before play: ${youtube[0]}`);
+await page.click("#proj-scout .pcard__more");
+await page.waitForSelector("dialog.sheet[open] .video__play", { timeout: 2000 });
+await page.click("dialog.sheet[open] .video__play");
+const player = await page.$eval("dialog.sheet[open] .video iframe", (f) => f.src).catch(() => "");
+if (!player.startsWith("https://www.youtube-nocookie.com/embed/")) fails.push(`video player after play: ${player || "none"}`);
+// focus is inside the cross-origin player now, which keeps Escape: use the close button
+await page.click("dialog.sheet[open] .sheet__close");
+await page.waitForFunction(() => !document.querySelector("dialog.sheet[open]"), { timeout: 2000 });
+if (await page.$("dialog.sheet .video iframe")) fails.push("video player still mounted after closing the dialog");
 
 // 2. LABNOV PT/EN toggle
 const ptText = await page.$eval("#proj-labnov .pcard__lead", (el) => el.textContent);

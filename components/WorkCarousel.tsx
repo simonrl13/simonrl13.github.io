@@ -131,6 +131,44 @@ function LabBody({ skin, label }: { skin: Extract<Project["skin"], { kind: "lab"
 
 /* ---------- dialog ---------- */
 
+/** Click-to-load video: a self-hosted poster button until pressed, then the
+    youtube-nocookie.com player (the only frame-src in the CSP). Nothing is
+    requested from YouTube before the click. Fixed 16:9 box, so no layout shift. */
+function VideoFacade({ video, title, ui }: { video: NonNullable<Project["video"]>; title: string; ui: CarouselUi }) {
+  const [playing, setPlaying] = useState(false);
+  const frame = useRef<HTMLIFrameElement>(null);
+  useEffect(() => {
+    if (playing) frame.current?.focus();
+  }, [playing]);
+
+  return (
+    <div className="video">
+      {playing ? (
+        <iframe
+          ref={frame}
+          src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`}
+          title={`${title}, ${ui.videoFrame}`}
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      ) : (
+        <button
+          type="button"
+          className="video__play"
+          aria-label={`${ui.playVideo}: ${title} (${video.seconds} s)`}
+          onClick={() => setPlaying(true)}
+        >
+          {/* pre-sized, compressed by hand (images are unoptimized site-wide) */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={video.poster} alt="" width={960} height={540} decoding="async" />
+          <span className="video__icon" aria-hidden="true" />
+        </button>
+      )}
+    </div>
+  );
+}
+
 function ProjectDialog({
   project,
   open,
@@ -186,6 +224,10 @@ function ProjectDialog({
           </p>
           <h2 lang="en">{project.dialogTitle ?? project.title}</h2>
           {ui.detailNote && <p className="sheet__note mono">{ui.detailNote}</p>}
+          {project.video && (
+            // keyed on open: closing the dialog unmounts the player, so it stops
+            <VideoFacade key={`${project.id}-${open}`} video={project.video} title={project.title} ui={ui} />
+          )}
           <div className="sheet__iso">
             <IsoStack layers={project.layers} className="iso--lg" />
           </div>
@@ -208,13 +250,16 @@ function ProjectDialog({
                   key={l.href}
                   href={l.href}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                 >
                   {l.label} ↗
                 </a>
               ))}
             </p>
           )}
+          {project.links?.map((l) => l.note && (
+            <p key={l.href} className="sheet__linknote mono">{l.note}</p>
+          ))}
         </>
       )}
     </dialog>
@@ -343,6 +388,12 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
               <p className="pcard__tag mono">
                 {p.tag}
                 {p.status && <span className="status-label">{p.status}</span>}
+                {p.video && (
+                  <span className="status-label status-label--video">
+                    <span aria-hidden="true">▶ </span>
+                    {ui.videoMark}
+                  </span>
+                )}
               </p>
               <h3>{p.title}</h3>
 
@@ -365,7 +416,7 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
                       key={l.href}
                       href={l.href}
                       target="_blank"
-                      rel="noopener"
+                      rel="noopener noreferrer"
                     >
                       {l.label} ↗
                     </a>
