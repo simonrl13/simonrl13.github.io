@@ -150,18 +150,16 @@
   </div>
 
   <h2>Selected Projects</h2>
-  <!-- Scout numbers checked against the Scout repo (README, reports, TEST_LOG) -->
+  <!-- Scout numbers checked against the Scout repo (README, reports, TEST_LOG).
+       The live demo ends 2027-01-01: swap its link for the video before then (CLAUDE.md).
+       Add "(correct answers 4/36 → 24/36)" after the RAG clause once footballscout#41 is merged. -->
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">Scout — Player Market-Value Forecasting</span>
-      <span class="entry-meta"><a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
+      <span class="entry-title">Scout — Football Market-Value Forecasting with an LLM Agent</span>
+      <span class="entry-meta"><a href="https://scout-246528398633.europe-west1.run.app">Live demo</a> · <a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
     </div>
     <ul>
-      <li>Point-in-time pipeline forecasting 12-month market-value changes for 8,190 players across 7 European leagues (2013–2024), with automated leakage tests and a sealed, logged test set</li>
-      <li>LightGBM: test MAE 0.357 vs 0.410 for a no-change baseline, 80% prediction intervals at 82.2% coverage; does not beat a linear baseline (0.359)</li>
-      <li>Claude agent over read-only tools with cited Wikipedia search, plus an MCP server: 19/20 on held-out evals, 2/2 injection attempts resisted</li>
-      <li>LLM extraction over 24,260 Wikipedia documents for US$2.77, every kept event backed by a verbatim quote; transfer precision vs Transfermarkt 19/19 in the pilot, 94% in the full run</li>
-      <li>CI with tests, dependency audits, secret scanning and CodeQL; threat model in SECURITY.md; next: deployment</li>
+      <li>Python, LightGBM, FastAPI, Postgres, Cloud Run. Trained on 8,190 players across seven European leagues; ~13% lower MAE than the no-change baseline; Claude agent with tool use, a number-checking guardrail and Wikipedia RAG with revision-level citations; 19/20 on a held-out eval; resisted 2/2 injection attempts</li>
     </ul>
   </div>
   <div class="entry">

@@ -54,6 +54,12 @@ export const enUi = {
     close: "Close",
     /** shown at the top of the (English-only) project dialog; empty in English */
     detailNote: "",
+    /** card marker for projects with a video in the dialog */
+    videoMark: "Video",
+    /** the poster button reads "Play video: Scout (25 s)" */
+    playVideo: "Play video",
+    /** iframe title: "Scout, video (YouTube)" */
+    videoFrame: "video (YouTube)",
   },
   pipeline: { manualStep: "manual step" },
   languages: {

@@ -44,7 +44,7 @@ A plain-language summary for visitors lives at
 | `POST /api/contact` (public) | Spam, email flooding, scripted abuse | Honeypot field (filled → 200, nothing sent, no limit spent); per-IP sliding window (3 / 60 min) **and** daily cap (20 / UTC day) in Upstash Redis via the same limiter as the chat (`lib/rate-limit.ts`), **fails closed** (503) | Local curl: 4th valid post from one IP → 429; `npm run smoke` (honeypot, consent) |
 | `POST /api/contact` | Malformed payloads; email header injection; HTML injection into the email | Body ≤ 8 KB (413); JSON object with string fields within length limits (name 100, business 120, email 254, message 10–3000) and an email shape check, all **before** the limiter; control characters (CR/LF included) collapsed in single-line fields, so the subject and Reply-To can't carry extra headers; LGPD consent must be `true`; the email is plain text only | Local curl matrix (this PR): bad JSON, array body, `Bcc:` smuggled via newline, short/long fields, missing consent → 400 |
 | `POST /api/contact` from another website or a script | Cross-origin abuse | Requires an allow-listed `Origin` (same list as the chat); a missing or foreign Origin gets **403** before the body is read; no CORS headers are sent | Local curl (no Origin / foreign Origin → 403) |
-| Static pages | XSS, clickjacking, MIME sniffing | React escaping; `dangerouslySetInnerHTML` only on repo-authored strings in `content/`; CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff` | Headless browser check: no CSP violations (PR #28); `curl -I` |
+| Static pages | XSS, clickjacking, MIME sniffing | React escaping; `dangerouslySetInnerHTML` only on repo-authored strings in `content/`; CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff`; the only allowed frame is `frame-src https://www.youtube-nocookie.com` (project videos) | Headless browser check: no CSP violations (PR #28); `npm run smoke` (no YouTube request before play); `curl -I` |
 | Build and dependencies | Vulnerable or malicious package; compromised action; third-party outage or tampering at build time | Lockfile; runtime `npm audit` gate in CI; Dependabot; actions pinned to commit SHAs; packages vetted before install (age, downloads, maintainers); fonts self-hosted from `app/fonts` (`next/font/local`, SIL OFL), so neither builds nor visitors contact Google Fonts; the hero map's packages (`d3-geo`, `topojson-client`, `world-atlas`) are devDependencies run only by `npm run gen:map` — what ships is committed static JSON in `public/map/`, fetched same-origin (no CSP change, no runtime dependency) | CI `verify` job; build succeeds with Google Fonts unreachable (PR below) |
 | Repository | Committed secret | gitleaks pre-commit hook + full-history gitleaks in CI; GitHub secret scanning | CI `secret-scan` job |
 | Public CV (`/assets/cv.pdf`) | Personal data exposure | `npm run cv` strips the phone segment and **refuses to render** if a phone number or placeholder survives; the full CV is generated only into the gitignored `cv-private/` | Renderer guard |
@@ -153,8 +153,13 @@ OWASP Top 10 (2021):
   expires after 8 days, no visitor data) and logs the count.
 - **Hosting logs**: Vercel keeps its own platform request logs under its
   retention policy; this project doesn't add to them.
-- **Fonts and third parties**: all fonts are served from this site; pages make
-  no third-party requests (enforced by the CSP).
+- **Fonts and third parties**: all fonts and video posters are served from this
+  site; loading a page makes no third-party request (enforced by the CSP). The
+  two project videos (Scout, NutriQuest, in the project dialog) are a
+  click-to-load facade: a self-hosted poster button until pressed, then a
+  `youtube-nocookie.com` iframe (YouTube's privacy-enhanced mode; the CSP's only
+  `frame-src`). From that click on, YouTube's own terms and cookies apply inside
+  its frame. Closing the dialog removes the player.
 - **Browser storage**: `localStorage.theme` (the chosen theme),
   `localStorage.lang` (the language last picked in the switcher — remembered,
   never used to redirect) and
@@ -175,6 +180,9 @@ OWASP Top 10 (2021):
 - **CSP allows `'unsafe-inline'` for scripts and styles.** Statically rendered
   Next.js pages carry inline bootstrap scripts; per-request nonces would force
   every page to render on demand. Accepted.
+- **YouTube, after you press play.** Pressing play on a project video loads
+  YouTube's player in an iframe, which then talks to Google under its own
+  policy; this site gets nothing back from it. Accepted: opt-in per video.
 - **The Vercel preview toolbar** (vercel.live) is blocked by the CSP on
   preview deployments.
 - **simonrl13.github.io** (GitHub Pages) can't send custom headers or a

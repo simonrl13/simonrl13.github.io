@@ -60,8 +60,8 @@ export const securityPage = {
       },
     },
     {
-      title: "No third-party requests",
-      body: "Fonts are self-hosted, so neither building the site nor visiting it contacts Google Fonts or any other third party — and the Content Security Policy enforces it.",
+      title: "No third-party requests until you press play",
+      body: "Visiting the site contacts no third party: fonts and video posters are self-hosted, and the Content Security Policy enforces it. The two project videos load from YouTube, in its privacy-enhanced mode (youtube-nocookie.com), only when you press play.",
     },
     {
       title: "Every change passes the same gates",

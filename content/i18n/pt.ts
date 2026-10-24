@@ -56,6 +56,9 @@ export const pt: Bundle = {
       cardLanguage: "Idioma do cartão",
       close: "Fechar",
       detailNote: "Estudo de caso em inglês.",
+      videoMark: "Vídeo",
+      playVideo: "Reproduzir vídeo",
+      videoFrame: "vídeo (YouTube)",
     },
     pipeline: { manualStep: "passo manual" },
     languages: {
@@ -206,7 +209,15 @@ export const pt: Bundle = {
   projects: {
     scout: {
       tag: "01 · Previsão com ML + agente Claude",
-      status: "Em andamento",
+      status: "Demo ao vivo, até 1º de janeiro de 2027",
+      links: [
+        {
+          label: "Testar a demo ao vivo",
+          href: "https://scout-246528398633.europe-west1.run.app",
+          note: "A primeira pergunta depois de um tempo parada leva cerca de 20 s enquanto a demo acorda. No ar até 1º de janeiro de 2027.",
+        },
+        { label: "Código no GitHub", href: "https://github.com/simonrl13/footballscout" },
+      ],
       lead: "Prevê a variação, em 12 meses, do valor de mercado no Transfermarkt para 8.190 jogadores de 7 ligas europeias (2013–2024), com um agente Claude e um servidor MCP por cima — point-in-time, com testes de vazamento e um conjunto de teste lacrado e registrado.",
       layers: ["Agente Claude · servidor MCP", "Intervalos de previsão 80%", "LightGBM · runs no MLflow", "Features point-in-time", "Postgres · anti-vazamento"],
       skin: {
@@ -311,8 +322,8 @@ export const pt: Bundle = {
         },
       },
       {
-        title: "Nenhuma requisição a terceiros",
-        body: "As fontes são servidas pelo próprio site, então nem o build nem a visita ao site acessam o Google Fonts ou qualquer outro terceiro — e a Content Security Policy garante isso.",
+        title: "Nenhuma requisição a terceiros até você dar play",
+        body: "Visitar o site não aciona nenhum terceiro: as fontes e as capas dos vídeos são servidas pelo próprio site, e a Content Security Policy garante isso. Os dois vídeos de projetos carregam do YouTube, no modo de privacidade aprimorada (youtube-nocookie.com), só quando você aperta play.",
       },
       {
         title: "Toda mudança passa pelas mesmas checagens",

@@ -107,11 +107,19 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - Rogério Freire site = client work (CV freelance section + Journey). Game-dev 2018–2020
   entry: site Journey only, never on the CV. Certifications are listed without dates.
 - Scout (github.com/simonrl13/footballscout, read-only source at C:\Projetos\Scout) is
-  first in Selected Projects and the Work carousel, labelled "In progress". Check every
+  first in Selected Projects and the Work carousel, labelled "Live demo, until 1 January 2027". Check every
   number against its README/reports before changing copy (8,190 players, 82.2% interval
   coverage, MAE 0.357 vs 0.410 no-change). Agent and MCP server are **built** (19/20 held-out, 2/2 injection resisted); forecasting
-  model complete; deployment next (not live); it does **not** beat linear — never say it does.
+  model complete; it does **not** beat linear — never say it does. **Live demo** on Cloud Run
+  (europe-west1, Neon Postgres) at scout-246528398633.europe-west1.run.app **until 2027-01-01** —
+  a demo, never "production". The retrieval result (4/36 → 24/36) stays out until
+  footballscout#41 is merged and its labels reviewed.
   The chat's verified Scout entry is `SCOUT` in `content/assistant-context.ts`.
+- **Scout demo end date (2027-01-01):** before it, unless the cloud account is upgraded,
+  replace the demo with the video in one PR — the "Try the live demo" link and its note
+  (`content/projects.ts` + `pt.ts`), the card status, `SCOUT` / `CLARIFICATIONS` in
+  `content/assistant-context.ts`, the Scout probe and judge rule in `scripts/redteam.mjs`,
+  and the CV's demo link. A scheduled reminder fires on 2026-12-15.
 - No "graduated with highest honors", no "with distinction". Thesis: "MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural" (keep the
   Portuguese title; in English add a bracketed translation marked as one). Topic: NLP for
   clinical decision support — never generative AI or LLM work. Graded 10/10, the maximum grade
@@ -167,7 +175,9 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - Inter and JetBrains Mono use `display: "optional"` (a swap rewrapped the hero role line:
   CLS 0.02). Keep it; Fraunces stays `swap`.
 - CSP (`next.config.mjs`) is strict apart from `'unsafe-inline'`: any new third-party
-  script, font, image or API origin needs a deliberate CSP change + SECURITY.md entry.
+  script, font, image, frame or API origin needs a deliberate CSP change + SECURITY.md entry.
+  The only `frame-src` is `https://www.youtube-nocookie.com` (project videos, click-to-load:
+  `VideoFacade` in `WorkCarousel`; posters self-hosted in `public/assets/video/`).
 - `@upstash/ratelimit` *allows* on timeout by default — `lib/rate-limit.ts` treats
   `reason === "timeout"` as a block. Keep it that way.
 

@@ -55,6 +55,8 @@ export type ProjectCopy = {
   lead: string;
   layers: string[];
   status?: string;
+  /** labels and notes for the project's links, same order and hrefs */
+  links?: Project["links"];
   skin?: SkinText;
 };
 
@@ -133,6 +135,7 @@ export function localizedProjects(bundle: Bundle): Project[] {
       lead: c.lead,
       layers: c.layers,
       status: c.status ?? p.status,
+      links: c.links ?? p.links,
       skin: { ...p.skin, ...(c.skin ?? {}) } as Project["skin"],
     };
   });
