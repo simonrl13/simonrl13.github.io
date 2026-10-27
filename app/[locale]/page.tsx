@@ -11,7 +11,7 @@ import Pipeline from "@/components/sections/Pipeline";
 import Languages from "@/components/sections/Languages";
 import Contact from "@/components/sections/Contact";
 import { alternatesFor, fill, getBundle, languageAlternates, localizedProjects } from "@/content/i18n";
-import { pathFor } from "@/content/i18n/routes";
+import { hasPage, pathFor } from "@/content/i18n/routes";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -39,7 +39,7 @@ export default async function Page({ params }: Props) {
       <main>
         <Origin copy={b.site} ui={ui} />
         <Journey items={b.journey} ui={ui} />
-        <Arsenal arsenal={b.arsenal} ui={ui} />
+        <Arsenal arsenal={b.arsenal} training={b.training} ui={ui} />
         <Work projects={localizedProjects(b)} ui={ui} />
         <Pipeline pipeline={b.pipeline} ui={ui} />
         <Languages ui={ui} />
@@ -51,9 +51,11 @@ export default async function Page({ params }: Props) {
           <span className="mono">SL&#8209;2026 · rev. 2026.5</span> — {ui.footer.builtWith}{" "}
           <a href={pathFor(locale, "security")}>{ui.footer.security}</a>.
         </p>
-        <p>
-          <a href={pathFor(locale, "services")}>{b.services.footerLink}</a>
-        </p>
+        {hasPage(locale, "services") && (
+          <p>
+            <a href={pathFor(locale, "services")}>{b.services.footerLink}</a>
+          </p>
+        )}
       </footer>
     </>
   );

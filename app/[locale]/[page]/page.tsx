@@ -5,17 +5,19 @@ import LangSwitch from "@/components/LangSwitch";
 import SheetFrame from "@/components/SheetFrame";
 import ContactForm from "@/components/ContactForm";
 import { alternatesFor, fill, getBundle, languageAlternates, type Bundle } from "@/content/i18n";
-import { locales, pageForSlug, pageSlugs, pathFor, type PageKey } from "@/content/i18n/routes";
+import { hasPage, locales, pageForSlug, pageSlugs, pathFor, type PageKey } from "@/content/i18n/routes";
 import { PROBES_PASSED_ON } from "@/content/security";
 import { latestProbePass } from "@/lib/probe-pass";
 
-/* Sub-pages, by localized slug (/security/, /pt/seguranca/). Every page in
-   routes.ts has a slug in every locale; anything else 404s. */
+/* Sub-pages, by localized slug (/security/, /pt/seguranca/). A page exists
+   in the locales routes.ts gives it a slug in; anything else 404s. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
-    Object.values(pageSlugs).map((slugs) => ({ locale, page: (slugs as Record<string, string>)[locale] })),
+    (Object.keys(pageSlugs) as PageKey[])
+      .filter((page) => hasPage(locale, page))
+      .map((page) => ({ locale, page: (pageSlugs[page] as Record<string, string>)[locale] })),
   );
 }
 
@@ -147,7 +149,7 @@ function ServicesBody({ services: s, locale }: Bundle) {
 }
 
 function SecurityBody({ security: s, ui, locale }: Bundle, passed: string) {
-  const date = new Intl.DateTimeFormat(locale === "pt" ? "pt-BR" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
+  const date = new Intl.DateTimeFormat(locale === "en" ? "en-GB" : ui.meta.htmlLang, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
     .format(new Date(`${passed}T00:00:00Z`));
   return (
     <section className="section" aria-labelledby="security-title">

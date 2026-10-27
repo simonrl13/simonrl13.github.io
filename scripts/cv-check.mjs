@@ -1,6 +1,7 @@
 /* Facts that must match across the CV's languages: every number, every
    month + year date and "present". scripts/render-cv.mjs compares each
-   EN / FR / PT-BR trio of scripts/cv-source.html with these before it renders.
+   EN / FR / PT-BR trio of scripts/cv-source.html with these before it renders,
+   and scripts/i18n-check.test.mjs uses them on the site's translations.
    Each language writes the same fact its own way:
      EN 8,190 · 0.357 · Jun 2022 · present
      FR 8 190 · 0,357 · juin 2022 · aujourd’hui   (narrow no-break spaces)
@@ -23,7 +24,8 @@ const toNumber = {
 const MONTH = {
   en: /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?(?=\s+\d{4})/gi,
   fr: /\b(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)(?=\s+\d{4})/gi,
-  "pt-BR": /\b(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)\.?(?=\s+\d{4})/gi,
+  // the CV abbreviates (jun. 2022), the site spells out (1º de janeiro de 2027)
+  "pt-BR": /\b(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)[a-zç]*\.?(?=\s+(?:de\s+)?\d{4})/gi,
 };
 const MONTH_INDEX = {
   en: ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],

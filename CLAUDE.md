@@ -25,7 +25,7 @@
 - **Probe policy:** the full suite runs in `.github/workflows/probes.yml` — weekly, by hand,
   and after a push to `main` touching a chat-relevant file (it waits for that deploy):
   `content/assistant-context.ts`, `content/{site,projects,pipeline,services,security}.ts`,
-  `content/i18n/**`, `locales.json`, `app/api/chat/**`, `lib/rate-limit.ts`,
+  `content/i18n/**`, `content/locales.json`, `app/api/chat/**`, `lib/rate-limit.ts`,
   `scripts/redteam.mjs`, `package.json`, `package-lock.json` (the chat's runtime packages:
   `@anthropic-ai/sdk`, `next`, `@upstash/*`; any dependency change triggers it). Keep that `paths:` list, this one and SECURITY.md in sync. Every
   production deploy runs `deploy-smoke.yml` (one question; fails on 5xx or the fallback).
@@ -45,12 +45,15 @@
 - `content/pipeline.ts` — Lattes sync case study section.
 - `content/security.ts` + `app/security/page.tsx` — the public "How this site is secured"
   page (/security). Plain-language summary of SECURITY.md: keep them in sync, facts only.
-- `content/i18n/` — EN + PT (French-ready). `locales.json` (root) lists locales; `routes.ts`
-  localized slugs (`/security/` ↔ `/pt/seguranca/`); `en.ts` UI strings, `pt.ts` the full PT-BR
-  bundle (TS enforces the EN shape); `index.ts` assembles bundles. English = unprefixed URLs
-  (next.config rewrites to `app/[locale]` as /en; /en/* redirects back). Adding French = `fr.ts`,
-  one line in `bundles`, `"fr"` in locales.json, a slug per page. Dialog case studies stay EN.
-  The switcher remembers the choice but **never redirects** — the URL always wins.
+- `content/i18n/` — EN + PT-BR (/pt/) + FR (/fr/). `content/locales.json` lists locales; `routes.ts`
+  localized slugs (`/security/` ↔ `/pt/seguranca/` ↔ `/fr/securite/`; a page with no slug in a
+  locale doesn't exist there: services are EN + PT only, and the FR switcher on them goes to /fr/);
+  `en.ts` UI strings, `pt.ts` / `fr.ts` full bundles (TS enforces the EN shape); `index.ts`
+  assembles bundles. English = unprefixed URLs (next.config rewrites to `app/[locale]` as /en;
+  /en/* redirects back). Dialog case studies stay EN in PT (with a note); FR translates them
+  (`ProjectCopy.detail`). `fr.ts` is typed with plain spaces; its `typo()` adds the French
+  no-break spaces. `scripts/i18n-check.test.mjs` (npm test) fails if a translation's numbers or
+  dates differ from the English. The switcher remembers the choice but **never redirects** — the URL always wins.
 - `content/assistant-context.ts` — builds the chat system prompt from the files above:
   rules, `<facts>` (only source for claims about Simon, plus `CLARIFICATIONS`), `<services>`,
   `<security>`, then the no-embellishment rule again. `npm run redteam` judges fit answers
@@ -88,7 +91,7 @@ survey-traverse carousel stations ·
 hero dimension lines · drawing-sheet frame · scroll-revealed meters/ECG/XP/vitals ·
 section connectors · AS-BUILT stamp · exploded isometric project diagrams · Lattes
 pipeline flow diagram · "Ask about my work" chat with privacy note · security headers ·
-SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
+SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with hreflang + nav switcher.
 
 ## Facts to keep right
 - Availability: open to AI and software engineering roles, remote or on-site in the EU
@@ -194,7 +197,7 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 - Rogério Freire card has a placeholder — needs the artwork images (centred in the 5:2
   mat, `object-fit: contain`) and the live URL. LABNOV live URL missing.
 - Scout full case study (card + CV entry live; backs Docker, pytest, AWS, LightGBM, MLflow).
-- French locale (structure ready; content only).
+- PT project dialogs: translate them (FR already does; `ProjectCopy.detail` in `pt.ts`). Own PR.
 - ESLint upgrade: ESLint 9 → 10 (major ignored in dependabot.yml) together with
   eslint-config-next; clears the dev-only braces/micromatch audit chain once a patched
   `braces` exists (logged in SECURITY.md → Development safeguards). Its own PR.

@@ -133,7 +133,7 @@ await page.goto(url("/pt/"), { waitUntil: "networkidle0" });
 const htmlLang = () => page.$eval("html", (el) => el.lang);
 if ((await htmlLang()) !== "pt-BR") fails.push(`/pt/ html lang: ${await htmlLang()}`);
 const hreflangs = await page.$$eval("link[rel=alternate][hreflang]", (ls) => ls.map((l) => l.hreflang).sort().join(","));
-if (hreflangs !== "en,pt-BR,x-default") fails.push(`/pt/ hreflang: ${hreflangs}`);
+if (hreflangs !== "en,fr,pt-BR,x-default") fails.push(`/pt/ hreflang: ${hreflangs}`);
 const ptTitle = await page.$eval("#journey-title", (el) => el.textContent);
 if (ptTitle !== "Trajetória") fails.push(`/pt/ journey title: ${ptTitle}`);
 // note markers only: "todo" is an ordinary Portuguese word
@@ -214,24 +214,62 @@ if (/localhost|127\.0\.0\.1/.test(BASE)) {
   if (!/não está configurado|foi enviada/.test(status)) fails.push(`form submit status: ${status}`);
 }
 
-// 13. no horizontal overflow on a phone, in either language
+// 12b. French: /fr/ is translated, dialogs too; no services page or links
+await page.goto(url("/fr/"), { waitUntil: "networkidle0" });
+if ((await htmlLang()) !== "fr") fails.push(`/fr/ html lang: ${await htmlLang()}`);
+const frHreflangs = await page.$$eval("link[rel=alternate][hreflang]", (ls) => ls.map((l) => l.hreflang).sort().join(","));
+if (frHreflangs !== "en,fr,pt-BR,x-default") fails.push(`/fr/ hreflang: ${frHreflangs}`);
+if ((await page.$eval("#journey-title", (el) => el.textContent)) !== "Parcours") fails.push("/fr/ journey title not French");
+if (leaksTodo(await page.$eval("main", (el) => el.textContent))) fails.push("/fr/ shows a TODO note");
+if (await page.$("a[href*='/services/'], a[href*='/empresas/']")) fails.push("/fr/ links a services page");
+if (!(await page.$(".foot a[href='/fr/securite/']"))) fails.push("/fr/ footer has no link to /fr/securite/");
+await page.click("#proj-medhelp .pcard__more");
+await page.waitForSelector("dialog.sheet[open]", { timeout: 2000 });
+const frDlg = await page.$eval("dialog.sheet[open]", (el) => ({
+  note: el.querySelector(".sheet__note")?.textContent ?? "",
+  lang: el.querySelector(".sheet__body").lang,
+  dt: el.querySelector(".sheet__meta dt").textContent,
+}));
+if (frDlg.note || frDlg.lang !== "fr" || frDlg.dt !== "Rôle") fails.push(`/fr/ dialog: ${JSON.stringify(frDlg)}`);
+await page.keyboard.press("Escape");
+await page.waitForFunction(() => !document.querySelector("dialog.sheet[open]"), { timeout: 2000 });
+const frSec = await page.goto(url("/fr/securite/"), { waitUntil: "networkidle0" });
+if (!frSec || frSec.status() !== 200) fails.push(`/fr/securite/ status ${frSec && frSec.status()}`);
+if (!/sécurisé/.test(await page.$eval("h1", (el) => el.textContent))) fails.push("/fr/securite/ h1 not French");
+if (!(await page.$(".lang-switch--nav a[href='/pt/seguranca/']"))) fails.push("/fr/securite/ switcher misses /pt/seguranca/");
+for (const [path, h1] of [["/fr/services/", "Hors du dessin"], ["/fr/empresas/", "Hors du dessin"], ["/fr/rien/", "Hors du dessin"]]) {
+  const r = await page.goto(url(path), { waitUntil: "networkidle0" });
+  const got = await page.$eval("h1", (el) => el.textContent).catch(() => "");
+  if (!r || r.status() !== 404 || got !== h1) fails.push(`${path}: ${r && r.status()} "${got}"`);
+}
+// the services pages exist in EN and PT only: FR in their switcher goes to the French home
+await page.goto(url("/services/"), { waitUntil: "networkidle0" });
+const svcHreflangs = await page.$$eval("link[rel=alternate][hreflang]", (ls) => ls.map((l) => l.hreflang).sort().join(","));
+if (svcHreflangs !== "en,pt-BR,x-default") fails.push(`/services/ hreflang: ${svcHreflangs}`);
+if (!(await page.$(".lang-switch--nav a[hreflang='fr'][href='/fr/']"))) fails.push("/services/ FR switcher doesn't go to /fr/");
+
+// 13. no horizontal overflow on a phone, in every language
 await page.setViewport({ width: 360, height: 780, isMobile: true, hasTouch: true });
-for (const path of ["/", "/pt/", "/security/", "/pt/seguranca/", "/services/", "/pt/empresas/"]) {
+for (const path of ["/", "/pt/", "/fr/", "/security/", "/pt/seguranca/", "/fr/securite/", "/services/", "/pt/empresas/"]) {
   await page.goto(url(path), { waitUntil: "networkidle0" });
   const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (over > 0) fails.push(`${path} overflows by ${over}px at 360px`);
 }
 
-// 14. CVs: the hero button offers the page's language, the other two sit
-// beside it, and every PDF is served
-for (const [path, main] of [["/", "/assets/cv.pdf"], ["/pt/", "/assets/cv-pt.pdf"]]) {
+// 14. CVs: the hero button offers the page's language, the locale's others
+// sit beside it (French: English only), and every PDF is served
+for (const [path, main, others] of [
+  ["/", "/assets/cv.pdf", "/assets/cv-fr.pdf,/assets/cv-pt.pdf"],
+  ["/pt/", "/assets/cv-pt.pdf", "/assets/cv.pdf,/assets/cv-fr.pdf"],
+  ["/fr/", "/assets/cv-fr.pdf", "/assets/cv.pdf"],
+]) {
   await page.goto(url(path), { waitUntil: "networkidle0" });
   const cv = await page.evaluate(() => ({
     button: document.querySelector(".origin__actions .btn--ghost")?.getAttribute("href"),
     others: [...document.querySelectorAll(".origin__cv-others a")].map((a) => a.getAttribute("href")),
   }));
   if (cv.button !== main) fails.push(`${path} CV button links ${cv.button}, expected ${main}`);
-  if (cv.others.length !== 2 || cv.others.includes(main)) fails.push(`${path} other CVs: ${cv.others.join(", ")}`);
+  if (cv.others.join(",") !== others) fails.push(`${path} other CVs: ${cv.others.join(", ")}`);
 }
 for (const pdf of ["/assets/cv.pdf", "/assets/cv-fr.pdf", "/assets/cv-pt.pdf"]) {
   const r = await fetch(url(pdf));

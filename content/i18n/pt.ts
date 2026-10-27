@@ -27,6 +27,7 @@ export const pt: Bundle = {
       cta: "Vamos conversar",
       cv: "Baixar CV",
       cvNote: "(PDF)",
+      cvOthers: ["en", "fr"],
       titleBlockLabel: "Carimbo do desenho",
       languagesLabel: "Idiomas falados",
       dimLabel: "FOLHA 1 / 1 — ESCALA 1:1",
@@ -56,6 +57,9 @@ export const pt: Bundle = {
       cardLanguage: "Idioma do cartão",
       close: "Fechar",
       detailNote: "Estudo de caso em inglês.",
+      // the dialogs stay English, so do their labels
+      role: "Role",
+      outcome: "Outcome",
       videoMark: "Vídeo",
       playVideo: "Reproduzir vídeo",
       videoFrame: "vídeo (YouTube)",
@@ -157,7 +161,7 @@ export const pt: Bundle = {
       when: "2020 — 2025",
       title: "Bacharelado em Sistemas de Informação",
       org: "UNIFACISA — Campina Grande",
-      body: "TCC — <em>&ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo;</em> — processamento de linguagem natural (PLN) para apoio à decisão clínica, aprovado com nota máxima (10), e a semente do projeto MedHelp.",
+      body: "TCC — <em>&ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo;</em> — processamento de linguagem natural (PLN) para apoio à decisão clínica, aprovado com nota máxima (10/10), e a semente do projeto MedHelp.",
     },
     {
       when: "2022 — 2023",
@@ -185,6 +189,16 @@ export const pt: Bundle = {
     { icon: "frontend", title: "Frontend e mobile", items: "Next.js · React · React Native · Expo · Tailwind · HTML/CSS semântico" },
     { icon: "infra", title: "Infraestrutura e ferramentas", items: "Docker · AWS EC2 · Vercel · Git · JIRA · Sanity CMS · Figma" },
     { icon: "test", title: "Testes", items: "pytest" },
+  ],
+
+  // course names stay English; dates as on the PT CV
+  training: [
+    "Anthropic Academy — AI Fluency: Framework & Foundations (mar. 2026)",
+    "Anthropic Academy — Claude Code in Action (mar. 2026)",
+    "Anthropic Academy — Building with the Claude API (jul. 2026)",
+    "Anthropic Academy — Introduction to Model Context Protocol (ago. 2026)",
+    "Anthropic Academy — Model Context Protocol: Advanced Topics (ago. 2026)",
+    "Accenture Academy — Oracle BRM",
   ],
 
   pipeline: {

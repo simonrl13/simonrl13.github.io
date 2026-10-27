@@ -5,7 +5,7 @@ name: probes
 # chat says or how it answers (the chat-relevant files, also listed in
 # CLAUDE.md and SECURITY.md). It waits for that commit's production deploy
 # first. /security reads the date of the latest successful run of this
-# workflow, so a pass here is a full 22/22 (the script exits non-zero on any
+# workflow, so a pass here is a full 25/25 (the script exits non-zero on any
 # failure). The judge uses PROBES_ANTHROPIC_API_KEY — a separate key with its
 # own spend limit, never the production key.
 
@@ -23,7 +23,7 @@ on:
       - content/services.ts
       - content/security.ts
       - content/i18n/**
-      - locales.json
+      - content/locales.json
       - app/api/chat/**
       - lib/rate-limit.ts
       - scripts/redteam.mjs

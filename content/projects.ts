@@ -72,6 +72,8 @@ export type Project = {
   /** YouTube video in the dialog, behind a click-to-load poster
       (public/assets/video/): nothing loads from YouTube before the click */
   video?: { id: string; poster: string; seconds: number };
+  /** language of the dialog text (set by localizedProjects; English here) */
+  detailLang?: string;
   detail: {
     body: string;
     role: string;
