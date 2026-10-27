@@ -39,6 +39,12 @@ jobs:
 
       - run: npm run build
 
+      # the CV in en / fr / pt-BR: same numbers and dates, exactly 2 pages each
+      - name: CV check (renders, writes nothing)
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run cv -- --check
+
       - name: Smoke test (next start + headless Chrome)
         env:
           CHROME_PATH: /usr/bin/google-chrome

@@ -4,6 +4,9 @@ import MapDraft from "@/components/MapDraft";
 import { BEARING_TO_PARIS, KM_TO_PARIS, bearingLabel } from "@/content/geo";
 
 export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle["ui"] }) {
+  // the CV in the page's language on the button; the other two beside it
+  const cv = site.links.cvs.find((c) => c.lang === ui.meta.htmlLang) ?? site.links.cvs[0];
+  const otherCvs = site.links.cvs.filter((c) => c !== cv);
   return (
     <section id="origin" className="section origin" aria-labelledby="origin-name">
       <div className="origin__frame">
@@ -38,9 +41,17 @@ export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle[
           <a className="btn btn--solid" href="#contact">
             {ui.origin.cta}
           </a>
-          <a className="btn btn--ghost" href={site.links.cv} download>
+          <a className="btn btn--ghost" href={cv.href} download={cv.file}>
             {ui.origin.cv} <span className="mono">{ui.origin.cvNote}</span>
           </a>
+          {/* the other two languages, each named in its own language */}
+          <p className="origin__cv-others">
+            {otherCvs.map((c) => (
+              <a key={c.lang} href={c.href} download={c.file} lang={c.lang} hrefLang={c.lang}>
+                {c.label}
+              </a>
+            ))}
+          </p>
         </div>
 
         {/* the drafted map: a layer behind the hero on wide screens, a figure here on small ones */}

@@ -29,7 +29,7 @@ export const site = {
 
   // Right to work — hero and Contact. Matches the CV header line.
   workRights:
-    "French citizen with full right to work in the EU — no visa sponsorship needed. Based in Brazil; open to remote work and relocation.",
+    "Brazilian and French citizen with the right to work in Brazil and the EU — no visa sponsorship needed. Based in Brazil; open to remote work and relocation.",
 
   contactIntro:
     "Open to AI and software engineering roles — remote or on-site in the EU — plus freelance and contract work.",
@@ -82,8 +82,14 @@ export const site = {
     githubHandle: "github.com/simonrl13",
     linkedin: "https://www.linkedin.com/in/simonrodrigueslaborde",
     linkedinHandle: "in/simonrodrigueslaborde",
-    cv: "/assets/cv.pdf", // rendered from scripts/cv-source.html (npm run cv)
-    cvName: "Simon_Laborde_CV.pdf",
+    // rendered from scripts/cv-source.html (npm run cv), one per language;
+    // `label` is in the CV's own language. The hero button offers the page's
+    // language (htmlLang) and links the other two next to it.
+    cvs: [
+      { lang: "en", href: "/assets/cv.pdf", file: "Simon_Laborde_CV.pdf", label: "English version" },
+      { lang: "fr", href: "/assets/cv-fr.pdf", file: "Simon_Laborde_CV_FR.pdf", label: "Version française" },
+      { lang: "pt-BR", href: "/assets/cv-pt.pdf", file: "Simon_Laborde_CV_PT.pdf", label: "Versão em português" },
+    ],
   },
 
   // Exam-based certifications vs. course completions — kept apart on

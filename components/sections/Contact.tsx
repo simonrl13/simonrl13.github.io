@@ -30,9 +30,13 @@ export default function Contact({ copy, ui }: { copy: Bundle["site"]; ui: Bundle
         </li>
         <li>
           <span className="contact__k mono">CV</span>
-          <a href={site.links.cv} download>
-            {site.links.cvName}
-          </a>
+          <span className="contact__cvs">
+            {site.links.cvs.map((c) => (
+              <a key={c.lang} href={c.href} download={c.file} hrefLang={c.lang}>
+                {c.file}
+              </a>
+            ))}
+          </span>
         </li>
       </ul>
     </section>

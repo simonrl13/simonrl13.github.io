@@ -222,6 +222,22 @@ for (const path of ["/", "/pt/", "/security/", "/pt/seguranca/", "/services/", "
   if (over > 0) fails.push(`${path} overflows by ${over}px at 360px`);
 }
 
+// 14. CVs: the hero button offers the page's language, the other two sit
+// beside it, and every PDF is served
+for (const [path, main] of [["/", "/assets/cv.pdf"], ["/pt/", "/assets/cv-pt.pdf"]]) {
+  await page.goto(url(path), { waitUntil: "networkidle0" });
+  const cv = await page.evaluate(() => ({
+    button: document.querySelector(".origin__actions .btn--ghost")?.getAttribute("href"),
+    others: [...document.querySelectorAll(".origin__cv-others a")].map((a) => a.getAttribute("href")),
+  }));
+  if (cv.button !== main) fails.push(`${path} CV button links ${cv.button}, expected ${main}`);
+  if (cv.others.length !== 2 || cv.others.includes(main)) fails.push(`${path} other CVs: ${cv.others.join(", ")}`);
+}
+for (const pdf of ["/assets/cv.pdf", "/assets/cv-fr.pdf", "/assets/cv-pt.pdf"]) {
+  const r = await fetch(url(pdf));
+  if (!r.ok || !/pdf/.test(r.headers.get("content-type") ?? "")) fails.push(`${pdf}: HTTP ${r.status} ${r.headers.get("content-type")}`);
+}
+
 await browser.close();
 
 if (fails.length) {
