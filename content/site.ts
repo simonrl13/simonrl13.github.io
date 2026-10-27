@@ -29,7 +29,7 @@ export const site = {
 
   // Right to work — hero and Contact. Matches the CV header line.
   workRights:
-    "Brazilian and French citizen with the right to work in Brazil and the EU — no visa sponsorship needed. Based in Brazil; open to remote work and relocation.",
+    "French citizen with full right to work in the EU — no visa sponsorship needed. Also a Brazilian citizen. Based in Brazil; open to remote work and relocation.",
 
   contactIntro:
     "Open to AI and software engineering roles — remote or on-site in the EU — plus freelance and contract work.",

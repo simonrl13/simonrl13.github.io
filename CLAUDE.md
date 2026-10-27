@@ -93,7 +93,8 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 ## Facts to keep right
 - Availability: open to AI and software engineering roles, remote or on-site in the EU
   (full-time, contract, freelance). **No master's mentions anywhere.**
-- Brazilian and French citizen: right to work in Brazil and the EU, no visa sponsorship needed; based in
+- French citizen, full right to work in the EU, no visa sponsorship needed; also a Brazilian citizen (the PT
+  copy and PT CV say "Cidadão brasileiro e francês, com direito de trabalhar no Brasil e na UE"); based in
   Brazil, open to remote work and relocation.
 - Accenture title: **Custom Software Engineer** (Jun 2022 – Jun 2023).
 - LABNOV = a site Simon built as independent/freelance work — **not** a research role.
