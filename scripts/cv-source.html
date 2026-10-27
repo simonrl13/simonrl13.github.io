@@ -4,10 +4,22 @@
 <meta charset="utf-8" />
 <title>Simon Laborde — CV</title>
 <!--
-  Single source of truth for the CV. `npm run cv` renders the public PDF
-  (public/assets/cv.pdf) with the phone segment removed; `npm run cv:full`
-  renders a private copy with the phone filled in from CV_PHONE into the
-  gitignored cv-private/ folder. Never type the phone number into this file.
+  Single source of truth for the CV in three languages. Every translated
+  element appears as a trio, side by side and in this order:
+  lang="en", lang="fr", lang="pt-BR". Shared text (name, links) appears once.
+  `npm run cv` renders one public PDF per language with the phone removed;
+  `npm run cv:full` renders private copies with the phone from CV_PHONE into
+  the gitignored cv-private/ folder. Never type the phone number into this file.
+
+  scripts/cv-check.mjs fails the render if a trio's numbers or dates differ,
+  if a trio is incomplete, or if a PDF isn't exactly 2 pages. The only
+  intended differences between languages: the PT summary's availability
+  sentence (remote in Brazil or abroad, open to relocation) and the
+  citizenship wording (EN/FR lead with French, PT names both; same facts).
+
+  French typography: &nbsp; before ":" and inside « », &#8239; (narrow
+  no-break space) before ; ? ! % and as the thousands separator. English
+  names keep their own colon ("AI Fluency: …", "AI-900:", "MedHelp:").
 -->
 <style>
   @page { size: A4; margin: 14mm 16mm; }
@@ -64,6 +76,10 @@
   h3.subhead:first-of-type { margin-top: 0; }
   p { margin: 0 0 8px; }
   .entry { margin-bottom: 8px; break-inside: avoid; }
+  /* the long freelance entry may break between bullets (never inside one):
+     kept whole, it pushes the French CV onto a third page */
+  .entry--split { break-inside: auto; }
+  li { break-inside: avoid; }
   .entry:last-child { margin-bottom: 0; }
   .entry-head {
     display: flex;
@@ -91,125 +107,234 @@
 <body>
 
   <h1>Simon Rodrigues Laborde</h1>
-  <div class="contact">Campina Grande, Paraíba — Brazil<span class="private-phone"> &nbsp;|&nbsp; {{PHONE}}</span> &nbsp;|&nbsp; simonrl865@gmail.com</div>
+  <div class="contact" lang="en">Campina Grande, Paraíba — Brazil<span class="private-phone"> &nbsp;|&nbsp; {{PHONE}}</span> &nbsp;|&nbsp; simonrl865@gmail.com</div>
+  <div class="contact" lang="fr">Campina Grande, Paraíba — Brésil<span class="private-phone"> &nbsp;|&nbsp; {{PHONE}}</span> &nbsp;|&nbsp; simonrl865@gmail.com</div>
+  <div class="contact" lang="pt-BR">Campina Grande, Paraíba — Brasil<span class="private-phone"> &nbsp;|&nbsp; {{PHONE}}</span> &nbsp;|&nbsp; simonrl865@gmail.com</div>
   <div class="contact"><a href="https://simonlaborde.com">simonlaborde.com</a> &nbsp;|&nbsp; <a href="https://www.linkedin.com/in/simonrodrigueslaborde">linkedin.com/in/simonrodrigueslaborde</a> &nbsp;|&nbsp; <a href="https://github.com/simonrl13">github.com/simonrl13</a></div>
-  <div class="workrights">French citizen — full right to work in the EU, no visa sponsorship needed</div>
+  <div class="workrights" lang="en">French citizen with full right to work in the EU — no visa sponsorship needed. Also a Brazilian citizen.</div>
+  <div class="workrights" lang="fr">Nationalité française&nbsp;: droit de travailler dans l’UE, sans besoin de visa. Également de nationalité brésilienne.</div>
+  <div class="workrights" lang="pt-BR">Cidadão brasileiro e francês — direito de trabalhar no Brasil e na UE, sem necessidade de visto</div>
   <hr class="rule" />
 
-  <h2>Professional Summary</h2>
-  <p>Backend and full-stack software engineer with a growing focus on AI/LLM engineering — agent design, the Model Context Protocol (MCP), and Claude/Anthropic APIs — built on a foundation in enterprise backend systems and full-stack web development. Open to AI and software engineering roles, remote or on-site in the EU, for full-time, contract, or freelance work.</p>
+  <h2 lang="en">Professional Summary</h2>
+  <h2 lang="fr">Profil</h2>
+  <h2 lang="pt-BR">Resumo profissional</h2>
+  <p lang="en">Backend and full-stack software engineer focused on applied AI engineering: LLM agents, the Model Context Protocol (MCP), RAG and quality evaluation, built on enterprise backend systems (Accenture) and full-stack web development. I built and deployed Scout, a Claude agent with tools, guardrails and automated evaluations, with a public demo on GCP. Open to AI and software engineering roles, remote or on-site in the EU, for full-time, contract or freelance work. French citizen with full right to work in the EU — no visa sponsorship needed. Also a Brazilian citizen.</p>
+  <p lang="fr">Ingénieur logiciel backend et full-stack spécialisé en ingénierie IA appliquée&nbsp;: agents LLM, Model Context Protocol (MCP), RAG et évaluation de la qualité, avec une base en systèmes backend d’entreprise (Accenture) et en développement web full-stack. J’ai conçu et déployé Scout, un agent Claude avec outils, garde-fous et évaluations automatisées, accessible en démo publique sur GCP. Ouvert aux postes en IA et en ingénierie logicielle, à distance ou sur site dans l’UE, à temps plein, en contrat ou en freelance. Nationalité française&nbsp;: droit de travailler dans l’UE, sans besoin de visa. Également de nationalité brésilienne.</p>
+  <p lang="pt-BR">Engenheiro de software backend e full-stack com foco em engenharia de IA aplicada: agentes com LLMs, Model Context Protocol (MCP), RAG e avaliação de qualidade, com base em sistemas backend corporativos (Accenture) e desenvolvimento web full-stack. Construí e publiquei o Scout, um agente Claude com tools, guardrails e avaliações automatizadas, com demo pública no GCP. Aberto a vagas de IA e engenharia de software, remotas no Brasil ou internacionais, com disponibilidade para mudança. Cidadão brasileiro e francês, com direito de trabalhar no Brasil e na UE.</p>
 
-  <h2>Technical Skills</h2>
-  <div class="skills-row"><b>Languages:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
-  <div class="skills-row"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP), agent &amp; subagent design, Claude / Anthropic APIs, Machine Learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
-  <div class="skills-row"><b>Web &amp; Mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
-  <div class="skills-row"><b>Backend &amp; Data:</b> REST APIs, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
-  <div class="skills-row"><b>DevOps &amp; Cloud:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
-  <div class="skills-row"><b>Tools:</b> Git, pytest, JIRA, Figma, Sanity CMS</div>
-  <div class="skills-row"><b>Methodologies:</b> Agile / Scrum</div>
+  <h2 lang="en">Technical Skills</h2>
+  <h2 lang="fr">Compétences</h2>
+  <h2 lang="pt-BR">Competências técnicas</h2>
+  <div class="skills-row" lang="en"><b>Languages:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
+  <div class="skills-row" lang="fr"><b>Langages&nbsp;:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
+  <div class="skills-row" lang="pt-BR"><b>Linguagens:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
+  <div class="skills-row" lang="en"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP), agent &amp; subagent design, Claude / Anthropic APIs, Machine Learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
+  <div class="skills-row" lang="fr"><b>IA / LLM&nbsp;:</b> intégration de LLM et systèmes de prompts, Model Context Protocol (MCP), conception d’agents et de sous-agents, API Claude / Anthropic, machine learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
+  <div class="skills-row" lang="pt-BR"><b>IA / LLM:</b> integração de LLMs e sistemas de prompts, Model Context Protocol (MCP), design de agentes e subagentes, APIs Claude / Anthropic, machine learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
+  <div class="skills-row" lang="en"><b>Web &amp; Mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
+  <div class="skills-row" lang="fr"><b>Web et mobile&nbsp;:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
+  <div class="skills-row" lang="pt-BR"><b>Web e mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
+  <div class="skills-row" lang="en"><b>Backend &amp; Data:</b> REST APIs, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
+  <div class="skills-row" lang="fr"><b>Backend et données&nbsp;:</b> API REST, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
+  <div class="skills-row" lang="pt-BR"><b>Backend e dados:</b> APIs REST, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
+  <div class="skills-row" lang="en"><b>DevOps &amp; Cloud:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
+  <div class="skills-row" lang="fr"><b>DevOps et cloud&nbsp;:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
+  <div class="skills-row" lang="pt-BR"><b>DevOps e nuvem:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Vercel</div>
+  <div class="skills-row" lang="en"><b>Tools:</b> Git, pytest, JIRA, Figma, Sanity CMS</div>
+  <div class="skills-row" lang="fr"><b>Outils&nbsp;:</b> Git, pytest, JIRA, Figma, Sanity CMS</div>
+  <div class="skills-row" lang="pt-BR"><b>Ferramentas:</b> Git, pytest, JIRA, Figma, Sanity CMS</div>
+  <div class="skills-row" lang="en"><b>Methodologies:</b> Agile / Scrum</div>
+  <div class="skills-row" lang="fr"><b>Méthodes&nbsp;:</b> Agile / Scrum</div>
+  <div class="skills-row" lang="pt-BR"><b>Metodologias:</b> Agile / Scrum</div>
 
-  <h2>Languages</h2>
+  <h2 lang="en">Languages</h2>
+  <h2 lang="fr">Langues</h2>
+  <h2 lang="pt-BR">Idiomas</h2>
   <div class="two-col">
     <div>
-      <div class="lang-line">Portuguese — Native</div>
-      <div class="lang-line">English — Fluent, C2 (EF SET 77/100)</div>
+      <div class="lang-line" lang="en">Portuguese — Native</div>
+      <div class="lang-line" lang="fr">Portugais — langue maternelle</div>
+      <div class="lang-line" lang="pt-BR">Português — nativo</div>
+      <div class="lang-line" lang="en">English — Fluent, C2 (EF SET 77/100)</div>
+      <div class="lang-line" lang="fr">Anglais — courant, C2 (EF SET 77/100)</div>
+      <div class="lang-line" lang="pt-BR">Inglês — fluente, C2 (EF SET 77/100)</div>
     </div>
     <div>
-      <div class="lang-line">French — Advanced, C1</div>
-      <div class="lang-line">Spanish — Intermediate, B1</div>
+      <div class="lang-line" lang="en">French — Advanced, C1</div>
+      <div class="lang-line" lang="fr">Français — avancé, C1</div>
+      <div class="lang-line" lang="pt-BR">Francês — avançado, C1</div>
+      <div class="lang-line" lang="en">Spanish — Intermediate, B1</div>
+      <div class="lang-line" lang="fr">Espagnol — intermédiaire, B1</div>
+      <div class="lang-line" lang="pt-BR">Espanhol — intermediário, B1</div>
     </div>
   </div>
 
-  <h2>Professional Experience</h2>
+  <h2 lang="en">Professional Experience</h2>
+  <h2 lang="fr">Expérience professionnelle</h2>
+  <h2 lang="pt-BR">Experiência profissional</h2>
 
   <div class="entry">
     <div class="entry-head">
       <span class="entry-title">Custom Software Engineer — Accenture</span>
-      <span class="entry-meta">Jun 2022 – Jun 2023</span>
+      <span class="entry-meta" lang="en">Jun 2022 – Jun 2023</span>
+      <span class="entry-meta" lang="fr">juin 2022 – juin 2023</span>
+      <span class="entry-meta" lang="pt-BR">jun. 2022 – jun. 2023</span>
     </div>
-    <div class="entry-org">Campina Grande, Brazil</div>
+    <div class="entry-org" lang="en">Campina Grande, Brazil</div>
+    <div class="entry-org" lang="fr">Campina Grande, Brésil</div>
+    <div class="entry-org" lang="pt-BR">Campina Grande, Brasil</div>
     <ul>
-      <li>Developed and maintained large-scale financial systems using Oracle BRM, Shell scripting, and C</li>
-      <li>Optimized backend batch processes, improving performance and reliability</li>
-      <li>Automated financial reporting through Oracle BI Publisher to support decision-making</li>
-      <li>Delivered features on schedule inside an Agile/Scrum team using JIRA</li>
+      <li lang="en">Developed and maintained large-scale financial systems using Oracle BRM, Shell scripting, and C</li>
+      <li lang="fr">Développement et maintenance de systèmes financiers à grande échelle avec Oracle BRM, des scripts Shell et C</li>
+      <li lang="pt-BR">Desenvolvimento e manutenção de sistemas financeiros de grande porte com Oracle BRM, Shell script e C</li>
+      <li lang="en">Optimized backend batch processes, improving performance and reliability</li>
+      <li lang="fr">Optimisation de traitements batch backend, pour de meilleures performances et une plus grande fiabilité</li>
+      <li lang="pt-BR">Otimização de processos batch no backend, melhorando desempenho e confiabilidade</li>
+      <li lang="en">Automated financial reporting through Oracle BI Publisher to support decision-making</li>
+      <li lang="fr">Automatisation du reporting financier avec Oracle BI Publisher, en appui à la prise de décision</li>
+      <li lang="pt-BR">Automação de relatórios financeiros com Oracle BI Publisher para apoiar a tomada de decisão</li>
+      <li lang="en">Delivered features on schedule inside an Agile/Scrum team using JIRA</li>
+      <li lang="fr">Livraison des fonctionnalités dans les délais au sein d’une équipe Agile/Scrum, avec JIRA</li>
+      <li lang="pt-BR">Entrega de funcionalidades no prazo em um time Agile/Scrum, com JIRA</li>
     </ul>
   </div>
 
-  <div class="entry">
+  <div class="entry entry--split">
     <div class="entry-head">
-      <span class="entry-title">Freelance / Independent Software Developer</span>
-      <span class="entry-meta">2024 – present</span>
+      <span class="entry-title" lang="en">Freelance / Independent Software Developer</span>
+      <span class="entry-title" lang="fr">Développeur logiciel freelance / indépendant</span>
+      <span class="entry-title" lang="pt-BR">Desenvolvedor de software freelancer / independente</span>
+      <span class="entry-meta" lang="en">2024 – present</span>
+      <span class="entry-meta" lang="fr">2024 – aujourd’hui</span>
+      <span class="entry-meta" lang="pt-BR">2024 – atual</span>
     </div>
-    <div class="entry-org">Remote</div>
+    <div class="entry-org" lang="en">Remote</div>
+    <div class="entry-org" lang="fr">À distance</div>
+    <div class="entry-org" lang="pt-BR">Remoto</div>
     <ul>
-      <li><b>LABNOV</b> (UFCG materials-research lab) — designed and built the bilingual (PT/EN) site from scratch: a Next.js frontend, a Sanity CMS content model for non-technical staff, and an automated publication-sync pipeline off Brazil&rsquo;s Plataforma Lattes, including a manual-assisted workaround for reCAPTCHA where full automation wasn&rsquo;t possible</li>
-      <li><b>Rogério Freire</b> (pop-art painter) — website showcasing his original paintings and a catalog of products made from them (mugs, pillows, notebooks, t-shirts), with purchase enquiries via WhatsApp and email; Next.js, Tailwind CSS, Vercel</li>
-      <li>UI/UX prototyping in Figma through backend implementation in Python and Java for earlier client web and mobile projects</li>
+      <li lang="en"><b>LABNOV</b> (UFCG materials-research lab) — designed and built the bilingual (PT/EN) site from scratch: a Next.js frontend, a Sanity CMS content model for non-technical staff, and an automated publication-sync pipeline off Brazil&rsquo;s Plataforma Lattes, including a manual-assisted workaround for reCAPTCHA where full automation wasn&rsquo;t possible</li>
+      <li lang="fr"><b>LABNOV</b> (laboratoire de recherche en matériaux de l’UFCG) — conception et développement du site bilingue (PT/EN) de A à Z&nbsp;: frontend Next.js, modèle de contenu Sanity CMS pour une équipe non technique et pipeline de synchronisation automatique des publications depuis la Plataforma Lattes (Brésil), avec une solution semi-manuelle pour le reCAPTCHA là où l’automatisation complète n’était pas possible</li>
+      <li lang="pt-BR"><b>LABNOV</b> (laboratório de pesquisa em materiais da UFCG) — projetou e construiu do zero o site bilíngue (PT/EN): frontend em Next.js, modelo de conteúdo no Sanity CMS para uma equipe não técnica e pipeline de sincronização automática de publicações a partir da Plataforma Lattes, com uma solução semiautomática para o reCAPTCHA onde a automação completa não era possível</li>
+      <li lang="en"><b>Rogério Freire</b> (pop-art painter) — website showcasing his original paintings and a catalog of products made from them (mugs, pillows, notebooks, t-shirts), with purchase enquiries via WhatsApp and email; Next.js, Tailwind CSS, Vercel</li>
+      <li lang="fr"><b>Rogério Freire</b> (peintre pop art) — site présentant ses peintures originales et un catalogue de produits qui en sont tirés (mugs, coussins, carnets, t-shirts), avec demandes d’achat par WhatsApp et e-mail&#8239;; Next.js, Tailwind CSS, Vercel</li>
+      <li lang="pt-BR"><b>Rogério Freire</b> (pintor pop art) — site que apresenta suas pinturas originais e um catálogo de produtos feitos a partir delas (canecas, almofadas, cadernos, camisetas), com pedidos de compra por WhatsApp e e-mail; Next.js, Tailwind CSS, Vercel</li>
+      <li lang="en">UI/UX prototyping in Figma through backend implementation in Python and Java for earlier client web and mobile projects</li>
+      <li lang="fr">Du prototypage UI/UX sur Figma jusqu’à l’implémentation backend en Python et Java, pour de précédents projets clients web et mobiles</li>
+      <li lang="pt-BR">Do protótipo de UI/UX no Figma à implementação do backend em Python e Java em projetos anteriores de clientes, web e mobile</li>
     </ul>
   </div>
 
-  <h2>Selected Projects</h2>
+  <h2 lang="en">Selected Projects</h2>
+  <h2 lang="fr">Projets</h2>
+  <h2 lang="pt-BR">Projetos</h2>
   <!-- Scout numbers checked against the Scout repo (README, reports, TEST_LOG).
        The live demo ends 2027-01-01: swap its link for the video before then (CLAUDE.md).
-       Add "(correct answers 4/36 → 24/36)" after the RAG clause once footballscout#41 is merged. -->
+       Add "(correct answers 4/36 → 24/36)" after the RAG clause, in all three
+       languages, once footballscout#41 is merged. -->
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">Scout — Football Market-Value Forecasting with an LLM Agent</span>
-      <span class="entry-meta"><a href="https://scout-246528398633.europe-west1.run.app">Live demo</a> · <a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
+      <span class="entry-title" lang="en">Scout — Football Market-Value Forecasting with an LLM Agent</span>
+      <span class="entry-title" lang="fr">Scout — prévision de la valeur marchande de footballeurs, avec un agent LLM</span>
+      <span class="entry-title" lang="pt-BR">Scout — previsão de valor de mercado de jogadores de futebol com um agente LLM</span>
+      <span class="entry-meta" lang="en"><a href="https://scout-246528398633.europe-west1.run.app">Live demo</a> · <a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
+      <span class="entry-meta" lang="fr"><a href="https://scout-246528398633.europe-west1.run.app">Démo en ligne</a> · <a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
+      <span class="entry-meta" lang="pt-BR"><a href="https://scout-246528398633.europe-west1.run.app">Demo ao vivo</a> · <a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
     </div>
     <ul>
-      <li>Python, LightGBM, FastAPI, Postgres, Cloud Run. Trained on 8,190 players across seven European leagues; ~13% lower MAE than the no-change baseline; Claude agent with tool use, a number-checking guardrail and Wikipedia RAG with revision-level citations; 19/20 on a held-out eval; resisted 2/2 injection attempts</li>
+      <li lang="en">Python, LightGBM, FastAPI, Postgres, Cloud Run. Trained on 8,190 players across seven European leagues; ~13% lower MAE than the no-change baseline; Claude agent with tool use, a number-checking guardrail and Wikipedia RAG with revision-level citations; 19/20 on a held-out eval; resisted 2/2 injection attempts</li>
+      <li lang="fr">Python, LightGBM, FastAPI, Postgres, Cloud Run. Entraîné sur 8&#8239;190 joueurs de sept championnats européens&#8239;; MAE inférieure d’environ 13&#8239;% à la référence «&nbsp;sans changement&nbsp;»&#8239;; agent Claude avec appel d’outils, garde-fou de vérification des chiffres et RAG sur Wikipédia avec citation de la révision exacte&#8239;; 19/20 sur une évaluation réservée (held-out)&#8239;; 2/2 tentatives d’injection repoussées</li>
+      <li lang="pt-BR">Python, LightGBM, FastAPI, Postgres, Cloud Run. Treinado com 8.190 jogadores de sete ligas europeias; MAE cerca de 13% menor que a referência “sem mudança”; agente Claude com uso de ferramentas, uma verificação de números e RAG sobre a Wikipédia com citação da revisão exata; 19/20 em uma avaliação held-out; resistiu a 2/2 tentativas de injeção</li>
     </ul>
   </div>
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">AI Portfolio Assistant — simonlaborde.com</span>
+      <span class="entry-title" lang="en">AI Portfolio Assistant — simonlaborde.com</span>
+      <span class="entry-title" lang="fr">Assistant IA du portfolio — simonlaborde.com</span>
+      <span class="entry-title" lang="pt-BR">Assistente de IA do portfólio — simonlaborde.com</span>
     </div>
     <ul>
-      <li>Live chat assistant on my portfolio, grounded in structured site content via the Claude API (Haiku); every answer is checked against the profile before it is shown</li>
-      <li>Hardened for production: per-IP rate limits and a daily spending cap, CSP and security headers (grade A on securityheaders.com), prompt-injection tests, and CI with CodeQL and secret scanning</li>
+      <li lang="en">Live chat assistant on my portfolio, grounded in structured site content via the Claude API (Haiku); every answer is checked against the profile before it is shown</li>
+      <li lang="fr">Assistant conversationnel en ligne sur mon portfolio, ancré dans le contenu structuré du site via l’API Claude (Haiku)&#8239;; chaque réponse est vérifiée par rapport au profil avant d’être affichée</li>
+      <li lang="pt-BR">Assistente de chat no meu portfólio, baseado no conteúdo estruturado do site via API Claude (Haiku); cada resposta é verificada contra o perfil antes de ser exibida</li>
+      <li lang="en">Hardened for production: per-IP rate limits and a daily spending cap, CSP and security headers (grade A on securityheaders.com), prompt-injection tests, and CI with CodeQL and secret scanning</li>
+      <li lang="fr">Sécurisé pour la production&nbsp;: limites de requêtes par IP et plafond de dépenses quotidien, CSP et en-têtes de sécurité (note A sur securityheaders.com), tests d’injection de prompt, et CI avec CodeQL et détection de secrets</li>
+      <li lang="pt-BR">Protegido para produção: limites de requisições por IP e teto de gasto diário, CSP e cabeçalhos de segurança (nota A no securityheaders.com), testes de prompt injection e CI com CodeQL e varredura de segredos</li>
     </ul>
   </div>
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">MedHelp — AI Clinical Decision Support</span>
+      <span class="entry-title" lang="en">MedHelp — AI Clinical Decision Support</span>
+      <span class="entry-title" lang="fr">MedHelp — aide à la décision clinique par IA</span>
+      <span class="entry-title" lang="pt-BR">MedHelp — apoio à decisão clínica com IA</span>
     </div>
     <ul>
-      <li>Python NLP tool designed for Brazil&rsquo;s public health system (SUS), built and evaluated on synthetic data, not real patient records: normalizes clinical notes and recommends preventive exams from patient history</li>
-      <li>92% (23/25 terms, synthetic data) on clinical terminology normalization</li>
-      <li>Undergraduate thesis (graded 10/10, the maximum grade): &ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo; [translation: &ldquo;MedHelp: A Clinical Decision Support System for Preventive Exam Recommendations Using Natural Language Processing&rdquo;]</li>
+      <li lang="en">Python NLP tool designed for Brazil&rsquo;s public health system (SUS), built and evaluated on synthetic data, not real patient records: normalizes clinical notes and recommends preventive exams from patient history</li>
+      <li lang="fr">Outil Python de NLP conçu pour le système de santé public brésilien (SUS), développé et évalué sur des données synthétiques, et non sur de vrais dossiers de patients&nbsp;: il normalise des notes cliniques et recommande des examens de prévention à partir des antécédents du patient</li>
+      <li lang="pt-BR">Ferramenta de NLP em Python projetada para o SUS, desenvolvida e avaliada com dados sintéticos, não com prontuários reais: normaliza anotações clínicas e recomenda exames preventivos a partir do histórico do paciente</li>
+      <li lang="en">92% (23/25 terms, synthetic data) on clinical terminology normalization</li>
+      <li lang="fr">92&#8239;% (23/25 termes, données synthétiques) en normalisation de la terminologie clinique</li>
+      <li lang="pt-BR">92% (23/25 termos, dados sintéticos) na normalização de terminologia clínica</li>
+      <li lang="en">Undergraduate thesis (graded 10/10, the maximum grade): &ldquo;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&rdquo; [translation: &ldquo;MedHelp: A Clinical Decision Support System for Preventive Exam Recommendations Using Natural Language Processing&rdquo;]</li>
+      <li lang="fr">Mémoire de fin d’études, note maximale (10/10)&nbsp;: «&nbsp;MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural&nbsp;» [traduction&nbsp;: «&nbsp;MedHelp&nbsp;: système d’aide à la décision clinique pour la recommandation d’examens de prévention par traitement automatique du langage naturel&nbsp;»]</li>
+      <li lang="pt-BR">Trabalho de conclusão de curso, aprovado com nota máxima (10/10): “MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural”</li>
     </ul>
   </div>
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">NutriQuest — Gamified Nutrition Tracking App</span>
+      <span class="entry-title" lang="en">NutriQuest — Gamified Nutrition Tracking App</span>
+      <span class="entry-title" lang="fr">NutriQuest — application de suivi nutritionnel ludique</span>
+      <span class="entry-title" lang="pt-BR">NutriQuest — app de nutrição gamificado</span>
     </div>
     <ul>
-      <li>Mobile app (React Native / Expo) that gamifies meal logging with streaks, XP levels and weekly challenges, in Brazilian Portuguese; in development (redesign in progress)</li>
+      <li lang="en">Mobile app (React Native / Expo) that gamifies meal logging with streaks, XP levels and weekly challenges, in Brazilian Portuguese; in development (redesign in progress)</li>
+      <li lang="fr">Application mobile (React Native / Expo) qui transforme le suivi des repas en jeu, avec séries, niveaux d’XP et défis hebdomadaires, en portugais du Brésil&#8239;; en développement (refonte en cours)</li>
+      <li lang="pt-BR">App mobile (React Native / Expo) que transforma o registro de refeições em jogo, com sequências, níveis de XP e desafios semanais, em português do Brasil; em desenvolvimento (redesign em andamento)</li>
     </ul>
   </div>
 
-  <h2>Education</h2>
+  <h2 lang="en">Education</h2>
+  <h2 lang="fr">Formation</h2>
+  <h2 lang="pt-BR">Formação acadêmica</h2>
   <div class="entry">
     <div class="entry-head">
-      <span class="entry-title">Bachelor&rsquo;s Degree in Information Systems — UNIFACISA</span>
+      <span class="entry-title" lang="en">Bachelor&rsquo;s Degree in Information Systems — UNIFACISA</span>
+      <span class="entry-title" lang="fr">Licence (Bachelor) en systèmes d’information — UNIFACISA</span>
+      <span class="entry-title" lang="pt-BR">Bacharelado em Sistemas de Informação — UNIFACISA</span>
       <span class="entry-meta">2020 – 2025</span>
     </div>
-    <div class="entry-org">Campina Grande, Brazil</div>
+    <div class="entry-org" lang="en">Campina Grande, Brazil</div>
+    <div class="entry-org" lang="fr">Campina Grande, Brésil</div>
+    <div class="entry-org" lang="pt-BR">Campina Grande, Brasil</div>
   </div>
 
-  <h2>Certifications &amp; Training</h2>
-  <h3 class="subhead">Certifications</h3>
+  <h2 lang="en">Certifications &amp; Training</h2>
+  <h2 lang="fr">Certifications et formations</h2>
+  <h2 lang="pt-BR">Certificações e cursos</h2>
+  <h3 class="subhead" lang="en">Certifications</h3>
+  <h3 class="subhead" lang="fr">Certifications</h3>
+  <h3 class="subhead" lang="pt-BR">Certificações</h3>
   <div class="cert-line">AI-900: Microsoft Azure AI Fundamentals — Microsoft</div>
   <div class="cert-line">Scrum Fundamentals Certified (SFC)</div>
   <div class="cert-line">EF SET English Certificate (C2, 77/100)</div>
-  <h3 class="subhead">Training</h3>
-  <div class="cert-line">Anthropic Academy — AI Fluency: Framework &amp; Foundations (Mar 2026)</div>
-  <div class="cert-line">Anthropic Academy — Claude Code in Action (Mar 2026)</div>
-  <div class="cert-line">Anthropic Academy — Building with the Claude API (Jul 2026)</div>
-  <div class="cert-line">Anthropic Academy — Introduction to Model Context Protocol (Aug 2026)</div>
-  <div class="cert-line">Anthropic Academy — Model Context Protocol: Advanced Topics (Aug 2026)</div>
+  <h3 class="subhead" lang="en">Training</h3>
+  <h3 class="subhead" lang="fr">Formations (pas des certifications)</h3>
+  <h3 class="subhead" lang="pt-BR">Cursos (não são certificações)</h3>
+  <div class="cert-line" lang="en">Anthropic Academy — AI Fluency: Framework &amp; Foundations (Mar 2026)</div>
+  <div class="cert-line" lang="fr">Anthropic Academy — AI Fluency: Framework &amp; Foundations (mars 2026)</div>
+  <div class="cert-line" lang="pt-BR">Anthropic Academy — AI Fluency: Framework &amp; Foundations (mar. 2026)</div>
+  <div class="cert-line" lang="en">Anthropic Academy — Claude Code in Action (Mar 2026)</div>
+  <div class="cert-line" lang="fr">Anthropic Academy — Claude Code in Action (mars 2026)</div>
+  <div class="cert-line" lang="pt-BR">Anthropic Academy — Claude Code in Action (mar. 2026)</div>
+  <div class="cert-line" lang="en">Anthropic Academy — Building with the Claude API (Jul 2026)</div>
+  <div class="cert-line" lang="fr">Anthropic Academy — Building with the Claude API (juillet 2026)</div>
+  <div class="cert-line" lang="pt-BR">Anthropic Academy — Building with the Claude API (jul. 2026)</div>
+  <div class="cert-line" lang="en">Anthropic Academy — Introduction to Model Context Protocol (Aug 2026)</div>
+  <div class="cert-line" lang="fr">Anthropic Academy — Introduction to Model Context Protocol (août 2026)</div>
+  <div class="cert-line" lang="pt-BR">Anthropic Academy — Introduction to Model Context Protocol (ago. 2026)</div>
+  <div class="cert-line" lang="en">Anthropic Academy — Model Context Protocol: Advanced Topics (Aug 2026)</div>
+  <div class="cert-line" lang="fr">Anthropic Academy — Model Context Protocol: Advanced Topics (août 2026)</div>
+  <div class="cert-line" lang="pt-BR">Anthropic Academy — Model Context Protocol: Advanced Topics (ago. 2026)</div>
   <div class="cert-line">Accenture Academy — Oracle BRM</div>
 
 </body>

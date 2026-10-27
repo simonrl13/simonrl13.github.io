@@ -583,6 +583,28 @@ main { padding-left: var(--rail-w); }
 .btn--ghost { background: transparent; color: var(--paper); }
 .btn--ghost:hover { background: rgba(var(--brass-rgb),.12); }
 .btn .mono { color: inherit; opacity: .7; }
+/* the CV in the other two languages, beside the download button; underline
+   instead of the border so the 44px touch target doesn't move the rule */
+.origin__cv-others {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 16px;
+    margin: 0;
+    font-size: .85rem;
+}
+main .origin__cv-others a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-bottom: 0;
+    padding: 0;
+    color: var(--paper);
+    text-decoration: underline;
+    text-decoration-color: var(--brass);
+    text-underline-offset: 4px;
+}
+main .origin__cv-others a:hover { color: var(--brass); }
 
 /* title block strip, along the foot of the drawing */
 .titleblock {
@@ -1344,6 +1366,7 @@ main { padding-left: var(--rail-w); }
 .contact__list li:first-child { border-top: 0; }
 .contact__k { color: var(--paper-dim); letter-spacing: .1em; }
 .contact__list a { font-size: 1.02rem; }
+.contact__cvs { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 
 @media (max-width: 560px) {
     .contact__list li { grid-template-columns: 1fr; gap: 4px; }

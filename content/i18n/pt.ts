@@ -26,7 +26,7 @@ export const pt: Bundle = {
       statusKey: "STATUS",
       cta: "Vamos conversar",
       cv: "Baixar CV",
-      cvNote: "(PDF, em inglês)",
+      cvNote: "(PDF)",
       titleBlockLabel: "Carimbo do desenho",
       languagesLabel: "Idiomas falados",
       dimLabel: "FOLHA 1 / 1 — ESCALA 1:1",
@@ -119,7 +119,7 @@ export const pt: Bundle = {
       detail: "Remoto ou presencial na UE — tempo integral, contrato ou freelance",
     },
     workRights:
-      "Cidadão francês, com direito pleno de trabalhar na UE — sem necessidade de patrocínio de visto. Moro no Brasil; aberto a trabalho remoto e a mudança.",
+      "Cidadão brasileiro e francês, com direito de trabalhar no Brasil e na UE — sem necessidade de patrocínio de visto. Moro no Brasil; aberto a trabalho remoto e a mudança.",
     contactIntro:
       "Aberto a vagas em IA e engenharia de software — remoto ou presencial na UE — e também a projetos freelance e por contrato.",
     chatLauncher: { full: "PERGUNTE SOBRE MEU TRABALHO", short: "PERGUNTE" },

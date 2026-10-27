@@ -70,9 +70,13 @@
 - `content/services.ts` (EN) + `pt.ts` `services` — /services and /pt/empresas (primary):
   two offers, LGPD data block, form copy. `[PRAZO]`/`[PRICE]` stay visible until Simon fills
   them; never invent prices, clients, numbers or testimonials.
-- `scripts/cv-source.html` — the CV's single source. `npm run cv` → public PDF without
-  the phone; `npm run cv:full` → private PDF (phone from `CV_PHONE`) in gitignored
-  `cv-private/`.
+- `scripts/cv-source.html` — the CV's single source in EN, FR and PT-BR (each translated
+  element is an `en` / `fr` / `pt-BR` trio). `npm run cv` → `public/assets/cv.pdf`, `cv-fr.pdf`,
+  `cv-pt.pdf` without the phone; `npm run cv:full` → three private PDFs (phone from `CV_PHONE`)
+  in gitignored `cv-private/`. Both fail if a trio's numbers or dates differ
+  (`scripts/cv-check.mjs`) or a PDF isn't exactly 2 pages; CI runs `npm run cv -- --check`.
+  Only intended difference: the PT summary's availability (remote in Brazil or abroad,
+  relocation). Site: the hero button offers the page's language, the other two beside it.
 - `scripts/redteam.mjs` — prompt-injection probes. `scripts/smoke.mjs` — browser smoke.
 - `SECURITY.md`, `public/.well-known/security.txt`, `.github/workflows/ci.yml`,
   `.github/dependabot.yml`, `.githooks/pre-commit`, `.claude/settings.json`.
@@ -89,7 +93,8 @@ SEO/OG/JSON-LD · CV download · EN / PT-BR (/pt/) with hreflang + nav switcher.
 ## Facts to keep right
 - Availability: open to AI and software engineering roles, remote or on-site in the EU
   (full-time, contract, freelance). **No master's mentions anywhere.**
-- French citizen, full right to work in the EU, no visa sponsorship needed; based in
+- French citizen, full right to work in the EU, no visa sponsorship needed; also a Brazilian citizen (the PT
+  copy and PT CV say "Cidadão brasileiro e francês, com direito de trabalhar no Brasil e na UE"); based in
   Brazil, open to remote work and relocation.
 - Accenture title: **Custom Software Engineer** (Jun 2022 – Jun 2023).
 - LABNOV = a site Simon built as independent/freelance work — **not** a research role.
