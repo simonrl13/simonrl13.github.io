@@ -72,15 +72,15 @@ const copy: Omit<Bundle, "services"> = {
       intro: "À lire comme une légende, pas comme un nuage de mots-clés — classé selon la couche du système que chaque élément touche.",
       credentials: "Certifications et formations",
       certifications: "Certifications",
-      training: "Formations (pas des certifications)",
+      training: "Formations",
     },
     work: {
       title: "Projets choisis",
-      intro: "Six projets, six problèmes. Chaque dessin prend l’allure de ce que la chose est vraiment.",
+      intro: "Six projets, six problèmes. Chaque dessin reprend la forme de ce qu’est réellement le projet.",
       hint: "faire défiler →",
     },
     carousel: {
-      label: "Carrousel de projets, défilant",
+      label: "Carrousel de projets, à faire défiler",
       prev: "Projet précédent",
       next: "Projet suivant",
       more: "Voir le dessin complet",
@@ -96,7 +96,7 @@ const copy: Omit<Bundle, "services"> = {
     pipeline: { manualStep: "étape manuelle" },
     languages: {
       title: "Langues",
-      intro: "Multilingue et tourné vers l’Europe — mesuré sur l’échelle du CECRL, lu comme un indicateur de signal.",
+      intro: "Multilingue et tourné vers l’Europe — mesuré sur l’échelle du CECRL, présenté comme un indicateur de niveau de signal.",
       names: { PT: "Portugais", EN: "Anglais", FR: "Français", ES: "Espagnol" },
       native: "langue maternelle",
     },
@@ -122,7 +122,7 @@ const copy: Omit<Bundle, "services"> = {
       close: "Fermer",
       you: "Vous",
       thinking: "Réflexion",
-      placeholder: "ex. : Quel est son projet le plus solide ?",
+      placeholder: "ex. : Quel est son projet le plus abouti ?",
       inputLabel: "Votre question",
       send: "Envoyer",
       fallback: "Impossible de joindre l’assistant pour le moment — vérifiez votre connexion et réessayez, ou écrivez directement à {email}.",
@@ -146,15 +146,15 @@ const copy: Omit<Bundle, "services"> = {
     roleLine:
       "Ingénieur backend et full-stack orienté <strong>IA&nbsp;/&nbsp;LLM</strong>, avec une base en systèmes backend d’entreprise chez Accenture.",
     thesis:
-      "Je fais le lien entre des systèmes complexes et les personnes qui en dépendent — en ce moment, en construisant des outils fondés sur des LLM.",
+      "Je fais le lien entre des systèmes complexes et les personnes qui en dépendent — avec un accent sur les outils basés sur des LLM.",
     status: {
       label: "Ouvert aux postes en IA et en ingénierie logicielle",
-      detail: "À distance ou sur site dans l’UE — temps plein, contrat ou freelance",
+      detail: "À distance ou sur site dans l’UE — CDI, CDD ou freelance",
     },
     workRights:
-      "Nationalité française : droit de travailler dans l’UE, sans besoin de visa. Également de nationalité brésilienne. Basé au Brésil ; ouvert au travail à distance et à une relocalisation.",
+      "Nationalité française : droit de travailler dans l’UE, sans besoin de visa. Également de nationalité brésilienne. Basé au Brésil ; ouvert au télétravail et prêt à m’installer en Europe.",
     contactIntro:
-      "Ouvert aux postes en IA et en ingénierie logicielle — à distance ou sur site dans l’UE — ainsi qu’aux missions freelance et en contrat.",
+      "Ouvert aux postes en IA et en ingénierie logicielle — à distance ou sur site dans l’UE — ainsi qu’aux missions en freelance ou en CDD.",
     chatLauncher: { full: "QUESTIONS SUR MON TRAVAIL", short: "QUESTIONS" },
     chatSuggestions: [
       "Quelle est son expérience avec les LLM et les agents ?",
@@ -184,11 +184,11 @@ const copy: Omit<Bundle, "services"> = {
       when: "2024 — aujourd’hui",
       title: "Développement logiciel freelance",
       org: "Indépendant — à distance",
-      body: "J’ai réalisé le site bilingue du LABNOV, laboratoire de recherche en matériaux de l’UFCG — un modèle de contenu Sanity CMS pour son équipe non technique et un pipeline automatique de publications depuis la Plataforma Lattes (Brésil) —, ainsi que le site du peintre pop art Rogério Freire. D’autres travaux pour des clients sont sous NDA.",
+      body: "J’ai réalisé le site bilingue du LABNOV, laboratoire de recherche en matériaux de l’UFCG — un modèle de contenu Sanity CMS pour son équipe non technique et un pipeline automatique de publications depuis la Plataforma Lattes (Brésil) —, ainsi que le site du peintre pop art Rogério Freire. D’autres missions clients sont couvertes par un NDA.",
     },
     {
       when: "2020 — 2025",
-      title: "Licence (Bachelor) en systèmes d’information",
+      title: "Bachelor en systèmes d’information (UNIFACISA, Brésil)",
       org: "UNIFACISA — Campina Grande",
       body: "Mémoire de fin d’études — <em>« MedHelp: Sistema de Apoio à Decisão Clínica para Recomendações de Exames Preventivos com Processamento de Linguagem Natural »</em> [traduction : « MedHelp : système d’aide à la décision clinique pour la recommandation d’examens de prévention par traitement automatique du langage naturel »] — traitement automatique du langage naturel (NLP) pour l’aide à la décision clinique, noté 10/10, la note maximale, et point de départ du projet MedHelp.",
     },
@@ -196,11 +196,11 @@ const copy: Omit<Bundle, "services"> = {
       when: "2022 — 2023",
       title: "Custom Software Engineer",
       org: "Accenture",
-      body: "Optimisation de processus de facturation et backend sur Oracle BRM, en C et en shell ; automatisation du reporting financier avec Oracle BI Publisher, au sein d’une équipe de livraison Agile.",
+      body: "Optimisation de processus de facturation et backend sur Oracle BRM, en C et en shell ; automatisation du reporting financier avec Oracle BI Publisher, au sein d’une équipe Agile.",
     },
     {
       when: "2018 — 2020",
-      title: "Bases en développement de jeux vidéo",
+      title: "Formation en développement de jeux vidéo",
       org: "UNIFACISA",
       body: "Conception de systèmes interactifs, logique de gameplay en C# et travail sur des moteurs physiques — c’est là qu’est né le réflexe de comprendre comment les systèmes bougent et cassent.",
     },
@@ -263,7 +263,7 @@ const copy: Omit<Bundle, "services"> = {
         { label: "Code source sur GitHub", href: "https://github.com/simonrl13/footballscout" },
       ],
       lead: "Prévoit l’évolution sur 12 mois de la valeur marchande Transfermarkt de 8 190 joueurs de 7 championnats européens (2013–2024), avec un agent Claude et un serveur MCP par-dessus — point-in-time, testé contre les fuites de données, avec un jeu de test scellé et journalisé.",
-      layers: ["Agent Claude · serveur MCP", "Intervalles à 80 %", "LightGBM · runs MLflow", "Variables point-in-time", "Postgres · tests de fuite"],
+      layers: ["Agent Claude · serveur MCP", "Intervalles à 80 %", "LightGBM · suivi MLflow", "Variables point-in-time", "Postgres · tests de fuite"],
       skin: {
         readings: [
           { dt: "Joueurs", value: "8 190" },
@@ -282,16 +282,16 @@ const copy: Omit<Bundle, "services"> = {
     medhelp: {
       tag: "02 · Aide à la décision clinique par IA",
       lead: "Un outil de NLP conçu pour le système de santé public brésilien (SUS), développé et évalué sur des données synthétiques, et non sur de vrais dossiers de patients : il normalise des notes cliniques et signale des examens de prévention à partir du profil et des antécédents du patient.",
-      layers: ["Recommandation d’examens", "Normalisation par NLP", "Notes cliniques (synthét.)"],
+      layers: ["Recommandation d’examens", "Normalisation par NLP", "Notes cliniques synthétiques"],
       skin: {
         vitals: [
           { dt: "Normalisation de la terminologie (23/25 termes, données synthétiques)", value: "92", unit: "%" },
-          { dt: "Surface du modèle", value: "NLP" },
+          { dt: "Périmètre du modèle", value: "NLP" },
         ],
       },
       detail: {
         body: "Un outil Python de NLP conçu pour le système de santé public brésilien (SUS), développé et évalué sur des données synthétiques, et non sur de vrais dossiers de patients. Il lit des notes cliniques en texte libre, normalise une terminologie incohérente et recommande des examens de prévention à partir des données démographiques et des antécédents médicaux du patient. Il est né directement de mon mémoire de fin d’études sur le traitement automatique du langage naturel (NLP) pour l’aide à la décision clinique.",
-        role: "Projet de mémoire de fin d’études (licence)",
+        role: "Projet de mémoire de fin d’études (bachelor)",
         outcome:
           "92 % (23 termes sur 25) en normalisation de la terminologie clinique, évalué sur des données synthétiques dans le mémoire (chapitre 4.3)",
         stack: "Python · FastAPI · Pydantic · Uvicorn · moteur de règles fondé sur les recommandations (MS/INCA, sociétés médicales) · données patients synthétiques",
@@ -303,7 +303,7 @@ const copy: Omit<Bundle, "services"> = {
       lead: "Site du peintre pop art Rogério Freire : une galerie de ses peintures originales, un catalogue de produits tirés de son œuvre et l’achat par WhatsApp ou par e-mail.",
       layers: ["Galerie des originaux", "Catalogue de produits", "Achat WhatsApp / e-mail", "Next.js+Tailwind / Vercel"],
       skin: {
-        placeholder: "PLACEHOLDER — œuvre à venir",
+        placeholder: "EMPLACEMENT — œuvre à venir",
         caption: "PLANCHE 01 — peinture originale · détails à venir",
       },
       detail: {
@@ -354,7 +354,7 @@ const copy: Omit<Bundle, "services"> = {
       title: "Optimisation de la facturation d’entreprise",
       dialogTitle: "Optimisation de la facturation d’entreprise — Accenture",
       lead: "Performance backend et automatisation du reporting sur une plateforme de facturation d’entreprise — analyse et optimisation de traitements batch, et remplacement d’étapes de reporting manuelles par des pipelines scriptés.",
-      layers: ["Reporting BI Publisher", "Rating et billing batch (C)", "Plateforme Oracle BRM"],
+      layers: ["Reporting BI Publisher", "Valorisation et facturation batch (C)", "Plateforme Oracle BRM"],
       detail: {
         body: "Performance backend et automatisation du reporting sur une plateforme de facturation d’entreprise. Analyse et optimisation des traitements batch de rating et de facturation sur Oracle BRM en C, et remplacement d’étapes de reporting manuelles par des pipelines en shell alimentant Oracle BI Publisher, au sein d’une équipe Agile. Le client, les volumes de transactions et les chiffres de performance sont couverts par un accord de confidentialité (NDA).",
         role: "Custom Software Engineer — optimisation backend et automatisation du reporting",
@@ -414,7 +414,7 @@ const copy: Omit<Bundle, "services"> = {
       },
       {
         title: "Chaque modification passe les mêmes contrôles",
-        body: "Chaque modification est une pull request qui doit passer un lint, un build de production, un test de fumée dans le navigateur, un audit des dépendances, une recherche de secrets sur tout l’historique git (gitleaks) et une analyse statique CodeQL. La branche principale est protégée sans exception pour les administrateurs — même le propriétaire ne peut pas y pousser directement. Dependabot propose les mises à jour, et les actions de CI sont fixées sur des hashes de commit exacts. L’audit qui a mis tout cela en place a aussi détecté une vulnérabilité critique de Next.js dans la version déployée (GHSA-vcvr-r3jv-pc5j), corrigée le jour même.",
+        body: "Chaque modification est une pull request qui doit passer un lint, un build de production, un smoke test dans le navigateur, un audit des dépendances, une recherche de secrets sur tout l’historique git (gitleaks) et une analyse statique CodeQL. La branche principale est protégée sans exception pour les administrateurs — même le propriétaire ne peut pas y pousser directement. Dependabot propose les mises à jour, et les actions de CI sont fixées sur des hashes de commit exacts. L’audit qui a mis tout cela en place a aussi détecté une vulnérabilité critique de Next.js dans la version déployée (GHSA-vcvr-r3jv-pc5j), corrigée le jour même.",
       },
       {
         title: "Données personnelles",
