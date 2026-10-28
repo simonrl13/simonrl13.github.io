@@ -23,6 +23,8 @@ export const enUi = {
     cta: "Start a conversation",
     cv: "Download CV",
     cvNote: "(PDF)",
+    /** the other CVs linked beside the button (site.links.cvs langs) */
+    cvOthers: ["fr", "pt-BR"],
     titleBlockLabel: "Drawing title block",
     languagesLabel: "Spoken languages",
     dimLabel: "SHEET 1 / 1 — SCALE 1:1",
@@ -52,8 +54,11 @@ export const enUi = {
     more: "Read the full drawing",
     cardLanguage: "Card language",
     close: "Close",
-    /** shown at the top of the (English-only) project dialog; empty in English */
+    /** shown at the top of an English project dialog in another locale; empty in English */
     detailNote: "",
+    /** dialog labels, in the dialog's language (PT keeps them English, like its dialogs) */
+    role: "Role",
+    outcome: "Outcome",
     /** card marker for projects with a video in the dialog */
     videoMark: "Video",
     /** the poster button reads "Play video: Scout (25 s)" */

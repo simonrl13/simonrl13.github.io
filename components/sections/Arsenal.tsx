@@ -39,7 +39,15 @@ const ICONS: Record<ArsenalRow["icon"], React.ReactNode> = {
   test: <path d="M4 12l5 5L20 6" />,
 };
 
-export default function Arsenal({ arsenal, ui }: { arsenal: Bundle["arsenal"]; ui: Bundle["ui"] }) {
+export default function Arsenal({
+  arsenal,
+  training,
+  ui,
+}: {
+  arsenal: Bundle["arsenal"];
+  training: Bundle["training"];
+  ui: Bundle["ui"];
+}) {
   return (
     <section
       id="arsenal"
@@ -80,7 +88,7 @@ export default function Arsenal({ arsenal, ui }: { arsenal: Bundle["arsenal"]; u
             </p>
             <p>
               <span className="legend__sub mono">{ui.arsenal.training}</span>
-              {site.training.join(" · ")}
+              {training.join(" · ")}
             </p>
           </div>
         </div>

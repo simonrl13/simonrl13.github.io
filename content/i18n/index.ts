@@ -1,12 +1,14 @@
 /* Per-locale content bundles. English is assembled from the existing English
    sources; every other locale provides the same shape (TypeScript enforces
-   it). Adding French = content/i18n/fr.ts + one line in `bundles` + "fr" in
-   content/locales.json + a slug per page in routes.ts — no component code.
+   it). A locale = content/i18n/<locale>.ts + one line in `bundles` + its code
+   in content/locales.json + a slug per page in routes.ts — no component code.
 
    What is NOT translated: profile facts (names, links, numbers, cert names),
-   the project dialogs' detail (English case studies, with a note in other
-   locales) and the chat assistant's context (it answers in the visitor's
-   language from the English profile). */
+   the chat assistant's context (it answers in the visitor's language from
+   the English profile) and, in Portuguese, the project dialogs (English case
+   studies, with a note). French translates the dialogs (ProjectCopy.detail).
+   scripts/i18n-check.test.mjs fails if a translation's numbers or dates
+   differ from the English. */
 
 import { site, journey, arsenal, type JourneyItem, type ArsenalRow } from "../site";
 import { projects, type Project } from "../projects";
@@ -15,7 +17,8 @@ import { securityPage } from "../security";
 import { servicesPage } from "../services";
 import { enUi } from "./en";
 import { pt } from "./pt";
-import { defaultLocale, locales, pathFor, type PageKey } from "./routes";
+import { fr } from "./fr";
+import { defaultLocale, hasPage, locales, pathFor, type PageKey } from "./routes";
 
 /** Recursively widens literal types so another locale can supply its strings. */
 type Widen<T> = T extends string
@@ -48,10 +51,12 @@ type SkinText = Partial<{
   caption: string;
 }>;
 
-/** Card copy per project; the dialog detail stays English. */
+/** Card copy per project; the dialog stays English unless `detail` is given. */
 export type ProjectCopy = {
   tag: string;
   title?: string;
+  dialogTitle?: string;
+  detail?: Project["detail"];
   lead: string;
   layers: string[];
   status?: string;
@@ -66,6 +71,8 @@ export type Bundle = {
   site: SiteCopy;
   journey: JourneyItem[];
   arsenal: ArsenalRow[];
+  /** course names stay English; the dates follow the locale */
+  training: readonly string[];
   pipeline: Widen<typeof pipeline>;
   projects: Record<(typeof projects)[number]["id"], ProjectCopy>;
   security: Widen<typeof securityPage>;
@@ -93,6 +100,7 @@ const en: Bundle = {
   },
   journey,
   arsenal,
+  training: site.training,
   pipeline,
   projects: Object.fromEntries(
     projects.map((p) => [p.id, { tag: p.tag, title: p.title, lead: p.lead, layers: p.layers, status: p.status }]),
@@ -101,7 +109,7 @@ const en: Bundle = {
   services: servicesPage,
 };
 
-const bundles: Record<string, Bundle> = { en, pt };
+const bundles: Record<string, Bundle> = { en, pt, fr };
 
 // every locale listed in content/locales.json must have a bundle
 for (const l of locales) {
@@ -122,7 +130,7 @@ export function fill(text: string): string {
   return text.replaceAll("{email}", site.links.email);
 }
 
-/** Projects with this locale's card copy applied (dialog detail stays English). */
+/** Projects with this locale's card copy applied, and its dialog if translated. */
 export function localizedProjects(bundle: Bundle): Project[] {
   return projects.map((p) => {
     const c = bundle.projects[p.id];
@@ -131,7 +139,10 @@ export function localizedProjects(bundle: Bundle): Project[] {
       ...p,
       tag: c.tag,
       title: c.title ?? p.title,
-      dialogTitle: p.dialogTitle ?? p.title, // the dialog stays English
+      // an untranslated dialog stays English, title included
+      dialogTitle: c.detail ? (c.dialogTitle ?? c.title ?? p.dialogTitle ?? p.title) : (p.dialogTitle ?? p.title),
+      detail: c.detail ?? p.detail,
+      detailLang: c.detail ? bundle.ui.meta.htmlLang : "en",
       lead: c.lead,
       layers: c.layers,
       status: c.status ?? p.status,
@@ -151,12 +162,15 @@ export function alternatesFor(page?: PageKey) {
   }));
 }
 
-/** canonical + hreflang links for a page (x-default = the default locale). */
+/** canonical + hreflang links for a page (x-default = the default locale);
+    only the locales the page exists in. */
 export function languageAlternates(locale: string, page?: PageKey) {
   return {
     canonical: pathFor(locale, page),
     languages: {
-      ...Object.fromEntries(locales.map((l) => [bundles[l].ui.meta.htmlLang, pathFor(l, page)])),
+      ...Object.fromEntries(
+        locales.filter((l) => hasPage(l, page)).map((l) => [bundles[l].ui.meta.htmlLang, pathFor(l, page)]),
+      ),
       "x-default": pathFor(defaultLocale, page),
     },
   };

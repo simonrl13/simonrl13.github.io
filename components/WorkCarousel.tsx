@@ -222,7 +222,7 @@ function ProjectDialog({
             {project.tag}
             {project.status && <span className="status-label">{project.status}</span>}
           </p>
-          <h2 lang="en">{project.dialogTitle ?? project.title}</h2>
+          <h2 lang={project.detailLang ?? "en"}>{project.dialogTitle ?? project.title}</h2>
           {ui.detailNote && <p className="sheet__note mono">{ui.detailNote}</p>}
           {project.video && (
             // keyed on open: closing the dialog unmounts the player, so it stops
@@ -231,18 +231,18 @@ function ProjectDialog({
           <div className="sheet__iso">
             <IsoStack layers={project.layers} className="iso--lg" />
           </div>
-          <p className="sheet__body" lang="en">{project.detail.body}</p>
-          <dl className="sheet__meta" lang="en">
+          <p className="sheet__body" lang={project.detailLang ?? "en"}>{project.detail.body}</p>
+          <dl className="sheet__meta" lang={project.detailLang ?? "en"}>
             <div>
-              <dt>Role</dt>
+              <dt>{ui.role}</dt>
               <dd>{project.detail.role}</dd>
             </div>
             <div>
-              <dt>Outcome</dt>
+              <dt>{ui.outcome}</dt>
               <dd>{project.detail.outcome}</dd>
             </div>
           </dl>
-          <p className="sheet__stack mono" lang="en">{project.detail.stack}</p>
+          <p className="sheet__stack mono" lang={project.detailLang ?? "en"}>{project.detail.stack}</p>
           {project.links && project.links.length > 0 && (
             <p className="sheet__links">
               {project.links.map((l) => (
