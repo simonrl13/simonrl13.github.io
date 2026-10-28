@@ -354,7 +354,7 @@ const copy: Omit<Bundle, "services"> = {
       title: "Optimisation de la facturation d’entreprise",
       dialogTitle: "Optimisation de la facturation d’entreprise — Accenture",
       lead: "Performance backend et automatisation du reporting sur une plateforme de facturation d’entreprise — analyse et optimisation de traitements batch, et remplacement d’étapes de reporting manuelles par des pipelines scriptés.",
-      layers: ["Reporting BI Publisher", "Valorisation et facturation batch (C)", "Plateforme Oracle BRM"],
+      layers: ["Reporting BI Publisher", "Facturation batch (C)", "Plateforme Oracle BRM"],
       detail: {
         body: "Performance backend et automatisation du reporting sur une plateforme de facturation d’entreprise. Analyse et optimisation des traitements batch de rating et de facturation sur Oracle BRM en C, et remplacement d’étapes de reporting manuelles par des pipelines en shell alimentant Oracle BI Publisher, au sein d’une équipe Agile. Le client, les volumes de transactions et les chiffres de performance sont couverts par un accord de confidentialité (NDA).",
         role: "Custom Software Engineer — optimisation backend et automatisation du reporting",
