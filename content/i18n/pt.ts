@@ -113,9 +113,9 @@ export const pt: Bundle = {
     role: "Engenharia de sistemas e full-stack",
     title: "Simon Laborde — Engenheiro Backend e de IA/LLM",
     description:
-      "Simon Laborde — engenheiro backend e full-stack com foco em IA/LLM, com base em sistemas backend corporativos. Portfólio, experiência e contato.",
+      "Simon Laborde — engenheiro backend e full-stack que cria funcionalidades de IA verificadas antes de irem ao ar. Portfólio, experiência e contato.",
     roleLine:
-      "Engenheiro backend e full-stack com foco em <strong>IA / LLM</strong>, com experiência em sistemas backend corporativos na Accenture.",
+      "Engenheiro backend e full-stack que cria funcionalidades de IA <strong>verificadas antes de irem ao&nbsp;ar</strong>: avaliações, guardrails e respostas&nbsp;fundamentadas.",
     thesis:
       "Faço a ponte entre sistemas complexos e as pessoas que dependem deles — hoje, construindo ferramentas com LLMs.",
     status: {

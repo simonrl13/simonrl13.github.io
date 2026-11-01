@@ -13,11 +13,11 @@ export const site = {
 
   title: "Simon Laborde — Backend & AI/LLM Engineer",
   description:
-    "Simon Laborde — backend and full-stack engineer with an AI/LLM focus, built on a foundation in enterprise backend systems. Portfolio, experience, and contact.",
+    "Simon Laborde — backend & full-stack engineer building AI features that are checked before they ship. Portfolio, experience, and contact.",
 
   // Hero copy
   roleLine:
-    "Backend & full-stack engineer with an <strong>AI / LLM</strong> focus, built on enterprise backend systems at Accenture.",
+    "Backend & full-stack engineer building AI features that are <strong>checked before they&nbsp;ship</strong>: evals, guardrails and grounded&nbsp;answers.",
   thesis:
     "I bridge the gap between complex systems and the people who depend on them — currently building LLM-backed tools.",
 
