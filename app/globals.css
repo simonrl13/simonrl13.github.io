@@ -386,6 +386,28 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
     to   { clip-path: inset(0 0 0 0); }
 }
 
+/* opening a project = the card unfolds into the sheet (one shared name,
+   WorkCarousel openDialog). Only while .vt-sheet is set: the page behind
+   crossfades instead of wiping, and the sheet's own enter fade stands down */
+:root.vt-sheet::view-transition-old(root) { animation: vtFadeOut .24s ease both; }
+:root.vt-sheet::view-transition-new(root) { animation: vtFadeIn .24s ease both; }
+:root.vt-sheet .sheet,
+:root.vt-sheet .sheet::backdrop { transition: none; }
+/* a click during the morph reaches the live sheet underneath (play, close),
+   instead of being swallowed by the transition overlay */
+:root.vt-sheet::view-transition { pointer-events: none; }
+::view-transition-group(sheet-morph) {
+    animation-duration: .34s;
+    animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+::view-transition-old(sheet-morph),
+::view-transition-new(sheet-morph) {
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+}
+::view-transition-old(sheet-morph) { animation-duration: .16s; }
+
 .nav__mobile {
     position: fixed; top: 62px; left: 0; right: 0;
     z-index: 99;
@@ -786,6 +808,7 @@ main .origin__cv-others a:hover { color: var(--brass); }
 .carousel__track::-webkit-scrollbar-thumb { background: var(--brass); }
 
 .pcard {
+    position: relative; /* hosts the inspection overlay */
     scroll-snap-align: start;
     flex: 0 0 min(86vw, 480px);
     border: 1px solid var(--line);
@@ -930,6 +953,92 @@ main .origin__cv-others a:hover { color: var(--brass); }
     transition: border-color .18s var(--ease), background .18s var(--ease), translate .12s var(--ease);
 }
 .pcard__more:hover { border-color: var(--brass); background: rgba(var(--brass-rgb),.1); }
+
+/* ---- inspection pass: each card is checked like a drawing ----
+   Dimension lines run out along the top and left margins, tolerance ticks
+   along the foot, then the mark lands in the title-block corner (beside the
+   button row): a copper check once shipped, a dashed ring in dim ink while
+   `draft`. The pass (WorkCarousel adds .is-inspected) settles to this
+   quiet rest state — which is also what shows without JS or with reduced
+   motion. All of it sits in the card's padding, clear of the text. */
+.insp {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    color: var(--brass);
+}
+.insp__dim, .insp__ticks { position: absolute; opacity: .35; }
+.insp__dim::before { content: ""; position: absolute; background: currentColor; }
+.insp__dim--top {
+    top: 7px; left: 14px; right: 14px;
+    height: 7px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    transform-origin: left center;
+}
+.insp__dim--top::before { top: 50%; left: 0; right: 0; height: 1px; }
+.insp__dim--left {
+    left: 7px; top: 14px; bottom: 14px;
+    width: 7px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    transform-origin: center top;
+}
+.insp__dim--left::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.insp__ticks {
+    left: 14px; right: 14px; bottom: 6px;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 12px);
+}
+.insp__mark {
+    position: absolute;
+    right: clamp(22px, 3vw, 32px);
+    bottom: clamp(22px, 3vw, 32px);
+    width: 40px; height: 40px;
+    overflow: visible;
+    opacity: .85;
+    transform: rotate(-5deg); /* the same tilt as the title-block stamps */
+}
+.insp__mark circle, .insp__mark path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.insp__mark--draft { color: var(--paper-dim); }
+.insp__mark--draft circle { stroke-dasharray: .045 .035; } /* pathLength=1 */
+
+/* the pass, when motion is allowed (.anim-ready): hidden until inspected,
+   then ≈1.6 s — top dim, left dim, ticks, the mark lands at .8 s, the
+   check draws in, and the line work settles back to hairline */
+.anim-ready .insp > * { opacity: 0; }
+.anim-ready .insp__mark path { stroke-dasharray: 1; }
+.anim-ready .is-inspected .insp__dim--top { animation: inspX 1.6s var(--ease) var(--insp-delay, 0ms) both; }
+.anim-ready .is-inspected .insp__dim--left { animation: inspY 1.6s var(--ease) calc(var(--insp-delay, 0ms) + .1s) both; }
+.anim-ready .is-inspected .insp__ticks { animation: inspTicks 1.6s ease var(--insp-delay, 0ms) both; }
+.anim-ready .is-inspected .insp__mark { animation: inspLand .16s var(--ease) calc(var(--insp-delay, 0ms) + .8s) both; }
+.anim-ready .is-inspected .insp__mark path { animation: inspDraw .3s var(--ease) calc(var(--insp-delay, 0ms) + .92s) both; }
+@keyframes inspX {
+    0%       { opacity: .9; transform: scaleX(0); }
+    30%, 75% { opacity: .9; transform: scaleX(1); }
+    100%     { opacity: .35; transform: scaleX(1); }
+}
+@keyframes inspY {
+    0%       { opacity: .9; transform: scaleY(0); }
+    30%, 75% { opacity: .9; transform: scaleY(1); }
+    100%     { opacity: .35; transform: scaleY(1); }
+}
+@keyframes inspTicks {
+    0%, 20%  { opacity: 0; }
+    45%, 75% { opacity: .9; }
+    100%     { opacity: .35; }
+}
+@keyframes inspLand {
+    from { opacity: 0; transform: rotate(-5deg) scale(1.08); }
+    to   { opacity: .85; transform: rotate(-5deg); }
+}
+@keyframes inspDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 
 /* -- MedHelp: clinical dashboard -- */
 .pcard--clinical { border-top: 2px solid var(--green); }

@@ -87,7 +87,7 @@
 ## Features live
 Blueprint (dark, default) + whiteprint (light) theme · rail draw-in + scroll trace ·
 drafted hero map (Origin → Paris: compass, pencil, dividers, great circle) ·
-survey-traverse carousel stations ·
+survey-traverse carousel stations · Work-card inspection pass (check = shipped, dashed ring = `draft`) + card→sheet morph ·
 hero dimension lines · drawing-sheet frame · scroll-revealed meters/ECG/XP/vitals ·
 section connectors · AS-BUILT stamp · exploded isometric project diagrams · Lattes
 pipeline flow diagram · "Ask about my work" chat with privacy note · security headers ·
@@ -160,6 +160,7 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
 - `ProjectDialog`: `open` drives showModal/close; `active` outlives close so the exit
   animation has content. Don't clear `active` on close.
 - Press feedback is `translate: 0 1px` (Simon's choice), never `scale(.97)`.
+- Inspection pass: the mark follows `Project.draft` (language-neutral), never the status string; `npm test` fails if they drift. The card→sheet View Transition is scoped to `.vt-sheet` (the theme wipe stays) with `::view-transition { pointer-events: none }` so clicks during the morph reach the sheet; no View Transitions → the sheet's own fade.
 - `IsoStack` takes any number of layers; `--k` per slab drives the explode spread.
 - `trailingSlash: true` → client fetches `/api/chat/` (avoids a 308 hop).
 - The root layout lives under `app/[locale]`, so unmatched URLs use `app/global-not-found.tsx`

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import type { Project } from "@/content/projects";
 import type { Bundle } from "@/content/i18n";
 
@@ -356,10 +357,73 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
     });
   };
 
+  // inspection pass: a card is inspected once, when it sits whole in the
+  // track (horizontal) and its bottom row — where the mark lands — is on
+  // screen (vertical). Cards that qualify together go 180ms apart.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cards = cardRefs.current.filter(Boolean) as HTMLLIElement[];
+    const inTrack = new Set<Element>();
+    const onScreen = new Set<Element>();
+    const run = () => {
+      let n = 0;
+      for (const card of cards) {
+        if (card.classList.contains("is-inspected")) continue;
+        if (!inTrack.has(card) || !onScreen.has(card)) continue;
+        card.style.setProperty("--insp-delay", `${n++ * 180}ms`);
+        card.classList.add("is-inspected");
+      }
+    };
+    const watch = (set: Set<Element>, key: (t: Element) => Element) => (entries: IntersectionObserverEntry[]) => {
+      for (const e of entries) {
+        if (e.isIntersecting) set.add(key(e.target));
+        else set.delete(key(e.target));
+      }
+      run();
+    };
+    const trackIo = new IntersectionObserver(watch(inTrack, (t) => t), { root: track, threshold: 0.85 });
+    const pageIo = new IntersectionObserver(watch(onScreen, (t) => t.closest(".pcard")!), {
+      threshold: 1,
+      rootMargin: "0px 0px -10% 0px",
+    });
+    for (const card of cards) {
+      trackIo.observe(card);
+      const row = card.querySelector(".pcard__actions");
+      if (row) pageIo.observe(row);
+    }
+    return () => {
+      trackIo.disconnect();
+      pageIo.disconnect();
+    };
+  }, []);
+
   const openDialog = (project: Project, e: React.MouseEvent<HTMLButtonElement>) => {
     lastFocused.current = e.currentTarget;
-    setActive(project);
-    setOpen(true);
+    const card = e.currentTarget.closest<HTMLElement>(".pcard");
+    const sheet = document.getElementById("sheet") as HTMLDialogElement | null;
+    const show = () => {
+      setActive(project);
+      setOpen(true);
+    };
+    if (!document.startViewTransition || reduceMotion || !card || !sheet) return show();
+
+    // the card unfolds into the sheet: one shared name, handed from the card
+    // to the dialog inside the update. If the browser can't snapshot the top
+    // layer, the transition is skipped and the sheet's own fade still runs.
+    const root = document.documentElement;
+    root.classList.add("vt-sheet");
+    card.style.viewTransitionName = "sheet-morph";
+    const vt = document.startViewTransition(() => {
+      card.style.viewTransitionName = "";
+      sheet.style.viewTransitionName = "sheet-morph";
+      flushSync(show);
+      if (!sheet.open) sheet.showModal();
+    });
+    vt.finished.finally(() => {
+      sheet.style.viewTransitionName = "";
+      root.classList.remove("vt-sheet");
+    });
   };
 
   const closeDialog = () => {
@@ -433,6 +497,19 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
                 </button>
               </div>
             </div>
+
+            {/* inspection pass: dimension lines, tolerance ticks, then the mark
+                in the title-block corner — a check once shipped, a dashed
+                draft ring while in development. Decorative only. */}
+            <span className="insp" aria-hidden="true">
+              <span className="insp__dim insp__dim--top" />
+              <span className="insp__dim insp__dim--left" />
+              <span className="insp__ticks" />
+              <svg className={`insp__mark${p.draft ? " insp__mark--draft" : ""}`} viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="17" pathLength={1} />
+                {!p.draft && <path d="M12.5 20.5l5 5 10-11" pathLength={1} />}
+              </svg>
+            </span>
           </li>
         ))}
       </ul>
