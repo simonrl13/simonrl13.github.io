@@ -400,30 +400,31 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
 
   const openDialog = (project: Project, e: React.MouseEvent<HTMLButtonElement>) => {
     lastFocused.current = e.currentTarget;
-    const card = e.currentTarget.closest<HTMLElement>(".pcard");
+    const from = e.currentTarget.closest(".pcard")?.getBoundingClientRect();
     const sheet = document.getElementById("sheet") as HTMLDialogElement | null;
-    const show = () => {
+    flushSync(() => {
       setActive(project);
       setOpen(true);
-    };
-    if (!document.startViewTransition || reduceMotion || !card || !sheet) return show();
+    });
+    if (!sheet) return;
+    if (!sheet.open) sheet.showModal(); // the effect then finds it open
+    if (reduceMotion || !from) return;
 
-    // the card unfolds into the sheet: one shared name, handed from the card
-    // to the dialog inside the update. If the browser can't snapshot the top
-    // layer, the transition is skipped and the sheet's own fade still runs.
-    const root = document.documentElement;
-    root.classList.add("vt-sheet");
-    card.style.viewTransitionName = "sheet-morph";
-    const vt = document.startViewTransition(() => {
-      card.style.viewTransitionName = "";
-      sheet.style.viewTransitionName = "sheet-morph";
-      flushSync(show);
-      if (!sheet.open) sheet.showModal();
-    });
-    vt.finished.finally(() => {
-      sheet.style.viewTransitionName = "";
-      root.classList.remove("vt-sheet");
-    });
+    // the card unfolds into the sheet (FLIP): the live sheet starts on the
+    // card's footprint and grows into place, so it stays clickable throughout
+    // (a View Transition's overlay swallowed clicks). offset* = its layout
+    // box, untouched by the CSS enter transition this animation overrides.
+    const dx = from.left - sheet.offsetLeft;
+    const dy = from.top - sheet.offsetTop;
+    const sx = from.width / sheet.offsetWidth;
+    const sy = from.height / sheet.offsetHeight;
+    sheet.animate(
+      [
+        { transformOrigin: "top left", transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 0.5 },
+        { transformOrigin: "top left", transform: "none", opacity: 1 },
+      ],
+      { duration: 340, easing: "cubic-bezier(.22, 1, .36, 1)" },
+    );
   };
 
   const closeDialog = () => {

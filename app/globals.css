@@ -386,28 +386,6 @@ main p a:hover, .contact__list a:hover, .sheet a:hover { color: var(--brass); }
     to   { clip-path: inset(0 0 0 0); }
 }
 
-/* opening a project = the card unfolds into the sheet (one shared name,
-   WorkCarousel openDialog). Only while .vt-sheet is set: the page behind
-   crossfades instead of wiping, and the sheet's own enter fade stands down */
-:root.vt-sheet::view-transition-old(root) { animation: vtFadeOut .24s ease both; }
-:root.vt-sheet::view-transition-new(root) { animation: vtFadeIn .24s ease both; }
-:root.vt-sheet .sheet,
-:root.vt-sheet .sheet::backdrop { transition: none; }
-/* a click during the morph reaches the live sheet underneath (play, close),
-   instead of being swallowed by the transition overlay */
-:root.vt-sheet::view-transition { pointer-events: none; }
-::view-transition-group(sheet-morph) {
-    animation-duration: .34s;
-    animation-timing-function: cubic-bezier(.22, 1, .36, 1);
-}
-::view-transition-old(sheet-morph),
-::view-transition-new(sheet-morph) {
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-}
-::view-transition-old(sheet-morph) { animation-duration: .16s; }
-
 .nav__mobile {
     position: fixed; top: 62px; left: 0; right: 0;
     z-index: 99;
