@@ -142,9 +142,9 @@ const copy: Omit<Bundle, "services"> = {
     role: "Ingénierie systèmes et full-stack",
     title: "Simon Laborde — Ingénieur backend et IA/LLM",
     description:
-      "Simon Laborde — ingénieur backend et full-stack orienté IA/LLM, avec une base en systèmes backend d’entreprise. Portfolio, expérience et contact.",
+      "Simon Laborde — ingénieur backend et full-stack qui conçoit des fonctionnalités d’IA vérifiées avant leur mise en ligne. Portfolio, expérience et contact.",
     roleLine:
-      "Ingénieur backend et full-stack orienté <strong>IA&nbsp;/&nbsp;LLM</strong>, avec une base en systèmes backend d’entreprise chez Accenture.",
+      "Ingénieur backend et full-stack qui conçoit des fonctionnalités d’IA <strong>vérifiées avant leur mise en&nbsp;ligne</strong> : évaluations, garde-fous et réponses ancrées dans les&nbsp;sources.",
     thesis:
       "Je fais le lien entre des systèmes complexes et les personnes qui en dépendent — avec un accent sur les outils basés sur des LLM.",
     status: {
