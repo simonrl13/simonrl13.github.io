@@ -86,3 +86,14 @@ test("a changed number or date in a translation is caught", () => {
   assert.equal(compare({ a: "until 1 January 2027" }, { a: "até 1º de janeiro de 2027" }, "pt-BR").length, 0);
   assert.equal(compare({ a: "0.357" }, { a: "0.357" }, "fr").length, 1, "a French decimal needs a comma");
 });
+
+// the inspection pass checks a card only once it shipped: `draft` must follow
+// the "in development" status, in every locale the page shows
+test("only in-development projects carry the draft mark", () => {
+  for (const locale of locales) {
+    for (const p of i18n.localizedProjects(i18n.getBundle(locale))) {
+      const inDev = /development|desenvolvimento|développement/i.test(`${p.status ?? ""} ${p.detail.outcome}`);
+      assert.equal(Boolean(p.draft), inDev, `${locale}:${p.id}`);
+    }
+  }
+});

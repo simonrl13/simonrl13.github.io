@@ -63,6 +63,9 @@ export type Project = {
     | "pcard--data";
   /** shown as a label on the card and in the dialog, e.g. "In progress" */
   status?: string;
+  /** not shipped yet: the card's inspection pass ends in a dashed draft mark,
+      not the check. Language-neutral, so it holds in every locale */
+  draft?: boolean;
   accentTitle?: boolean; // colour the <h3> with the skin accent (NutriQuest)
   // system layers, top (what the user touches) → bottom (foundation);
   // rendered as an exploded isometric stack. Keep labels ≤ ~26 chars.
@@ -193,6 +196,7 @@ export const projects: Project[] = [
     title: "NutriQuest",
     accentTitle: true,
     status: "In development (redesign in progress)",
+    draft: true,
     lead: "A mobile app that turns meal logging into a game — streaks, XP levels and weekly challenges, in Brazilian Portuguese.",
     skinClass: "pcard--game",
     layers: ["Mobile UI · streaks, XP, challenges", "Food search · TACO table", "On-device storage"],

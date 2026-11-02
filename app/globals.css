@@ -786,6 +786,7 @@ main .origin__cv-others a:hover { color: var(--brass); }
 .carousel__track::-webkit-scrollbar-thumb { background: var(--brass); }
 
 .pcard {
+    position: relative; /* hosts the inspection overlay */
     scroll-snap-align: start;
     flex: 0 0 min(86vw, 480px);
     border: 1px solid var(--line);
@@ -930,6 +931,115 @@ main .origin__cv-others a:hover { color: var(--brass); }
     transition: border-color .18s var(--ease), background .18s var(--ease), translate .12s var(--ease);
 }
 .pcard__more:hover { border-color: var(--brass); background: rgba(var(--brass-rgb),.1); }
+
+/* ---- inspection pass: each card is checked like a drawing ----
+   Dimension lines run out along the top and left margins (the top one
+   labelled with the card's real width, set by WorkCarousel), tolerance ticks
+   along the foot, then the mark lands in the title-block corner (beside the
+   button row): a copper check once shipped, a dashed ring in dim ink while
+   `draft`. The pass (WorkCarousel adds .is-inspected) holds at full strength,
+   then settles to this rest state — which is also what shows without JS or
+   with reduced motion. All of it sits in the card's padding, clear of text. */
+.insp {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    color: var(--brass);
+}
+.insp__dim, .insp__ticks { position: absolute; opacity: .6; }
+.insp__dim::before { content: ""; position: absolute; background: currentColor; }
+.insp__dim--top {
+    top: 7px; left: 14px; right: 14px;
+    height: 9px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    transform-origin: left center;
+}
+/* the line breaks around the width label */
+.insp__dim--top::before {
+    top: 50%; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, currentColor calc(50% - 26px), transparent 0 calc(50% + 26px), currentColor 0);
+}
+.insp__dim--left {
+    left: 7px; top: 14px; bottom: 14px;
+    width: 9px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    transform-origin: center top;
+}
+.insp__dim--left::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.insp__label {
+    position: absolute;
+    top: 6px; left: 50%;
+    translate: -50% 0;
+    font-size: .66rem;
+    line-height: 1;
+    letter-spacing: .08em;
+    color: var(--brass);
+    opacity: .85;
+}
+.insp__ticks {
+    left: 14px; right: 14px; bottom: 6px;
+    height: 6px;
+    background: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 10px);
+}
+.insp__mark {
+    position: absolute;
+    right: clamp(22px, 3vw, 32px);
+    bottom: clamp(20px, 3vw, 30px);
+    width: 48px; height: 48px;
+    color: var(--brass); /* its own ink: it also stands outside .insp, in the sheet */
+    overflow: visible;
+    opacity: .9;
+    transform: rotate(-5deg); /* the same tilt as the title-block stamps */
+}
+.insp__mark circle, .insp__mark path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.insp__mark--draft { color: var(--paper-dim); }
+.insp__mark--draft circle { stroke-dasharray: .045 .035; } /* pathLength=1 */
+
+/* the pass, when motion is allowed (.anim-ready): hidden until inspected,
+   then 2.8 s — top dim + label, left dim, ticks, holding at full strength,
+   then settling. The mark lands on its own cue (.is-stamped, when the
+   button row is on screen) and the check draws in */
+.anim-ready .insp > * { opacity: 0; }
+.anim-ready .insp__mark path { stroke-dasharray: 1; }
+.anim-ready .is-inspected .insp__dim--top { animation: inspX 2.8s var(--ease) var(--insp-delay, 0ms) both; }
+.anim-ready .is-inspected .insp__dim--left { animation: inspY 2.8s var(--ease) calc(var(--insp-delay, 0ms) + .1s) both; }
+.anim-ready .is-inspected .insp__label { animation: inspLabel 2.8s ease var(--insp-delay, 0ms) both; }
+.anim-ready .is-inspected .insp__ticks { animation: inspTicks 2.8s ease var(--insp-delay, 0ms) both; }
+.anim-ready .is-stamped .insp__mark { animation: inspLand .18s var(--ease) calc(var(--stamp-delay, 0ms) + .15s) both; }
+.anim-ready .is-stamped .insp__mark path { animation: inspDraw .3s var(--ease) calc(var(--stamp-delay, 0ms) + .29s) both; }
+@keyframes inspX {
+    0%       { opacity: 1; transform: scaleX(0); }
+    16%, 75% { opacity: 1; transform: scaleX(1); }
+    100%     { opacity: .6; transform: scaleX(1); }
+}
+@keyframes inspY {
+    0%       { opacity: 1; transform: scaleY(0); }
+    16%, 75% { opacity: 1; transform: scaleY(1); }
+    100%     { opacity: .6; transform: scaleY(1); }
+}
+@keyframes inspLabel {
+    0%, 14%  { opacity: 0; }
+    22%, 75% { opacity: 1; }
+    100%     { opacity: .85; }
+}
+@keyframes inspTicks {
+    0%, 10%  { opacity: 0; }
+    24%, 75% { opacity: 1; }
+    100%     { opacity: .6; }
+}
+@keyframes inspLand {
+    from { opacity: 0; transform: rotate(-5deg) scale(1.12); }
+    to   { opacity: .9; transform: rotate(-5deg); }
+}
+@keyframes inspDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 
 /* -- MedHelp: clinical dashboard -- */
 .pcard--clinical { border-top: 2px solid var(--green); }
@@ -1594,6 +1704,94 @@ main.subpage { padding-left: 0; }
 .sheet__links a { color: var(--paper); border-bottom: 1px solid var(--brass); padding-bottom: 1px; }
 .sheet__links a:hover { color: var(--brass); }
 .sheet__linknote { color: var(--paper-dim); font-size: .74rem; line-height: 1.5; margin-top: 6px; }
+
+/* -- project sheet: a full-screen drawing sheet. The paper (::before, with
+      an inset copper frame line) is its own layer so the opening FLIP can
+      grow it from the card without stretching any text (WorkCarousel). The
+      chat keeps the compact .sheet. -- */
+.sheet--project {
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    --frame: clamp(8px, 1.4vw, 16px);
+}
+/* full screen: it settles by fading only (no lift) */
+.sheet--project:not([open]) { transform: none; }
+@starting-style { .sheet--project[open] { transform: none; } }
+.sheet--project::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--surface);
+    box-shadow:
+        inset 0 0 0 var(--frame) var(--surface),
+        inset 0 0 0 calc(var(--frame) + 1px) var(--brass);
+}
+.sheet--project .sheet__close {
+    position: fixed;
+    top: calc(var(--frame) + 6px);
+    right: calc(var(--frame) + 6px);
+    z-index: 1;
+    background: var(--surface);
+}
+.sheet__inner {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: clamp(44px, 6vw, 72px) clamp(24px, 6vw, 88px) clamp(24px, 3vw, 36px);
+}
+.sheet__main { flex: 1; }
+.sheet__text { max-width: 64ch; }
+.sheet--project h2 {
+    font-size: clamp(2.3rem, 5.2vw, 4.4rem);
+    line-height: 1.02;
+    letter-spacing: -.01em;
+    margin-bottom: 18px;
+}
+.sheet--project .sheet__body { font-size: 1.02rem; line-height: 1.65; }
+.sheet--project .video { max-width: 720px; }
+.sheet--project .sheet__iso {
+    margin: 28px 0 0;
+    /* wider on the right: the layer labels run past the drawing itself */
+    padding: clamp(16px, 3vw, 36px) clamp(40px, 6vw, 76px) clamp(16px, 3vw, 36px) clamp(16px, 3vw, 36px);
+}
+.sheet--project .sheet__iso .iso { max-width: 560px; }
+.sheet__titleblock {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border: 1px solid var(--line);
+    margin-top: clamp(28px, 4vw, 44px);
+    background: var(--surface);
+}
+.sheet__titleblock .sheet__meta { border: 0; margin: 0; }
+.sheet__stamp {
+    display: grid;
+    place-items: center;
+    padding: 10px clamp(14px, 2vw, 24px);
+    border-left: 1px solid var(--line);
+}
+.sheet__stamp .insp__mark { position: static; width: 52px; height: 52px; }
+
+/* wide screens: text beside the stack (which stays in view as the text
+   scrolls); the title block closes the sheet, at the bottom edge when the
+   content is short. Not pinned: a long outcome would cover the drawing */
+@media (min-width: 901px) {
+    .sheet__main {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+        gap: clamp(32px, 5vw, 80px);
+        align-items: start;
+    }
+    .sheet--project .sheet__iso { position: sticky; top: 0; margin: 0; }
+}
 
 /* -- click-to-load video (dialog): poster button → youtube-nocookie iframe in
       the same fixed 16:9 box, so swapping them never shifts the layout -- */
