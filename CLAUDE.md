@@ -87,9 +87,9 @@
 ## Features live
 Blueprint (dark, default) + whiteprint (light) theme · rail draw-in + scroll trace ·
 drafted hero map (Origin → Paris: compass, pencil, dividers, great circle) ·
-survey-traverse carousel stations · Work-card inspection pass (check = shipped, dashed ring = `draft`) + card→sheet morph ·
+survey-traverse carousel stations · Work-card inspection pass (check = shipped, dashed ring = `draft`) + full-screen project sheet · detail callouts (Work 04, Pipeline 04.1, Contact 06: a ring sweeps out on scroll) + measured display headings ·
 hero dimension lines · drawing-sheet frame · scroll-revealed meters/ECG/XP/vitals ·
-section connectors · AS-BUILT stamp · exploded isometric project diagrams · Lattes
+AS-BUILT stamp · exploded isometric project diagrams · Lattes
 pipeline flow diagram · "Ask about my work" chat with privacy note · security headers ·
 SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with hreflang + nav switcher.
 
@@ -161,6 +161,7 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
   animation has content. Don't clear `active` on close.
 - Press feedback is `translate: 0 1px` (Simon's choice), never `scale(.97)`.
 - Inspection pass: lines start when a card's tag row is on screen (`is-inspected`), the mark lands when its button row is (`is-stamped`) — cards can be taller than the screen. The mark follows `Project.draft` (language-neutral), never the status string; `npm test` fails if they drift. The card→sheet morph is a WAAPI FLIP on the live dialog, not a View Transition: a VT's overlay swallowed clicks on the sheet (smoke test, CI). Reduced motion → the sheet's own fade.
+- Detail callouts (`DetailCallout`, refs = the rail's): the ring is scroll-driven (`view-timeline` on `.section--detail`, `animation-timeline` declared after the `animation` shorthand) with a once-on-reveal fallback; `main { overflow: clip }` keeps it from adding scroll height — never `hidden` there (it would break sticky children). Heading width labels come from RevealController, which also runs on subpages.
 - `IsoStack` takes any number of layers; `--k` per slab drives the explode spread.
 - `trailingSlash: true` → client fetches `/api/chat/` (avoids a 308 hop).
 - The root layout lives under `app/[locale]`, so unmatched URLs use `app/global-not-found.tsx`

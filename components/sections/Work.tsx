@@ -1,10 +1,12 @@
+import DetailCallout from "@/components/DetailCallout";
 import WorkCarousel from "@/components/WorkCarousel";
 import type { Bundle } from "@/content/i18n";
 import type { Project } from "@/content/projects";
 
 export default function Work({ projects, ui }: { projects: Project[]; ui: Bundle["ui"] }) {
   return (
-    <section id="work" className="section work" aria-labelledby="work-title">
+    <section id="work" className="section work section--detail" aria-labelledby="work-title">
+      <DetailCallout refNo="04" />
       <header className="sec-head">
         <h2 id="work-title">{ui.work.title}</h2>
         <p>

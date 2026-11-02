@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import LangSwitch from "@/components/LangSwitch";
 import SheetFrame from "@/components/SheetFrame";
+import RevealController from "@/components/RevealController";
 import ContactForm from "@/components/ContactForm";
 import { alternatesFor, fill, getBundle, languageAlternates, type Bundle } from "@/content/i18n";
 import { hasPage, locales, pageForSlug, pageSlugs, pathFor, type PageKey } from "@/content/i18n/routes";
@@ -63,6 +64,7 @@ export default async function SubPage({ params }: Props) {
         </div>
       </header>
 
+      <RevealController />
       <main className="subpage">{BODIES[page](b, passed)}</main>
 
       <footer className="foot foot--sub">

@@ -1,8 +1,10 @@
+import DetailCallout from "@/components/DetailCallout";
 import type { Bundle } from "@/content/i18n";
 
 export default function Pipeline({ pipeline, ui }: { pipeline: Bundle["pipeline"]; ui: Bundle["ui"] }) {
   return (
-    <section id="pipeline" className="section pipeline" aria-labelledby="pipeline-title">
+    <section id="pipeline" className="section pipeline section--detail" aria-labelledby="pipeline-title">
+      <DetailCallout refNo="04.1" />
       <header className="sec-head">
         <div>
           <p className="sec-head__eyebrow mono">{pipeline.eyebrow}</p>
