@@ -1,9 +1,11 @@
+import DetailCallout from "@/components/DetailCallout";
 import { site } from "@/content/site";
 import type { Bundle } from "@/content/i18n";
 
 export default function Contact({ copy, ui }: { copy: Bundle["site"]; ui: Bundle["ui"] }) {
   return (
-    <section id="contact" className="section contact" aria-labelledby="contact-title">
+    <section id="contact" className="section contact section--detail" aria-labelledby="contact-title">
+      <DetailCallout refNo="06" />
       <header className="sec-head">
         <h2 id="contact-title">{ui.contact.title}</h2>
         <p>{copy.contactIntro}</p>

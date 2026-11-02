@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 
 /* Lights up instruments (meters, ECG, XP bar), counts up vitals, and draws
-   the section-head connectors as they scroll into view. When the visitor
-   prefers reduced motion, connectors still resolve but nothing animates and
-   no counters run — every value is already in its final state in the markup. */
+   the section-head dimension lines as they scroll into view. When the visitor
+   prefers reduced motion, the dimension lines still show but nothing animates
+   and no counters run — every value is already in its final state. */
 
 function countUp(el: HTMLElement) {
   const numEl = el.querySelector<HTMLElement>(".vitals__n");
@@ -51,7 +51,19 @@ export default function RevealController() {
     );
 
     targets.forEach((t) => io.observe(t));
-    return () => io.disconnect();
+
+    // each section heading's dimension line is labelled with its real width
+    const sizer = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        (e.target as HTMLElement).dataset.w = String(Math.round(e.borderBoxSize[0].inlineSize));
+      }
+    });
+    document.querySelectorAll(".sec-head h2, .sec-head h1").forEach((h) => sizer.observe(h));
+
+    return () => {
+      io.disconnect();
+      sizer.disconnect();
+    };
   }, []);
 
   return null;

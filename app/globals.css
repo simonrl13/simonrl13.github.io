@@ -428,29 +428,36 @@ main { padding-left: var(--rail-w); }
 @media (max-width: 900px) { main { padding-left: 0; } }
 
 .section {
+    --pad-y: clamp(72px, 12vh, 128px);
+    --pad-x: clamp(20px, 6vw, 72px);
     max-width: var(--page-max);
     margin: 0 auto;
-    padding: clamp(72px, 12vh, 128px) clamp(20px, 6vw, 72px);
+    padding: var(--pad-y) var(--pad-x);
     scroll-margin-top: 62px;
 }
 
+/* headings at display size, across the full width, each measured by a
+   dimension line underneath (label = its real width, set by
+   RevealController); the intro sits below, in the right-hand column */
 .sec-head {
     display: grid;
     grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
-    gap: clamp(16px, 4vw, 56px);
-    align-items: end;
+    gap: clamp(30px, 3vw, 40px) clamp(16px, 4vw, 56px);
     padding-bottom: 28px;
     margin-bottom: 48px;
     border-bottom: 1px solid var(--line);
 }
+.sec-head > :first-child { grid-column: 1 / -1; }
+.sec-head > p { grid-column: 2; }
 .sec-head h2,
 .sec-head h1 {
+    width: fit-content;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(2rem, 5vw, 3.1rem);
-    line-height: 1.05;
+    font-size: clamp(2.6rem, 8.4vw, 6.2rem);
+    line-height: .98;
     color: var(--paper);
-    letter-spacing: -.01em;
+    letter-spacing: -.02em;
     text-wrap: balance;
 }
 .sec-head p { max-width: 46ch; }
@@ -458,7 +465,8 @@ main { padding-left: var(--rail-w); }
 .work__hint { color: var(--brass); white-space: nowrap; }
 
 @media (max-width: 720px) {
-    .sec-head { grid-template-columns: 1fr; align-items: start; gap: 12px; }
+    .sec-head { grid-template-columns: 1fr; }
+    .sec-head > p { grid-column: 1; }
 }
 
 /* =========================================================
@@ -2217,7 +2225,7 @@ main.subpage { padding-left: 0; }
 
 .anim-ready .vitals dd .vitals__n { transition: none; }
 
-/* ---- rail lit-node tick + section-head connector ---- */
+/* ---- rail lit-node tick ---- */
 
 .rail__node.is-lit::after {
     content: "";
@@ -2229,19 +2237,110 @@ main.subpage { padding-left: 0; }
     opacity: .7;
 }
 
-.sec-head h2 { position: relative; }
-.sec-head h2::before {
+/* ---- section headings, measured: a dimension line under each heading,
+   end ticks at its true edges and its width (px, from RevealController) in
+   a break at the middle — the same drawing language as the card pass. It
+   draws out when the head is revealed; at rest without .anim-ready ---- */
+.sec-head h2, .sec-head h1 { position: relative; }
+.sec-head h2::after, .sec-head h1::after {
     content: "";
     position: absolute;
-    top: .55em;
-    right: calc(100% + 14px);
-    width: 0;
+    left: 0; right: 0; bottom: -21px;
+    height: 9px;
+    border-left: 1px solid var(--brass);
+    border-right: 1px solid var(--brass);
+    background: linear-gradient(var(--brass), var(--brass)) center / 100% 1px no-repeat;
+    opacity: .75;
+    transform-origin: left center;
+}
+/* the break for the label only once there is one (no RevealController: 404) */
+.sec-head h2[data-w]::after, .sec-head h1[data-w]::after {
+    background-image: linear-gradient(90deg, var(--brass) calc(50% - 26px), transparent 0 calc(50% + 26px), var(--brass) 0);
+}
+.sec-head h2::before, .sec-head h1::before {
+    content: attr(data-w);
+    position: absolute;
+    left: 50%; bottom: -21px;
+    translate: -50% 0;
+    font: 400 .66rem/9px var(--font-mono);
+    letter-spacing: .08em;
+    color: var(--brass);
+}
+.anim-ready .sec-head h2::after, .anim-ready .sec-head h1::after { transform: scaleX(0); transition: transform .7s var(--ease); }
+.anim-ready .sec-head h2::before, .anim-ready .sec-head h1::before { opacity: 0; transition: opacity .3s ease .5s; }
+.anim-ready .sec-head.is-revealed h2::after, .anim-ready .sec-head.is-revealed h1::after { transform: scaleX(1); }
+.anim-ready .sec-head.is-revealed h2::before, .anim-ready .sec-head.is-revealed h1::before { opacity: 1; }
+
+/* ---- detail callouts (Work 04, Pipeline 04.1, Contact 06) ----
+   The section's rail ref in a copper circle above its heading, with a
+   short leader; as the section scrolls in, a ring sweeps out of that circle
+   across the screen — scroll-driven where supported (never scroll-jacked),
+   else once on reveal. The ring is the only moving part and ends
+   invisible: content is never hidden. It sweeps over the section above;
+   <main> clips it (overflow: clip — no scroll container, so sticky and
+   fixed children are unaffected), so it never adds scroll height. */
+main { overflow: clip; }
+.section--detail {
+    position: relative;
+    view-timeline: --detail block;
+}
+.detail {
+    position: absolute;
+    left: var(--pad-x);
+    top: calc(var(--pad-y) - 62px);
+    width: 44px; height: 44px;
+    pointer-events: none;
+}
+.detail::after {
+    content: "";
+    position: absolute;
+    left: 100%; top: 50%;
+    width: clamp(24px, 6vw, 72px);
     height: 1px;
     background: var(--brass);
-    transition: width .5s var(--ease);
+    opacity: .6;
 }
-.sec-head.is-revealed h2::before { width: clamp(18px, 4vw, 46px); }
-@media (max-width: 720px) { .sec-head h2::before { display: none; } }
+.detail__bubble {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--brass);
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--brass);
+    font-size: .64rem;
+    letter-spacing: .04em;
+}
+.detail__ring {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 600px; height: 600px;
+    margin: -300px 0 0 -300px;
+    border: 2px solid var(--brass);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(.073); /* = the 44px bubble */
+    z-index: -1; /* under cards and text, over the grid */
+}
+@keyframes detailOpen {
+    0%   { opacity: 0; transform: scale(.073); }
+    6%   { opacity: 1; transform: scale(.09); }
+    55%  { opacity: .8; }
+    100% { opacity: 0; transform: scale(4.2); }
+}
+@supports (animation-timeline: view()) {
+    .anim-ready .section--detail .detail__ring {
+        animation: detailOpen linear both;
+        animation-timeline: --detail; /* after the shorthand, which resets it */
+        animation-range: cover 0px cover 75vh;
+    }
+}
+@supports not (animation-timeline: view()) {
+    .anim-ready .section--detail:has(.sec-head.is-revealed) .detail__ring {
+        animation: detailOpen 1.6s cubic-bezier(.3, .6, .3, 1) both;
+    }
+}
 
 /* ---- title-block stamp on hover ---- */
 
