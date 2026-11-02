@@ -130,6 +130,17 @@ function LabBody({ skin, label }: { skin: Extract<Project["skin"], { kind: "lab"
   );
 }
 
+/** The inspection mark: a check once shipped, a dashed draft ring while in
+    development. Decorative; the status label carries the words. */
+function InspMark({ draft }: { draft?: boolean }) {
+  return (
+    <svg className={`insp__mark${draft ? " insp__mark--draft" : ""}`} viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="17" pathLength={1} />
+      {!draft && <path d="M12.5 20.5l5 5 10-11" pathLength={1} />}
+    </svg>
+  );
+}
+
 /* ---------- dialog ---------- */
 
 /** Click-to-load video: a self-hosted poster button until pressed, then the
@@ -204,9 +215,11 @@ function ProjectDialog({
     }
   };
 
+  // full-screen drawing sheet: text beside a large IsoStack, and a title block
+  // (role, outcome, the inspection mark) across the bottom
   return (
     <dialog
-      className="sheet"
+      className="sheet sheet--project"
       id="sheet"
       ref={ref}
       onClose={onClose}
@@ -218,50 +231,59 @@ function ProjectDialog({
         </button>
       </form>
       {project && (
-        <>
-          <p className="sheet__tag mono">
-            {project.tag}
-            {project.status && <span className="status-label">{project.status}</span>}
-          </p>
-          <h2 lang={project.detailLang ?? "en"}>{project.dialogTitle ?? project.title}</h2>
-          {ui.detailNote && <p className="sheet__note mono">{ui.detailNote}</p>}
-          {project.video && (
-            // keyed on open: closing the dialog unmounts the player, so it stops
-            <VideoFacade key={`${project.id}-${open}`} video={project.video} title={project.title} ui={ui} />
-          )}
-          <div className="sheet__iso">
-            <IsoStack layers={project.layers} className="iso--lg" />
-          </div>
-          <p className="sheet__body" lang={project.detailLang ?? "en"}>{project.detail.body}</p>
-          <dl className="sheet__meta" lang={project.detailLang ?? "en"}>
-            <div>
-              <dt>{ui.role}</dt>
-              <dd>{project.detail.role}</dd>
-            </div>
-            <div>
-              <dt>{ui.outcome}</dt>
-              <dd>{project.detail.outcome}</dd>
-            </div>
-          </dl>
-          <p className="sheet__stack mono" lang={project.detailLang ?? "en"}>{project.detail.stack}</p>
-          {project.links && project.links.length > 0 && (
-            <p className="sheet__links">
-              {project.links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {l.label} ↗
-                </a>
+        <div className="sheet__inner">
+          <div className="sheet__main">
+            <div className="sheet__text">
+              <p className="sheet__tag mono">
+                {project.tag}
+                {project.status && <span className="status-label">{project.status}</span>}
+              </p>
+              <h2 lang={project.detailLang ?? "en"}>{project.dialogTitle ?? project.title}</h2>
+              {ui.detailNote && <p className="sheet__note mono">{ui.detailNote}</p>}
+              {project.video && (
+                // keyed on open: closing the dialog unmounts the player, so it stops
+                <VideoFacade key={`${project.id}-${open}`} video={project.video} title={project.title} ui={ui} />
+              )}
+              <p className="sheet__body" lang={project.detailLang ?? "en"}>{project.detail.body}</p>
+              <p className="sheet__stack mono" lang={project.detailLang ?? "en"}>{project.detail.stack}</p>
+              {project.links && project.links.length > 0 && (
+                <p className="sheet__links">
+                  {project.links.map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {l.label} ↗
+                    </a>
+                  ))}
+                </p>
+              )}
+              {project.links?.map((l) => l.note && (
+                <p key={l.href} className="sheet__linknote mono">{l.note}</p>
               ))}
-            </p>
-          )}
-          {project.links?.map((l) => l.note && (
-            <p key={l.href} className="sheet__linknote mono">{l.note}</p>
-          ))}
-        </>
+            </div>
+            <div className="sheet__iso">
+              <IsoStack layers={project.layers} className="iso--lg" />
+            </div>
+          </div>
+          <div className="sheet__titleblock">
+            <dl className="sheet__meta" lang={project.detailLang ?? "en"}>
+              <div>
+                <dt>{ui.role}</dt>
+                <dd>{project.detail.role}</dd>
+              </div>
+              <div>
+                <dt>{ui.outcome}</dt>
+                <dd>{project.detail.outcome}</dd>
+              </div>
+            </dl>
+            <div className="sheet__stamp">
+              <InspMark draft={project.draft} />
+            </div>
+          </div>
+        </div>
       )}
     </dialog>
   );
@@ -357,44 +379,58 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
     });
   };
 
-  // inspection pass: a card is inspected once, when it sits whole in the
-  // track (horizontal) and its bottom row — where the mark lands — is on
-  // screen (vertical). Cards that qualify together go 180ms apart.
+  // inspection pass, once per card while it sits whole in the track: the
+  // line work starts when the card's top (tag row) is on screen, the mark
+  // lands when its button row is — a card can be taller than the screen, so
+  // you see it inspected as you read down and stamped at the end. Cards that
+  // qualify together go 180ms apart.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
     const cards = cardRefs.current.filter(Boolean) as HTMLLIElement[];
     const inTrack = new Set<Element>();
-    const onScreen = new Set<Element>();
-    const run = () => {
+    const onScreen = new Set<Element>(); // tag rows and button rows
+    const step = (rowSel: string, cls: string, delayVar: string) => {
       let n = 0;
       for (const card of cards) {
-        if (card.classList.contains("is-inspected")) continue;
-        if (!inTrack.has(card) || !onScreen.has(card)) continue;
-        card.style.setProperty("--insp-delay", `${n++ * 180}ms`);
-        card.classList.add("is-inspected");
+        const row = card.querySelector(rowSel);
+        if (card.classList.contains(cls) || !inTrack.has(card) || !row || !onScreen.has(row)) continue;
+        card.style.setProperty(delayVar, `${n++ * 180}ms`);
+        card.classList.add(cls);
       }
     };
-    const watch = (set: Set<Element>, key: (t: Element) => Element) => (entries: IntersectionObserverEntry[]) => {
+    const run = () => {
+      step(".pcard__tag", "is-inspected", "--insp-delay");
+      step(".pcard__actions", "is-stamped", "--stamp-delay");
+    };
+    const watch = (set: Set<Element>) => (entries: IntersectionObserverEntry[]) => {
       for (const e of entries) {
-        if (e.isIntersecting) set.add(key(e.target));
-        else set.delete(key(e.target));
+        if (e.isIntersecting) set.add(e.target);
+        else set.delete(e.target);
       }
       run();
     };
-    const trackIo = new IntersectionObserver(watch(inTrack, (t) => t), { root: track, threshold: 0.85 });
-    const pageIo = new IntersectionObserver(watch(onScreen, (t) => t.closest(".pcard")!), {
+    const trackIo = new IntersectionObserver(watch(inTrack), { root: track, threshold: 0.85 });
+    const pageIo = new IntersectionObserver(watch(onScreen), {
       threshold: 1,
-      rootMargin: "0px 0px -10% 0px",
+      rootMargin: "-64px 0px -10% 0px", // clear of the fixed nav
+    });
+    // the top dimension line is labelled with the card's real width (px)
+    const sizer = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const label = e.target.querySelector(".insp__label");
+        if (label) label.textContent = String(Math.round(e.borderBoxSize[0].inlineSize));
+      }
     });
     for (const card of cards) {
       trackIo.observe(card);
-      const row = card.querySelector(".pcard__actions");
-      if (row) pageIo.observe(row);
+      sizer.observe(card);
+      card.querySelectorAll(".pcard__tag, .pcard__actions").forEach((row) => pageIo.observe(row));
     }
     return () => {
       trackIo.disconnect();
       pageIo.disconnect();
+      sizer.disconnect();
     };
   }, []);
 
@@ -410,20 +446,24 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
     if (!sheet.open) sheet.showModal(); // the effect then finds it open
     if (reduceMotion || !from) return;
 
-    // the card unfolds into the sheet (FLIP): the live sheet starts on the
-    // card's footprint and grows into place, so it stays clickable throughout
-    // (a View Transition's overlay swallowed clicks). offset* = its layout
-    // box, untouched by the CSS enter transition this animation overrides.
-    const dx = from.left - sheet.offsetLeft;
-    const dy = from.top - sheet.offsetTop;
-    const sx = from.width / sheet.offsetWidth;
-    const sy = from.height / sheet.offsetHeight;
+    // the card unfolds into the full-screen sheet (FLIP): the sheet's paper
+    // (::before, no text, so stretching it is harmless) starts on the card's
+    // footprint and grows edge to edge; the drawing fades up as it lands.
+    // The live dialog stays clickable throughout (a View Transition's
+    // overlay swallowed clicks).
+    const ease = "cubic-bezier(.22, 1, .36, 1)";
+    const sx = from.width / window.innerWidth;
+    const sy = from.height / window.innerHeight;
     sheet.animate(
       [
-        { transformOrigin: "top left", transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 0.5 },
-        { transformOrigin: "top left", transform: "none", opacity: 1 },
+        { transformOrigin: "0 0", transform: `translate(${from.left}px, ${from.top}px) scale(${sx}, ${sy})` },
+        { transformOrigin: "0 0", transform: "none" },
       ],
-      { duration: 340, easing: "cubic-bezier(.22, 1, .36, 1)" },
+      { duration: 420, easing: ease, pseudoElement: "::before" },
+    );
+    sheet.querySelector(".sheet__inner")?.animate(
+      [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }],
+      { duration: 300, delay: 140, easing: ease, fill: "backwards" },
     );
   };
 
@@ -505,11 +545,9 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
             <span className="insp" aria-hidden="true">
               <span className="insp__dim insp__dim--top" />
               <span className="insp__dim insp__dim--left" />
+              <span className="insp__label mono" />
               <span className="insp__ticks" />
-              <svg className={`insp__mark${p.draft ? " insp__mark--draft" : ""}`} viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="17" pathLength={1} />
-                {!p.draft && <path d="M12.5 20.5l5 5 10-11" pathLength={1} />}
-              </svg>
+              <InspMark draft={p.draft} />
             </span>
           </li>
         ))}
