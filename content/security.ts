@@ -12,7 +12,7 @@ export type SecurityItem = {
 
 /** Last full probe pass recorded here; /security shows a later one from
     .github/workflows/probes.yml if GitHub reports it (lib/probe-pass.ts). */
-export const PROBES_PASSED_ON = "2026-10-28";
+export const PROBES_PASSED_ON = "2026-11-16";
 
 export const securityPage = {
   title: "How this site is secured",
