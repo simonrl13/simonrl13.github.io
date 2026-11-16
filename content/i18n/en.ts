@@ -44,7 +44,7 @@ export const enUi = {
   },
   work: {
     title: "Selected work",
-    intro: "Six projects, six problems. Each drawing is styled after what the thing actually is.",
+    intro: "Five projects, five problems. Each drawing is styled after what the thing actually is.",
     hint: "scroll →",
   },
   carousel: {

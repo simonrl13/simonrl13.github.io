@@ -121,7 +121,7 @@ export const journey: JourneyItem[] = [
     when: "2024 — present",
     title: "Freelance Software Development",
     org: "Independent — remote",
-    body: "Built LABNOV's bilingual site for a UFCG materials-research lab — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes — and a website for pop-art painter Rogério Freire. Additional client work under NDA.",
+    body: "Built LABNOV's bilingual site for a UFCG materials-research lab — a Sanity CMS content model for its non-technical staff and an automated publication pipeline off Brazil's Plataforma Lattes. Additional client work under NDA.",
   },
   {
     when: "2020 — 2025",
