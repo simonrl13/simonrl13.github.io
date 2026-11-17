@@ -38,14 +38,6 @@ type SkinMetrics = {
   readings: { dt: string; value: string; unit?: string }[];
 };
 
-type SkinGallery = {
-  kind: "gallery";
-  // a framed "plate" with drawing-style dimension lines; the painter's own
-  // colour lives only inside the artwork, the card chrome stays blueprint
-  placeholder: string; // shown in the mat until real artwork is supplied
-  caption: string;
-};
-
 export type Project = {
   id: string;
   tag: string;
@@ -53,16 +45,19 @@ export type Project = {
   /** dialog title, if different from the card title */
   dialogTitle?: string;
   lead: string;
-  skin: SkinClinical | SkinGame | SkinLab | SkinTerm | SkinGallery | SkinMetrics;
+  skin: SkinClinical | SkinGame | SkinLab | SkinTerm | SkinMetrics;
   skinClass:
     | "pcard--clinical"
     | "pcard--game"
     | "pcard--lab"
     | "pcard--term"
-    | "pcard--gallery"
     | "pcard--data";
   /** shown as a label on the card and in the dialog, e.g. "In progress" */
   status?: string;
+  /** not publicly released: the card's inspection pass ends in a dashed
+      draft mark, not the check (which means shipped). Language-neutral, so it
+      holds in every locale */
+  draft?: boolean;
   accentTitle?: boolean; // colour the <h3> with the skin accent (NutriQuest)
   // system layers, top (what the user touches) → bottom (foundation);
   // rendered as an exploded isometric stack. Keep labels ≤ ~26 chars.
@@ -159,40 +154,13 @@ export const projects: Project[] = [
     },
   },
   {
-    id: "rogerio",
-    tag: "03 · artist website & shop",
-    title: "Rogério Freire",
-    dialogTitle: "Rogério Freire — artist website",
-    lead: "Website for Rogério Freire, a pop-art painter: a gallery of his original paintings, a catalog of products made from his work, and purchase by WhatsApp or email.",
-    skinClass: "pcard--gallery",
-    layers: [
-      "Originals gallery",
-      "Derived-products catalog",
-      "WhatsApp / email purchase",
-      "Next.js+Tailwind on Vercel",
-    ],
-    skin: {
-      kind: "gallery",
-      // TODO(simon): swap for real artwork when the images arrive.
-      placeholder: "PLACEHOLDER — artwork pending",
-      caption: "PLATE 01 — original painting · details to follow",
-    },
-    // TODO(simon): add the live site URL.
-    links: [],
-    detail: {
-      body: "A website for Rogério Freire, a pop-art painter. It presents his original paintings in a gallery alongside a catalog of products derived from his work — mugs, pillows, notebooks and t-shirts — with enquiries and purchases handled directly over WhatsApp and email.",
-      role: "Client project for an independent artist",
-      outcome:
-        "One place to show the originals and sell the derived products, with purchase kept to a direct conversation over WhatsApp or email",
-      stack: "Next.js · Tailwind CSS · Vercel · WhatsApp / email purchase flow",
-    },
-  },
-  {
     id: "nutriquest",
-    tag: "04 · gamified nutrition tracker",
+    tag: "03 · gamified nutrition tracker",
     title: "NutriQuest",
     accentTitle: true,
-    status: "In development (redesign in progress)",
+    status: "Redesign complete · demo on request",
+    // not publicly distributed: keeps the dashed draft ring
+    draft: true,
     lead: "A mobile app that turns meal logging into a game — streaks, XP levels and weekly challenges, in Brazilian Portuguese.",
     skinClass: "pcard--game",
     layers: ["Mobile UI · streaks, XP, challenges", "Food search · TACO table", "On-device storage"],
@@ -210,18 +178,20 @@ export const projects: Project[] = [
     },
     detail: {
       // only what the current code does: no sync, no backend, the leaderboard
-      // runs on sample data and photo logging is planned
-      body: "A mobile app that turns meal logging into a game, in Brazilian Portuguese, now being redesigned. In the current code, meals are logged by searching a food-composition table (Brazil’s TACO, plus two milk entries from USDA FoodData Central) with calories and macros per portion, and a daily goal, streaks, XP levels, weekly challenges and achievements are derived from what is logged. Data is stored on the device; there is no backend or account yet.",
+      // runs on sample data and photo logging is planned. Redesign complete
+      // (the NutriQuest repo's revamp brief ends at Phase 4, merged); an EAS
+      // preview APK build exists (0.2.0); not publicly distributed
+      body: "A mobile app that turns meal logging into a game, in Brazilian Portuguese. In the current code, meals are logged by searching a food-composition table (Brazil’s TACO, plus two milk entries from USDA FoodData Central) with calories and macros per portion, and a daily goal, streaks, XP levels, weekly challenges and achievements are derived from what is logged. Data is stored on the device; there is no backend or account yet.",
       // personal project — not freelance/client work; keep it that way
       role: "Personal project — architecture and UI",
-      outcome: "In development (redesign in progress)",
+      outcome: "Redesign complete. Working build, not publicly distributed; demo on request.",
       stack: "React Native · Expo · Expo Router · TypeScript · Reanimated · on-device storage (AsyncStorage)",
     },
     video: { id: "-yoaS_WkRfY", poster: "/assets/video/nutriquest.webp", seconds: 21 },
   },
   {
     id: "labnov",
-    tag: "05 · bilingual research platform",
+    tag: "04 · bilingual research platform",
     title: "LABNOV",
     dialogTitle: "LABNOV Research Lab",
     lead: "Bilingual site for UFCG’s LABNOV research lab, with automatic publication sync from Brazil’s Plataforma Lattes and content editing through Sanity CMS for non-technical staff.",
@@ -248,7 +218,7 @@ export const projects: Project[] = [
   },
   {
     id: "financial",
-    tag: "06 · enterprise backend, Accenture",
+    tag: "05 · enterprise backend, Accenture",
     title: "Enterprise Billing Optimization",
     dialogTitle: "Enterprise Billing Optimization — Accenture",
     lead: "Backend performance and reporting-automation work on an enterprise billing platform — profiling and tuning batch processes and replacing manual reporting steps with scripted pipelines.",

@@ -86,3 +86,17 @@ test("a changed number or date in a translation is caught", () => {
   assert.equal(compare({ a: "until 1 January 2027" }, { a: "até 1º de janeiro de 2027" }, "pt-BR").length, 0);
   assert.equal(compare({ a: "0.357" }, { a: "0.357" }, "fr").length, 1, "a French decimal needs a comma");
 });
+
+// the inspection pass ends in a check (shipped) or, for a project that isn't
+// publicly released, the dashed draft ring. The mark is read from `draft`
+// itself: the same in every locale, and a draft card always carries a status
+// label, since the decorative ring has no words of its own
+test("the draft mark is the same in every locale and always has a status label", () => {
+  const en = i18n.localizedProjects(i18n.getBundle("en"));
+  for (const locale of locales) {
+    i18n.localizedProjects(i18n.getBundle(locale)).forEach((p, i) => {
+      assert.equal(Boolean(p.draft), Boolean(en[i].draft), `${locale}:${p.id}`);
+      if (p.draft) assert.ok(p.status, `${locale}:${p.id} is a draft without a status label`);
+    });
+  }
+});
