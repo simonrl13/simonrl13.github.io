@@ -24,7 +24,7 @@ export const site = {
   // The live "now" line in the hero.
   status: {
     label: "Open to AI & software engineering roles",
-    detail: "Remote or on-site in the EU — full-time, contract or freelance",
+    detail: "Available from February 2027 · remote or on-site in the EU — full-time, contract or freelance",
   },
 
   // Right to work — hero and Contact. Matches the CV header line.

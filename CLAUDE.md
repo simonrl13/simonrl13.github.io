@@ -95,7 +95,8 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
 
 ## Facts to keep right
 - Availability: open to AI and software engineering roles, remote or on-site in the EU
-  (full-time, contract, freelance). **No master's mentions anywhere.**
+  (full-time, contract, freelance), **available from February 2027** (hero status line, chat
+  facts, CV header; never an earlier start, never "now"). **No master's mentions anywhere.**
 - French citizen, full right to work in the EU, no visa sponsorship needed; also a Brazilian citizen (the PT
   copy and PT CV say "Cidadão brasileiro e francês, com direito de trabalhar no Brasil e na UE"); based in
   Brazil, open to remote work and relocation.

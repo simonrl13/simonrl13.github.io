@@ -149,7 +149,7 @@ const copy: Omit<Bundle, "services"> = {
       "Je fais le lien entre des systèmes complexes et les personnes qui en dépendent — avec un accent sur les outils basés sur des LLM.",
     status: {
       label: "Ouvert aux postes en IA et en ingénierie logicielle",
-      detail: "À distance ou sur site dans l’UE — CDI, CDD ou freelance",
+      detail: "Disponible à partir de février 2027 · à distance ou sur site dans l’UE — CDI, CDD ou freelance",
     },
     workRights:
       "Nationalité française : droit de travailler dans l’UE, sans besoin de visa. Également de nationalité brésilienne. Basé au Brésil ; ouvert au télétravail et prêt à m’installer en Europe.",
