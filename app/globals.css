@@ -549,6 +549,8 @@ main { padding-left: var(--rail-w); }
     vertical-align: .12em;
 }
 .origin__status-detail { color: var(--paper-dim); font-size: .9rem; }
+/* the start date leads the details: same block and colour, its own line */
+.origin__status-available { display: block; }
 
 /* right to work — a plain note under the status line */
 .origin__rights {

@@ -149,6 +149,7 @@ const copy: Omit<Bundle, "services"> = {
       "Je fais le lien entre des systèmes complexes et les personnes qui en dépendent — avec un accent sur les outils basés sur des LLM.",
     status: {
       label: "Ouvert aux postes en IA et en ingénierie logicielle",
+      available: "Disponible à partir de février 2027",
       detail: "À distance ou sur site dans l’UE — CDI, CDD ou freelance",
     },
     workRights:

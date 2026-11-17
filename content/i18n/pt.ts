@@ -120,6 +120,7 @@ export const pt: Bundle = {
       "Faço a ponte entre sistemas complexos e as pessoas que dependem deles — hoje, construindo ferramentas com LLMs.",
     status: {
       label: "Aberto a vagas em IA e engenharia de software",
+      available: "Disponível a partir de fevereiro de 2027",
       detail: "Remoto ou presencial na UE — tempo integral, contrato ou freelance",
     },
     workRights:
