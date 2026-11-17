@@ -120,7 +120,8 @@ export const pt: Bundle = {
       "Faço a ponte entre sistemas complexos e as pessoas que dependem deles — hoje, construindo ferramentas com LLMs.",
     status: {
       label: "Aberto a vagas em IA e engenharia de software",
-      detail: "Disponível a partir de fevereiro de 2027 · remoto ou presencial na UE — tempo integral, contrato ou freelance",
+      available: "Disponível a partir de fevereiro de 2027",
+      detail: "Remoto ou presencial na UE — tempo integral, contrato ou freelance",
     },
     workRights:
       "Cidadão brasileiro e francês, com direito de trabalhar no Brasil e na UE — sem necessidade de patrocínio de visto. Moro no Brasil; aberto a trabalho remoto e a mudança.",

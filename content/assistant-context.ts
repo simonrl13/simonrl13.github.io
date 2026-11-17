@@ -95,7 +95,7 @@ export function buildReference(): { facts: string; services: string; security: s
     `Role: ${site.role}`,
     plain(site.roleLine),
     plain(site.thesis),
-    `Current status: ${site.status.label} — ${plain(site.status.detail)}`,
+    `Current status: ${site.status.label} — ${site.status.available}; ${plain(site.status.detail)}`,
     `Right to work: ${site.workRights}`,
     `Languages: ${site.languages.map((l) => `${l.name} (${l.level})`).join(", ")}`,
     `Certifications (exam-based): ${site.certifications.join("; ")}`,
