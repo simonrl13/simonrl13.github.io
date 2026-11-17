@@ -76,7 +76,7 @@ const copy: Omit<Bundle, "services"> = {
     },
     work: {
       title: "Projets choisis",
-      intro: "Six projets, six problèmes. Chaque dessin reprend la forme de ce qu’est réellement le projet.",
+      intro: "Cinq projets, cinq problèmes. Chaque dessin reprend la forme de ce qu’est réellement le projet.",
       hint: "faire défiler →",
     },
     carousel: {
@@ -184,7 +184,7 @@ const copy: Omit<Bundle, "services"> = {
       when: "2024 — aujourd’hui",
       title: "Développement logiciel freelance",
       org: "Indépendant — à distance",
-      body: "J’ai réalisé le site bilingue du LABNOV, laboratoire de recherche en matériaux de l’UFCG — un modèle de contenu Sanity CMS pour son équipe non technique et un pipeline automatique de publications depuis la Plataforma Lattes (Brésil) —, ainsi que le site du peintre pop art Rogério Freire. D’autres missions clients sont couvertes par un NDA.",
+      body: "J’ai réalisé le site bilingue du LABNOV, laboratoire de recherche en matériaux de l’UFCG — un modèle de contenu Sanity CMS pour son équipe non technique et un pipeline automatique de publications depuis la Plataforma Lattes (Brésil). D’autres missions clients sont couvertes par un NDA.",
     },
     {
       when: "2020 — 2025",
@@ -297,26 +297,9 @@ const copy: Omit<Bundle, "services"> = {
         stack: "Python · FastAPI · Pydantic · Uvicorn · moteur de règles fondé sur les recommandations (MS/INCA, sociétés médicales) · données patients synthétiques",
       },
     },
-    rogerio: {
-      tag: "03 · Site d’artiste et boutique",
-      dialogTitle: "Rogério Freire — site d’artiste",
-      lead: "Site du peintre pop art Rogério Freire : une galerie de ses peintures originales, un catalogue de produits tirés de son œuvre et l’achat par WhatsApp ou par e-mail.",
-      layers: ["Galerie des originaux", "Catalogue de produits", "Achat WhatsApp / e-mail", "Next.js+Tailwind / Vercel"],
-      skin: {
-        placeholder: "EMPLACEMENT — œuvre à venir",
-        caption: "PLANCHE 01 — peinture originale · détails à venir",
-      },
-      detail: {
-        body: "Un site pour Rogério Freire, peintre pop art. Il présente ses peintures originales dans une galerie, à côté d’un catalogue de produits tirés de son œuvre — mugs, coussins, carnets et t-shirts —, les demandes et les achats se faisant directement par WhatsApp et par e-mail.",
-        role: "Projet client pour un artiste indépendant",
-        outcome:
-          "Un seul endroit pour montrer les originaux et vendre les produits dérivés, l’achat restant une conversation directe par WhatsApp ou par e-mail",
-        stack: "Next.js · Tailwind CSS · Vercel · achat par WhatsApp / e-mail",
-      },
-    },
     nutriquest: {
-      tag: "04 · Suivi nutritionnel ludique",
-      status: "En développement (refonte en cours)",
+      tag: "03 · Suivi nutritionnel ludique",
+      status: "Refonte terminée · démo sur demande",
       lead: "Une application mobile qui transforme le suivi des repas en jeu — séries, niveaux d’XP et défis hebdomadaires, en portugais du Brésil.",
       layers: ["UI mobile · séries, XP, défis", "Recherche d’aliments · TACO", "Stockage sur l’appareil"],
       skin: {
@@ -330,14 +313,14 @@ const copy: Omit<Bundle, "services"> = {
         caption: "Aperçu de l’interface · données d’exemple",
       },
       detail: {
-        body: "Une application mobile qui transforme le suivi des repas en jeu, en portugais du Brésil, actuellement en refonte. Dans le code actuel, on enregistre un repas en cherchant dans une table de composition des aliments (la table brésilienne TACO, plus deux entrées de lait issues de l’USDA FoodData Central), avec calories et macronutriments par portion ; un objectif quotidien, des séries, des niveaux d’XP, des défis hebdomadaires et des succès sont calculés à partir de ce qui est enregistré. Les données sont stockées sur l’appareil ; il n’y a pas encore de backend ni de compte.",
+        body: "Une application mobile qui transforme le suivi des repas en jeu, en portugais du Brésil. Dans le code actuel, on enregistre un repas en cherchant dans une table de composition des aliments (la table brésilienne TACO, plus deux entrées de lait issues de l’USDA FoodData Central), avec calories et macronutriments par portion ; un objectif quotidien, des séries, des niveaux d’XP, des défis hebdomadaires et des succès sont calculés à partir de ce qui est enregistré. Les données sont stockées sur l’appareil ; il n’y a pas encore de backend ni de compte.",
         role: "Projet personnel — architecture et UI",
-        outcome: "En développement (refonte en cours)",
+        outcome: "Refonte terminée. Version fonctionnelle, non diffusée publiquement ; démo sur demande.",
         stack: "React Native · Expo · Expo Router · TypeScript · Reanimated · stockage sur l’appareil (AsyncStorage)",
       },
     },
     labnov: {
-      tag: "05 · Plateforme de recherche bilingue",
+      tag: "04 · Plateforme de recherche bilingue",
       dialogTitle: "Laboratoire de recherche LABNOV",
       lead: "Site bilingue pour le laboratoire de recherche LABNOV de l’UFCG, avec synchronisation automatique des publications depuis la Plataforma Lattes (Brésil) et édition du contenu via Sanity CMS pour une équipe non technique.",
       layers: ["Site Next.js bilingue", "Modèle de contenu Sanity", "Synchro Lattes automatique"],
@@ -350,7 +333,7 @@ const copy: Omit<Bundle, "services"> = {
       },
     },
     financial: {
-      tag: "06 · Backend d’entreprise, Accenture",
+      tag: "05 · Backend d’entreprise, Accenture",
       title: "Optimisation de la facturation d’entreprise",
       dialogTitle: "Optimisation de la facturation d’entreprise — Accenture",
       lead: "Performance backend et automatisation du reporting sur une plateforme de facturation d’entreprise — analyse et optimisation de traitements batch, et remplacement d’étapes de reporting manuelles par des pipelines scriptés.",

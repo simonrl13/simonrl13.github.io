@@ -1184,46 +1184,7 @@ main .origin__cv-others a:hover { color: var(--brass); }
     vertical-align: 1px;
 }
 
-/* -- Rogério Freire: a framed plate, dimensioned like the hero drawing.
-      The painter's colour belongs inside the artwork only; the frame,
-      mat and dimension lines stay in the blueprint palette. -- */
-.pcard--gallery { border-top: 2px solid var(--paper); }
-.plate { padding: 12px 0 0 14px; } /* room for the dimension lines */
-.plate__frame { position: relative; }
-.plate__mat {
-    border: 1px solid var(--line);
-    background: var(--ink);
-    padding: 10px;
-}
-.plate__placeholder {
-    /* a wide gallery mat: real artwork will sit centred inside it
-       (object-fit: contain), like a canvas on a wall, not cropped */
-    aspect-ratio: 5 / 2;
-    display: grid;
-    place-items: center;
-    padding: 8px;
-    text-align: center;
-    font-size: .7rem;
-    letter-spacing: .08em;
-    color: var(--paper-dim);
-    border: 1px dashed var(--line);
-    background: repeating-linear-gradient(45deg,
-        transparent 0 7px, rgba(var(--brass-rgb), .07) 7px 8px);
-}
-.plate__dim { position: absolute; color: var(--brass); opacity: .75; }
-.plate__dim::before { content: ""; position: absolute; background: currentColor; }
-.plate__dim--top {
-    top: -9px; left: 0; right: 0; height: 6px;
-    border-left: 1px solid currentColor;
-    border-right: 1px solid currentColor;
-}
-.plate__dim--top::before { top: 50%; left: 0; right: 0; height: 1px; }
-.plate__dim--left {
-    left: -11px; top: 0; bottom: 0; width: 6px;
-    border-top: 1px solid currentColor;
-    border-bottom: 1px solid currentColor;
-}
-.plate__dim--left::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+/* the caption under a card's preview (NutriQuest) */
 .plate__caption { margin-top: 8px; font-size: .72rem; color: var(--paper-dim); }
 
 /* -- Financial: terminal / data-trace -- */

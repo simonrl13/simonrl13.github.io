@@ -101,10 +101,13 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
   Brazil, open to remote work and relocation.
 - Accenture title: **Custom Software Engineer** (Jun 2022 – Jun 2023).
 - LABNOV = a site Simon built as independent/freelance work — **not** a research role.
-- NutriQuest = a **personal project** — never list it as freelance or client work. Status: "In
-  development (redesign in progress)" / "Em desenvolvimento (redesign em andamento)" — never
-  shipped, released, live or published. Describe only what its current code does
-  (C:\Projetos\Webpage\nutriquest): no sync or backend; leaderboard on sample data; photo logging planned.
+- NutriQuest = a **personal project** — never list it as freelance or client work. Status (2026-11-16):
+  redesign complete (the repo's revamp brief ends at Phase 4); working build (EAS preview APK); **not
+  publicly distributed**; demo on request. Tag "Redesign complete · demo on request" / "Redesign
+  concluído · demo sob pedido" / "Refonte terminée · démo sur demande"; its card keeps the dashed
+  draft ring (✓ = shipped). Never shipped, released, live, published or on an app store. Describe only
+  what its current code does (C:\Projetos\Webpage\nutriquest): no sync or backend; leaderboard on
+  sample data; photo logging planned. The CV still has the old status (separate CV PR, after #81).
 - MedHelp: designed for SUS, built and evaluated on **synthetic data**, never real patient records
   or a real SUS system. Only figure: "92% (23 of 25 terms) on clinical terminology normalization,
   evaluated on synthetic data in the thesis (chapter 4.3)" (short: "92% (23/25 terms, synthetic
@@ -113,8 +116,10 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
   Role line: "Undergraduate thesis project".
 - Accenture: no "improved data accuracy" claim.
 - LinkedIn: linkedin.com/in/simonrodrigueslaborde (the old -2131861bb URL is obsolete).
-- Rogério Freire site = client work (CV freelance section + Journey). Game-dev 2018–2020
-  entry: site Journey only, never on the CV. Certifications are listed without dates.
+- The Rogério Freire project was removed from the site on 2026-11-16 at Simon's request (card,
+  dialog, Journey, chat facts) — never re-add it. The CV still lists it until the separate CV PR
+  (after #81). Probe "removed project: Rogério Freire" checks the chat neither describes nor
+  denies it. Game-dev 2018–2020 entry: site Journey only, never on the CV. Certifications are listed without dates.
 - Scout (github.com/simonrl13/footballscout, read-only source at C:\Projetos\Scout) is
   first in Selected Projects and the Work carousel, labelled "Live demo, until 1 January 2027". Check every
   number against its README/reports before changing copy (8,190 players, 82.2% interval
@@ -195,8 +200,9 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
 - Services: Simon fills `[PRAZO]` and `[PRICE]` (EN + PT); verify "never used to train
   models" against each AI provider’s terms before adding it.
 - NDA freelance project details → CV + journey (Simon to send).
-- Rogério Freire card has a placeholder — needs the artwork images (centred in the 5:2
-  mat, `object-fit: contain`) and the live URL. LABNOV live URL missing.
+- LABNOV live URL missing.
+- CV PR (after #81 is merged or based on it): remove Rogério Freire and update NutriQuest's status
+  in `scripts/cv-source.html`, all three languages.
 - Scout full case study (card + CV entry live; backs Docker, pytest, AWS, LightGBM, MLflow).
 - PT project dialogs: translate them (FR already does; `ProjectCopy.detail` in `pt.ts`). Own PR.
 - ESLint upgrade: ESLint 9 → 10 (major ignored in dependabot.yml) together with

@@ -82,19 +82,6 @@ function Skin({ skin }: { skin: Project["skin"] }) {
           <code>{skin.log}</code>
         </pre>
       );
-    case "gallery":
-      return (
-        <figure className="plate">
-          <div className="plate__frame">
-            <span className="plate__dim plate__dim--top" aria-hidden="true" />
-            <span className="plate__dim plate__dim--left" aria-hidden="true" />
-            <div className="plate__mat">
-              <p className="plate__placeholder mono">{skin.placeholder}</p>
-            </div>
-          </div>
-          <figcaption className="plate__caption mono">{skin.caption}</figcaption>
-        </figure>
-      );
     case "lab":
       return null;
   }
@@ -130,8 +117,8 @@ function LabBody({ skin, label }: { skin: Extract<Project["skin"], { kind: "lab"
   );
 }
 
-/** The inspection mark: a check once shipped, a dashed draft ring while in
-    development. Decorative; the status label carries the words. */
+/** The inspection mark: a check once shipped, a dashed draft ring while not
+    publicly released. Decorative; the status label carries the words. */
 function InspMark({ draft }: { draft?: boolean }) {
   return (
     <svg className={`insp__mark${draft ? " insp__mark--draft" : ""}`} viewBox="0 0 40 40" aria-hidden="true">
@@ -541,7 +528,7 @@ export default function WorkCarousel({ projects, ui }: { projects: Project[]; ui
 
             {/* inspection pass: dimension lines, tolerance ticks, then the mark
                 in the title-block corner — a check once shipped, a dashed
-                draft ring while in development. Decorative only. */}
+                draft ring while not publicly released. Decorative only. */}
             <span className="insp" aria-hidden="true">
               <span className="insp__dim insp__dim--top" />
               <span className="insp__dim insp__dim--left" />

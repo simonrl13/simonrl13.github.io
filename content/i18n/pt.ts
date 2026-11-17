@@ -46,7 +46,7 @@ export const pt: Bundle = {
     },
     work: {
       title: "Trabalhos selecionados",
-      intro: "Seis projetos, seis problemas. Cada desenho tem a cara do que a coisa realmente é.",
+      intro: "Cinco projetos, cinco problemas. Cada desenho tem a cara do que a coisa realmente é.",
       hint: "role →",
     },
     carousel: {
@@ -155,7 +155,7 @@ export const pt: Bundle = {
       when: "2024 — atual",
       title: "Desenvolvimento de software freelance",
       org: "Independente — remoto",
-      body: "Criei o site bilíngue do LABNOV, laboratório de pesquisa em materiais da UFCG — um modelo de conteúdo no Sanity CMS para a equipe não técnica e um pipeline automático de publicações a partir da Plataforma Lattes — e o site do pintor pop art Rogério Freire. Outros trabalhos para clientes estão sob NDA.",
+      body: "Criei o site bilíngue do LABNOV, laboratório de pesquisa em materiais da UFCG — um modelo de conteúdo no Sanity CMS para a equipe não técnica e um pipeline automático de publicações a partir da Plataforma Lattes. Outros trabalhos para clientes estão sob NDA.",
     },
     {
       when: "2020 — 2025",
@@ -253,18 +253,9 @@ export const pt: Bundle = {
         ],
       },
     },
-    rogerio: {
-      tag: "03 · Site de artista e loja",
-      lead: "Site do pintor pop art Rogério Freire: uma galeria com as obras originais, um catálogo de produtos feitos a partir delas e compra pelo WhatsApp ou por e-mail.",
-      layers: ["Galeria de originais", "Catálogo de produtos", "Compra via WhatsApp/e-mail", "Next.js+Tailwind na Vercel"],
-      skin: {
-        placeholder: "PLACEHOLDER — obra pendente",
-        caption: "PRANCHA 01 — pintura original · detalhes em breve",
-      },
-    },
     nutriquest: {
-      tag: "04 · App de nutrição gamificado",
-      status: "Em desenvolvimento (redesign em andamento)",
+      tag: "03 · App de nutrição gamificado",
+      status: "Redesign concluído · demo sob pedido",
       lead: "Um app mobile que transforma o registro de refeições em jogo — sequências, níveis de XP e desafios semanais, em português do Brasil.",
       layers: ["UI mobile · XP e desafios", "Busca de alimentos · tabela TACO", "Dados no aparelho"],
       skin: {
@@ -279,12 +270,12 @@ export const pt: Bundle = {
       },
     },
     labnov: {
-      tag: "05 · Plataforma de pesquisa bilíngue",
+      tag: "04 · Plataforma de pesquisa bilíngue",
       lead: "Site bilíngue para o laboratório de pesquisa LABNOV, da UFCG, com sincronização automática de publicações a partir da Plataforma Lattes e edição de conteúdo pelo Sanity CMS para a equipe não técnica.",
       layers: ["Site bilíngue em Next.js", "Modelo de conteúdo Sanity", "Sync automático do Lattes"],
     },
     financial: {
-      tag: "06 · Backend corporativo, Accenture",
+      tag: "05 · Backend corporativo, Accenture",
       title: "Otimização de faturamento corporativo",
       lead: "Performance de backend e automação de relatórios em uma plataforma corporativa de faturamento — análise e ajuste de processos batch e troca de etapas manuais de relatório por pipelines em script.",
       layers: ["Relatórios no BI Publisher", "Rating e billing batch (C)", "Plataforma Oracle BRM"],

@@ -47,7 +47,6 @@ type SkinText = Partial<{
   xpMeta: string;
   xpAmount: string;
   board: { pos: string; name: string; pts: string; you?: boolean }[];
-  placeholder: string;
   caption: string;
 }>;
 
