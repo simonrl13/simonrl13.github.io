@@ -61,7 +61,7 @@ const copy: Omit<Bundle, "services"> = {
       titleBlockLabel: "Cartouche du dessin",
       languagesLabel: "Langues parlées",
       dimLabel: "FEUILLE 1 / 1 — ÉCHELLE 1:1",
-      bearingLabel: "CAP {deg} → PARIS",
+      bearingLabel: "CAP ≈{deg} → EUROPE",
     },
     journey: {
       title: "Parcours",
