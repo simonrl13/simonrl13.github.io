@@ -33,6 +33,8 @@
   `PROBES_PASSED_ON` only after a full pass (the copy states no probe count). Locally: `npm run redteam <url>`.
 - **Every change goes through a PR and passes CI** (`verify`, `secret-scan`, `codeql`);
   `main` is protected with no admin bypass.
+- **Never bypass pre-commit hooks or CI checks** (no `--no-verify`, no `core.hooksPath` override, no
+  skipped or ignored checks). If a hook or check fails, stop and report it.
 - **Update `SECURITY.md`** (and the /security page copy) whenever the attack surface or
   controls change (endpoint, dependency, data flow, header, limit, third-party service).
 - Public CV never contains the phone number (`npm run cv` enforces it); `TODO(simon)`
@@ -127,8 +129,13 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
   coverage, MAE 0.357 vs 0.410 no-change). Agent and MCP server are **built** (19/20 held-out, 2/2 injection resisted); forecasting
   model complete; it does **not** beat linear — never say it does. **Live demo** on Cloud Run
   (europe-west1, Neon Postgres) at scout-246528398633.europe-west1.run.app **until 2027-01-01** —
-  a demo, never "production". The retrieval result (4/36 → 24/36) stays out until
-  footballscout#41 is merged and its labels reviewed.
+  a demo, never "production". MCP server: stdio, the same five read-only tools, readOnlyHint
+  annotations, Pydantic-validated arguments, read-only DB role. Per-call traces + dashboard. Retrieval
+  (M8, merged, owner-reviewed blind labels): hybrid + reranking hits@1 0.52 → 0.91 vs keyword on 70
+  questions, missed the pre-registered latency budget, **keyword stays the default** (the demo uses
+  it) — never "production default". The older 4/36 → 24/36 (footballscout#41, still open) stays out.
+- Lastro (private repo, Stage 0 of phase 1): **CV only** until Stage 1 has code and tests, then the
+  site and the chat facts. Describe only the design; no link; never "production".
   The chat's verified Scout entry is `SCOUT` in `content/assistant-context.ts`.
 - **Scout demo end date (2027-01-01):** before it, unless the cloud account is upgraded,
   replace the demo with the video in one PR — the "Try the live demo" link and its note

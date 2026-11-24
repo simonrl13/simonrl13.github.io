@@ -184,11 +184,11 @@ export const pt: Bundle = {
       icon: "ai",
       title: "IA / LLM",
       items:
-        "Integração de LLMs e sistemas de prompts · Model Context Protocol (MCP) · design de agentes e subagentes · APIs Claude / Anthropic · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
+        "Integração de LLMs e sistemas de prompts · design de servidores Model Context Protocol (MCP) · design de agentes e subagentes · APIs Claude / Anthropic · observabilidade de LLMs (custo e latência por chamada) · embeddings, busca híbrida e reranking · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
     },
-    { icon: "data", title: "Backend e dados", items: "APIs RESTful · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher" },
+    { icon: "data", title: "Backend e dados", items: "APIs RESTful · FastAPI · Pydantic · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher" },
     { icon: "frontend", title: "Frontend e mobile", items: "Next.js · React · React Native · Expo · Tailwind · HTML/CSS semântico" },
-    { icon: "infra", title: "Infraestrutura e ferramentas", items: "Docker · AWS EC2 · Vercel · Git · JIRA · Sanity CMS · Figma" },
+    { icon: "infra", title: "Infraestrutura e ferramentas", items: "Docker · AWS EC2 · Cloud Run · Neon Postgres · Vercel · Git · JIRA · Sanity CMS · Figma" },
     { icon: "test", title: "Testes", items: "pytest" },
   ],
 

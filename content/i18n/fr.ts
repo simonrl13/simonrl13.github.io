@@ -213,11 +213,11 @@ const copy: Omit<Bundle, "services"> = {
       icon: "ai",
       title: "IA / LLM",
       items:
-        "Intégration de LLM et systèmes de prompts · Model Context Protocol (MCP) · conception d’agents et de sous-agents · API Claude / Anthropic · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
+        "Intégration de LLM et systèmes de prompts · conception de serveurs Model Context Protocol (MCP) · conception d’agents et de sous-agents · API Claude / Anthropic · observabilité des LLM (coût et latence par appel) · embeddings, recherche hybride et reranking · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
     },
-    { icon: "data", title: "Backend et données", items: "API RESTful · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher" },
+    { icon: "data", title: "Backend et données", items: "API RESTful · FastAPI · Pydantic · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher" },
     { icon: "frontend", title: "Frontend et mobile", items: "Next.js · React · React Native · Expo · Tailwind · HTML/CSS sémantique" },
-    { icon: "infra", title: "Infrastructure et outils", items: "Docker · AWS EC2 · Vercel · Git · JIRA · Sanity CMS · Figma" },
+    { icon: "infra", title: "Infrastructure et outils", items: "Docker · AWS EC2 · Cloud Run · Neon Postgres · Vercel · Git · JIRA · Sanity CMS · Figma" },
     { icon: "test", title: "Tests", items: "pytest" },
   ],
 
@@ -273,11 +273,11 @@ const copy: Omit<Bundle, "services"> = {
         ],
       },
       detail: {
-        body: "Scout prévoit l’évolution sur 12 mois de la valeur marchande Transfermarkt des footballeurs, avec un agent Claude qui répond aux questions sur les prévisions. Chaque chiffre d’une réponse de l’agent doit correspondre aux données renvoyées par ses outils ; une réponse qui ne correspond pas est relancée, puis bloquée. Les affirmations tirées de Wikipédia citent la révision exacte de la page. Entraîné sur 8 190 joueurs de sept championnats européens (2013–2024). LightGBM bat la référence « sans changement » d’environ 13 % en MAE (0,357 contre 0,410) et fait jeu égal avec un modèle linéaire ; couverture de 82,2 % pour les intervalles à 80 % ; 19/20 sur une évaluation réservée (held-out) de l’agent. Deux expériences préenregistrées sont présentées comme des résultats négatifs. L’agent tourne sur Claude Haiku 5.5, environ 8 fois moins cher par question que Haiku 4.5, pour le même résultat sur le jeu de développement. Le jalon M3 (variables issues de textes publics) est encore ouvert.",
+        body: "Scout prévoit l’évolution sur 12 mois de la valeur marchande Transfermarkt des footballeurs, avec un agent Claude qui répond aux questions sur les prévisions. Chaque chiffre d’une réponse de l’agent doit correspondre aux données renvoyées par ses outils ; une réponse qui ne correspond pas est relancée, puis bloquée, et un plafond de dépenses est vérifié avant chaque appel au modèle. Les mêmes cinq outils en lecture seule sont servis par un serveur MCP (stdio), avec annotations de lecture seule, arguments validés par Pydantic et rôle de base de données en lecture seule. Chaque appel au modèle est tracé (jetons, coût, latence, outils, cache), avec un tableau de bord du coût, du taux de cache, de la latence p50/p95 et des violations. Les pages Wikipédia, reliées via Wikidata, sont découpées en 37 375 passages qui conservent leur section et leur révision exacte, si bien que les affirmations citent la révision. Entraîné sur 8 190 joueurs de sept championnats européens (2013–2024). LightGBM bat la référence « sans changement » d’environ 13 % en MAE (0,357 contre 0,410) et fait jeu égal avec un modèle linéaire ; couverture de 82,2 % pour les intervalles à 80 % ; 19/20 sur une évaluation réservée (held-out) de l’agent. Deux expériences préenregistrées sur les variables sont présentées comme des résultats négatifs ; un test de recherche préenregistré (70 questions étiquetées à l’aveugle) a montré que la recherche hybride + reranking faisait passer le hits@1 de 0,52 à 0,91 par rapport à la recherche par mots-clés, mais dépassait son budget de latence : la recherche par mots-clés reste la méthode par défaut. L’agent tourne sur Claude Haiku 5.5, environ 8 fois moins cher par question que Haiku 4.5, pour le même résultat sur le jeu de développement. Le jalon M3 (variables issues de textes publics) est encore ouvert.",
         role: "Projet indépendant — démo en ligne",
         outcome:
-          "Sur les saisons de test 2023–24 : MAE de 0,357 contre 0,410 pour une référence « sans changement » (aucun gain sur une référence linéaire) et couverture de 82,2 % pour les intervalles de prévision à 80 % ; agent à 19/20 sur les évaluations réservées, avec 2/2 tentatives d’injection repoussées ; CI avec tests, audits de dépendances, détection de secrets et CodeQL, et un modèle de menaces documenté",
-        stack: "Python · LightGBM · FastAPI · Postgres · API Claude · RAG · Cloud Run",
+          "Sur les saisons de test 2023–24 : MAE de 0,357 contre 0,410 pour une référence « sans changement » (aucun gain sur une référence linéaire) et couverture de 82,2 % pour les intervalles de prévision à 80 % ; agent à 19/20 sur les évaluations réservées, avec 2/2 tentatives d’injection repoussées ; test de recherche préenregistré : hybride + reranking, hits@1 de 0,52 à 0,91 contre mots-clés, budget de latence dépassé, mots-clés par défaut ; CI avec tests, audits de dépendances, détection de secrets et CodeQL, et un modèle de menaces documenté",
+        stack: "Python · LightGBM · FastAPI · Pydantic · Postgres · MLflow · API Claude · MCP (stdio) · RAG · Cloud Run",
       },
     },
     medhelp: {

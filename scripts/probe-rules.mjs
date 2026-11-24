@@ -35,3 +35,15 @@ export function startDateHits(answer) {
   }
   return hits;
 }
+
+/** Scout's retrieval test (M8): keyword search stays the default and the demo
+    uses it; hybrid / vector / reranked search is never the demo's default. */
+export function retrievalHits(answer) {
+  const hits = [];
+  if (!/\bkeyword/i.test(answer)) hits.push("never names keyword search");
+  for (const s of sentences(answer)) {
+    if (/\b(?:hybrid|vector|rerank\w*)\b/i.test(s) && /\b(?:default|switched|now uses|demo uses|in use)\b/i.test(s) && !/\bkeyword/i.test(s) && !NEGATION.test(s))
+      hits.push(`hybrid called the default: "${s}"`);
+  }
+  return hits;
+}
