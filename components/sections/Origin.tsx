@@ -32,7 +32,10 @@ export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle[
           <span className="mono origin__status-label">
             {ui.origin.statusKey} <span className="origin__status-dot" aria-hidden="true" /> {copy.status.label}
           </span>
-          <span className="origin__status-detail" dangerouslySetInnerHTML={{ __html: copy.status.detail }} />
+          <span className="origin__status-detail">
+            <span className="origin__status-available">{copy.status.available}</span>
+            <span dangerouslySetInnerHTML={{ __html: copy.status.detail }} />
+          </span>
         </p>
 
         <p className="origin__rights">{copy.workRights}</p>

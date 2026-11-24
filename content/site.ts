@@ -24,6 +24,7 @@ export const site = {
   // The live "now" line in the hero.
   status: {
     label: "Open to AI & software engineering roles",
+    available: "Available from February 2027",
     detail: "Remote or on-site in the EU — full-time, contract or freelance",
   },
 
