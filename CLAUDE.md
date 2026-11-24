@@ -33,8 +33,9 @@
   `PROBES_PASSED_ON` only after a full pass (the copy states no probe count). Locally: `npm run redteam <url>`.
 - **Every change goes through a PR and passes CI** (`verify`, `secret-scan`, `codeql`);
   `main` is protected with no admin bypass.
-- **Never bypass pre-commit hooks or CI checks** (no `--no-verify`, no `core.hooksPath` override, no
-  skipped or ignored checks). If a hook or check fails, stop and report it.
+- **Never bypass pre-commit hooks or CI checks**: no `--no-verify` or `-n`, no `core.hooksPath`
+  override, no `SKIP=…` or `HUSKY=0`, no editing or disabling CI workflows or required checks to get a change through,
+  no skipped or ignored checks. If a hook or check fails, stop and report it.
 - **Update `SECURITY.md`** (and the /security page copy) whenever the attack surface or
   controls change (endpoint, dependency, data flow, header, limit, third-party service).
 - Public CV never contains the phone number (`npm run cv` enforces it); `TODO(simon)`
