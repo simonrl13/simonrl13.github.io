@@ -86,7 +86,7 @@
 
 ## Features live
 Blueprint (dark, default) + whiteprint (light) theme · rail draw-in + scroll trace ·
-drafted hero map (Origin → Paris: compass, pencil, dividers, great circle) ·
+drafted hero map (Origin → a dashed search area over Western Europe, no end point: compass, pencil, dividers, great circle) ·
 survey-traverse carousel stations · Work-card inspection pass (check = shipped, dashed ring = `draft`) + card→sheet morph ·
 hero dimension lines · drawing-sheet frame · scroll-revealed meters/ECG/XP/vitals ·
 section connectors · AS-BUILT stamp · exploded isometric project diagrams · Lattes
@@ -185,7 +185,9 @@ SEO/OG/JSON-LD · CV download (EN, FR, PT) · EN / PT-BR (/pt/) / FR (/fr/) with
 - Map line work that draws itself is stroked in user units (`--u`, set by MapDraft), never
   `vector-effect: non-scaling-stroke`: Chrome then takes the dashes in screen space and the
   draw-on breaks under any transform (e.g. a camera zoom).
-  Bearing (027°) and distance (7,259 km) → Paris are computed in `content/geo.ts` and tested.
+  No Paris (or any city) end point: bearing "≈025°" (nine cities Lisbon…Stockholm all within 18.5–31.5°),
+  coordinates "??°N ??°E", distance range 5,800–8,100 km (Lisbon to Berlin, the ellipse's extent), never one exact figure;
+  computed in `content/geo.ts` and tested.
 - Map data: `npm run gen:map` → committed `public/map/*.json` (Natural Earth, public domain).
   d3-geo / topojson-client / world-atlas are devDependencies only — never import them in app code.
 - Inter and JetBrains Mono use `display: "optional"` (a swap rewrapped the hero role line:

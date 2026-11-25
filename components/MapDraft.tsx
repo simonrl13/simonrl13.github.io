@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { ORIGIN, PARIS, formatLatLon, intermediatePoint } from "@/content/geo";
+import { ORIGIN, formatLatLon, intermediatePoint } from "@/content/geo";
 
 /* The hero's first-load moment: the sheet is drafted like a real map of the
    world being made (behind the hero on wide screens): the graticule is
    ruled · a compass pivots on the Origin and sweeps its arcs · the pencil
    inks the coastlines outward from Campina Grande — slow on detailed coasts,
    quick on long straight runs, lifting between strokes · dividers step out
-   the route and stamp the distance · the great circle inks and lands on the
-   bearing label · the instruments lift away and the drawing settles faint.
+   the route and stamp the distance range · the great circle inks toward
+   Western Europe and stops at a dashed search area (no city, no pin; a "?"
+   at its centre) · the bearing label stamps · the instruments lift away and
+   the drawing settles faint.
    Phones (≈6 s): the same drawing, pencil only, when the figure scrolls in.
 
    Wide screens (variant C, ≈14 s): A's pencil pacing and
@@ -19,7 +21,8 @@ import { ORIGIN, PARIS, formatLatLon, intermediatePoint } from "@/content/geo";
    then Europe; the whole map is in view before the dividers. Bold ink that
    fades to the background only at the end, hand-drawn texture (line-weight
    variation, overshooting construction lines, pencil grain) and a climax
-   (coordinates tick along the route, the bearing label stamps).
+   (coordinates tick along the route and resolve to "??°N ??°E", the bearing
+   label stamps).
 
    Weight: the page only carries two empty, fixed-size containers. After the
    page has loaded (browser idle), the data for the current screen size is
@@ -37,7 +40,10 @@ import { ORIGIN, PARIS, formatLatLon, intermediatePoint } from "@/content/geo";
 
 type Pt = readonly [number, number];
 type MapData = {
-  w: number; h: number; graticule: string[]; coast: string[]; route: string; origin: Pt; paris: Pt;
+  w: number; h: number; graticule: string[]; coast: string[]; route: string; origin: Pt;
+  /** where the route meets the search area; routeEnd = the same point as [lat, lon] */
+  end: Pt; routeEnd: Pt;
+  area: { cx: number; cy: number; rx: number; ry: number; angle: number };
   // wide screens only
   compass?: { r: number; sweep: [number, number]; arcs: string[] };
   dividers?: { span: number; steps: [number, number, number][] };
@@ -47,6 +53,8 @@ type MapData = {
 const EASE = "cubic-bezier(.22, 1, .36, 1)"; // --ease
 const IN_OUT = "cubic-bezier(.65, 0, .35, 1)";
 const WIDE = "(min-width: 1100px)";
+/** The coordinates label: the destination is open. */
+const UNKNOWN = "??°N ??°E";
 
 /** Generated paths use only M / L / Z: rings of points, closed back to the start. */
 const points = (d: string): Pt[] => {
@@ -61,12 +69,12 @@ const weight = (i: number) => 1.1 + ((i * 37) % 9) / 10;
 
 function Drawing({ d, wide, km, bearing }: { d: MapData; wide: boolean; km: string; bearing: string }) {
   const b = wide; // the full treatment (camera, bold ink, texture, climax) is wide-only
-  const [ox, oy] = d.origin, [px, py] = d.paris;
+  const [ox, oy] = d.origin, [px, py] = d.end, a = d.area;
   const r = d.compass?.r ?? 0;
   const half = (d.dividers?.span ?? 0) / 2;
   const s = wide ? 1 : 0.55; // label / instrument scale on the phone viewBox
   const over = 24 * s; // construction lines overshoot their points
-  const ux = (px - ox) / dist(d.origin, d.paris), uy = (py - oy) / dist(d.origin, d.paris);
+  const ux = (px - ox) / dist(d.origin, d.end), uy = (py - oy) / dist(d.origin, d.end);
   const kmAt = d.distanceAt ?? [(ox + px) / 2 + 10, (oy + py) / 2 + 4];
   return (
     <svg viewBox={`0 0 ${d.w} ${d.h}`} preserveAspectRatio={wide ? "xMaxYMin meet" : "xMidYMid meet"} className={b ? "md-b" : undefined}>
@@ -91,18 +99,26 @@ function Drawing({ d, wide, km, bearing }: { d: MapData; wide: boolean; km: stri
           <g className="md-con">
             <path className="md-con--o" d={`M${ox - 60 * s},${oy}L${ox + 60 * s},${oy}M${ox},${oy - 60 * s}L${ox},${oy + 60 * s}`} pathLength={1} />
             <path className="md-con--chord" d={`M${ox - ux * over},${oy - uy * over}L${px + ux * over},${py + uy * over}`} pathLength={1} />
-            <path className="md-con--p" d={`M${px - 44 * s},${py}L${px + 44 * s},${py}M${px},${py - 44 * s}L${px},${py + 44 * s}`} pathLength={1} />
           </g>
         )}
         <g className="md-coast">
           {d.coast.map((c, i) => <path key={i} d={c} pathLength={1} style={b ? ({ "--w": weight(i) } as CSSProperties) : undefined} />)}
         </g>
         <path className="md-route" d={d.route} pathLength={1} />
+        {/* the search area: a dashed ellipse, drawn on through a mask (a dash
+            pattern can't also carry the dashoffset draw-on) */}
+        <g transform={`translate(${a.cx} ${a.cy}) rotate(${a.angle})`}>
+          {/* the mask's content is in the ellipse's own (rotated) user space */}
+          <mask id="md-area-mask">
+            <ellipse className="md-area-ink" rx={a.rx} ry={a.ry} pathLength={1} />
+          </mask>
+          <ellipse className="md-area" rx={a.rx} ry={a.ry} mask="url(#md-area-mask)" />
+        </g>
         <circle className="md-pt md-pt--origin" cx={ox} cy={oy} r={4 * s + 1} />
-        <circle className="md-splash" cx={px} cy={py} r={6 * s} />
-        <circle className="md-pt md-pt--paris" cx={px} cy={py} r={4 * s + 1} />
+        <circle className="md-splash" cx={a.cx} cy={a.cy} r={10 * s} />
+        <text className="md-label md-label--q" x={a.cx} y={a.cy} textAnchor="middle" dominantBaseline="central">?</text>
         <text className="md-label md-label--brg" x={px - 14 * s} y={py - 16 * s} textAnchor="end">{bearing}</text>
-        {b && <text className="md-label md-label--coords" x={px - 14 * s} y={py - 50 * s} textAnchor="end">{formatLatLon(PARIS)}</text>}
+        {b && <text className="md-label md-label--coords" x={px - 14 * s} y={py - 50 * s} textAnchor="end">{UNKNOWN}</text>}
         <text className="md-label md-label--km" x={kmAt[0]} y={kmAt[1]}>{km}</text>
 
         {d.compass && (
@@ -229,19 +245,21 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
     go($(".md-dividers"), st.map(([x, y, a], i) => ({ offset: i / (st.length - 1), transform: `translate(${x}px, ${y}px) rotate(${a}deg)`, easing: IN_OUT })), T.dividers + 0.1, 0.7, "linear");
   }
   go($(".md-label--km"), [{ opacity: 0, transform: "scale(1.08)" }, { opacity: 1, transform: "none" }], d.dividers ? T.dividers + 0.8 : T.route + 0.3, 0.16);
-  if (b) { ink($(".md-con--chord"), T.dividers + 0.1, 0.35); ink($(".md-con--p"), T.dividers + 0.3, 0.3); }
+  if (b) ink($(".md-con--chord"), T.dividers + 0.1, 0.35);
 
-  // 5. the great circle inks in and lands on the bearing label
+  // 5. the great circle inks in and stops at the search area, which draws
+  // itself round; the "?" lands at its centre, the bearing label stamps
   const route = $(".md-route");
   ink(route, T.route, T.routeDur, b ? IN_OUT : EASE);
-  pop($(".md-pt--paris"), T.route + T.routeDur - 0.05);
   const land = T.route + T.routeDur;
+  ink($(".md-area-ink"), land - 0.05, 0.5, IN_OUT);
+  pop($(".md-label--q"), land + 0.35);
   if (!b) {
     go($(".md-label--brg"), [{ opacity: 0, translate: "0 3px" }, { opacity: 1, translate: "0 0" }], land, 0.25);
   } else {
     // climax: the label stamps down, a ring of ink, the sheet takes the hit
     go($(".md-label--brg"), [{ opacity: 0, transform: "scale(1.4)" }, { opacity: 1, transform: "scale(.96)", offset: 0.65 }, { opacity: 1, transform: "none" }], land, 0.24, "cubic-bezier(.5, 0, .75, 0)");
-    go($(".md-splash"), [{ opacity: 0, transform: "scale(1)" }, { opacity: 0.9, transform: "scale(1)", offset: 0.01 }, { opacity: 0, transform: "scale(5)" }], land + 0.15, 0.5, EASE);
+    go($(".md-splash"), [{ opacity: 0, transform: "scale(1)" }, { opacity: 0.9, transform: "scale(1)", offset: 0.01 }, { opacity: 0, transform: "scale(4)" }], land + 0.4, 0.5, EASE);
     go(svg, [{ translate: "0 0" }, { translate: "0 2px", offset: 0.3 }, { translate: "0 0" }], land + 0.15, 0.2, EASE);
     go($(".md-label--coords"), [{ opacity: 0 }, { opacity: 1 }], T.route, 0.2);
     // bold while drawing (foreground ink, full strength); the faint brass
@@ -302,7 +320,8 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
     go($(".md-cam"), kf, 0, end, "linear");
   }
 
-  // coordinates tick along the great circle while the route inks
+  // coordinates tick along the great circle while the route inks, then
+  // resolve to the open destination
   let raf = 0;
   const coords = b ? svg.querySelector(".md-label--coords") : null;
   const routeAnim = anims.find((a) => (a.effect as KeyframeEffect).target === route);
@@ -310,7 +329,7 @@ function draft(svg: SVGSVGElement, d: MapData, wide: boolean) {
     let last = "";
     const tick = () => {
       const f = routeAnim.playState === "finished" ? 1 : (routeAnim.effect!.getComputedTiming().progress ?? 0);
-      const text = formatLatLon(intermediatePoint(ORIGIN, PARIS, f));
+      const text = f < 1 ? formatLatLon(intermediatePoint(ORIGIN, { lat: d.routeEnd[0], lon: d.routeEnd[1] }, f)) : UNKNOWN;
       if (text !== last) coords.textContent = last = text;
       if (f < 1) raf = requestAnimationFrame(tick);
     };

@@ -1,15 +1,30 @@
-/* The hero's survey construction: Origin → Paris.
+/* The hero's survey construction: Origin → somewhere in Western Europe.
 
    ORIGIN is the title block's "Origin" (07°13′S 35°53′W, content/site.ts).
-   The label shows the INITIAL GREAT-CIRCLE BEARING from ORIGIN to Paris —
-   the compass direction you'd set off on along the shortest path over the
-   globe (not a constant rhumb-line heading). Checked by
-   scripts/geo.test.mjs: 026.6°, rounded to 027°. */
+   There is no end point: the route heads for a search area over Western
+   Europe (Lisbon to Berlin, drawn by scripts/gen-map.mjs). The label shows
+   an approximate INITIAL GREAT-CIRCLE BEARING ("≈025°": every candidate
+   city's bearing is within 18.5–31.5°) and a distance RANGE across the
+   search area (Lisbon to Berlin, each to the nearest 100 km), never one
+   exact figure. Checked by scripts/geo.test.mjs. */
 
 /** 07°13′S 35°53′W — must match the title block in content/site.ts. */
 export const ORIGIN = { lat: -(7 + 13 / 60), lon: -(35 + 53 / 60) };
-/** Paris, Notre-Dame point zéro area (48.8566°N, 2.3522°E). */
-export const PARIS = { lat: 48.8566, lon: 2.3522 };
+
+/** Candidate cities (city-centre coordinates). The first eight frame the search area and the distance range; Stockholm is in the bearing check only. */
+export const CITIES = {
+  Lisbon: { lat: 38.7223, lon: -9.1393 },
+  Madrid: { lat: 40.4168, lon: -3.7038 },
+  Paris: { lat: 48.8566, lon: 2.3522 },
+  London: { lat: 51.5074, lon: -0.1278 },
+  Dublin: { lat: 53.3498, lon: -6.2603 },
+  Amsterdam: { lat: 52.3676, lon: 4.9041 },
+  Berlin: { lat: 52.52, lon: 13.405 },
+  Zurich: { lat: 47.3769, lon: 8.5417 },
+  Stockholm: { lat: 59.3293, lon: 18.0686 },
+} as const;
+/** The cities the search-area ellipse must enclose (Lisbon to Berlin). */
+export const AREA_CITIES = (Object.keys(CITIES) as (keyof typeof CITIES)[]).filter((c) => c !== "Stockholm");
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 
@@ -21,8 +36,8 @@ export function initialBearing(a: { lat: number; lon: number }, b: { lat: number
   return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
 }
 
-/** Initial great-circle bearing ORIGIN → Paris, whole degrees (027). */
-export const BEARING_TO_PARIS = Math.round(initialBearing(ORIGIN, PARIS));
+/** The label's approximate bearing, whole degrees ("≈025°"; tested against every city). */
+export const BEARING_DEG = 25;
 
 /** "027°" — three digits, the way bearings are written. */
 export const bearingLabel = (deg: number) => `${String(deg).padStart(3, "0")}°`;
@@ -38,8 +53,10 @@ export function greatCircleKm(a: { lat: number; lon: number }, b: { lat: number;
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
 }
 
-/** Great-circle distance ORIGIN → Paris, whole km (7,259; tested). */
-export const KM_TO_PARIS = Math.round(greatCircleKm(ORIGIN, PARIS));
+/** Distance range ORIGIN → the search-area cities, nearest and farthest each rounded to
+ * the nearest 100 km ([5800, 8100]: Lisbon 5,807 to Berlin 8,106; tested). */
+const kms = AREA_CITIES.map((c) => greatCircleKm(ORIGIN, CITIES[c]));
+export const KM_RANGE = [Math.round(Math.min(...kms) / 100) * 100, Math.round(Math.max(...kms) / 100) * 100] as const;
 
 /** The point a fraction f (0–1) of the way along the great circle a → b. */
 export function intermediatePoint(a: { lat: number; lon: number }, b: { lat: number; lon: number }, f: number) {

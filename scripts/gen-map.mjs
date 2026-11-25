@@ -9,8 +9,11 @@
    one path per ring, in drawing order (outward from the Origin); the
    client paces pencil and ink from their vertices.
 
-   ORIGIN, PARIS, the bearing and the distance come from content/geo.ts
-   (tested in scripts/geo.test.mjs), so the drawing and the labels agree. */
+   ORIGIN, the candidate cities, the bearing and the distance range come
+   from content/geo.ts (tested in scripts/geo.test.mjs), so the drawing and
+   the labels agree. No city gets a point: the route heads for the centre of
+   a dashed search area (an ellipse along Lisbon → Berlin enclosing all of
+   geo.AREA_CITIES) and stops at its edge. */
 
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -33,9 +36,9 @@ const land = feature(
   "land",
 );
 
-// framing. desktop: a route map (the Brazilian bulge to France) that fits the
+// framing. desktop: a route map (the Brazilian bulge to Western Europe) that fits the
 // hero's empty top-right area; mobile: the wider South America–Atlantic–Europe view
-const EXTENT_DESKTOP = { type: "MultiPoint", coordinates: [[-50, -14], [14, -14], [14, 56], [-50, 56]] };
+const EXTENT_DESKTOP = { type: "MultiPoint", coordinates: [[-50, -14], [20, -14], [20, 58], [-50, 58]] };
 const EXTENT_MOBILE = { type: "MultiPoint", coordinates: [[-62, -24], [24, -24], [24, 60], [-62, 60]] };
 
 const round = (n) => Math.round(n * 10) / 10;
@@ -129,13 +132,33 @@ function build({ w, h, pad, tol, minRing, graticuleStep, extent }) {
     .filter(Boolean)
     .map((d) => toD(rings(d)));
 
-  // the great-circle route (d3 resamples LineStrings along great circles)
-  const origin = projection([geo.ORIGIN.lon, geo.ORIGIN.lat]).map(round);
-  const paris = projection([geo.PARIS.lon, geo.PARIS.lat]).map(round);
-  const routeRings = rings(pathOf({ type: "LineString", coordinates: [[geo.ORIGIN.lon, geo.ORIGIN.lat], [geo.PARIS.lon, geo.PARIS.lat]] }));
-  const routePts = routeRings.flatMap((r) => r.pts);
+  // the search area, in screen space: major axis Lisbon → Berlin, widened
+  // until every area city sits inside with a margin
+  const P = (c) => projection([geo.CITIES[c].lon, geo.CITIES[c].lat]);
+  const [L, B] = [P("Lisbon"), P("Berlin")];
+  const cx = (L[0] + B[0]) / 2, cy = (L[1] + B[1]) / 2;
+  const ang = Math.atan2(B[1] - L[1], B[0] - L[0]), [ca, sa] = [Math.cos(ang), Math.sin(ang)];
+  const local = geo.AREA_CITIES.map((c) => { const [x, y] = P(c); return [(x - cx) * ca + (y - cy) * sa, -(x - cx) * sa + (y - cy) * ca]; });
+  const rx = Math.max(...local.map(([u]) => Math.abs(u))) * 1.25;
+  const ry = Math.max(...local.map(([u, v]) => Math.abs(v) / Math.sqrt(1 - (u / rx) ** 2))) * 1.15 + rx * 0.08;
+  const area = { cx: round(cx), cy: round(cy), rx: round(rx), ry: round(ry), angle: round((ang * 180) / Math.PI) };
+  const inside = ([x, y]) => (((x - cx) * ca + (y - cy) * sa) / rx) ** 2 + ((-(x - cx) * sa + (y - cy) * ca) / ry) ** 2 <= 1;
+  if (!local.every(([u, v]) => (u / rx) ** 2 + (v / ry) ** 2 < 1)) throw new Error("search area misses a city");
 
-  return { w, h, projection, coastRings, graticule, origin, paris, routeRings, routePts };
+  // the great-circle route (d3 resamples LineStrings along great circles)
+  // toward the area's centre, cut where it meets the ellipse
+  const origin = projection([geo.ORIGIN.lon, geo.ORIGIN.lat]).map(round);
+  const [clon, clat] = projection.invert([cx, cy]);
+  const full = rings(pathOf({ type: "LineString", coordinates: [[geo.ORIGIN.lon, geo.ORIGIN.lat], [clon, clat]] })).flatMap((r) => r.pts);
+  const k = full.findIndex(inside);
+  let [a, z] = [full[k - 1], full[k]];
+  for (let i = 0; i < 30; i++) { const m = [(a[0] + z[0]) / 2, (a[1] + z[1]) / 2]; if (inside(m)) z = m; else a = m; }
+  const routePts = [...full.slice(0, k), a];
+  const routeRings = [{ pts: routePts, closed: false }];
+  const end = a.map(round);
+  const [elon, elat] = projection.invert(a);
+
+  return { w, h, projection, coastRings, graticule, origin, end, area, routeEnd: [elat, elon].map((n) => Math.round(n * 1000) / 1000), routeRings, routePts };
 }
 
 // ---------- desktop: full drawing with instruments ----------
@@ -175,7 +198,9 @@ const desktop = {
   coast: D.coastRings.map((r) => toD([r])),
   route: toD(D.routeRings),
   origin: D.origin,
-  paris: D.paris,
+  end: D.end,
+  area: D.area,
+  routeEnd: D.routeEnd,
   compass,
   dividers,
   distanceAt: [round(mid[0] + 50), round(mid[1] + 6)],
@@ -183,7 +208,7 @@ const desktop = {
 
 // ---------- mobile: simplified map + route, no instruments ----------
 const M = build({ w: 600, h: 400, pad: 14, tol: 1.6, minRing: 40, graticuleStep: [20, 20], extent: EXTENT_MOBILE });
-const mobile = { w: M.w, h: M.h, graticule: M.graticule, coast: M.coastRings.map((r) => toD([r])), route: toD(M.routeRings), origin: M.origin, paris: M.paris };
+const mobile = { w: M.w, h: M.h, graticule: M.graticule, coast: M.coastRings.map((r) => toD([r])), route: toD(M.routeRings), origin: M.origin, end: M.end, area: M.area, routeEnd: M.routeEnd };
 
 // Output: static JSON in public/map/, fetched by components/MapDraft.tsx only
 // for the current screen size, after the page has loaded — so the map never
@@ -191,8 +216,8 @@ const mobile = { w: M.w, h: M.h, graticule: M.graticule, coast: M.coastRings.map
 // data comes from (Natural Earth, public domain) and the tested geography.
 const meta = {
   source: "Natural Earth 1:110m land (naturalearthdata.com), public domain, via world-atlas; projected with d3-geo (Mercator) by scripts/gen-map.mjs",
-  bearingDeg: geo.BEARING_TO_PARIS,
-  distanceKm: geo.KM_TO_PARIS,
+  bearingDeg: geo.BEARING_DEG,
+  distanceKm: [...geo.KM_RANGE],
 };
 mkdirSync("public/map", { recursive: true });
 writeFileSync("public/map/desktop.json", JSON.stringify({ meta, ...desktop }));
@@ -206,4 +231,4 @@ const size = (o) => {
 };
 console.log(`desktop: ${size(desktop)}  (coast rings ${D.coastRings.length}, graticule ${D.graticule.length})`);
 console.log(`mobile:  ${size(mobile)}  (coast rings ${M.coastRings.length}, graticule ${M.graticule.length})`);
-console.log(`bearing ${geo.BEARING_TO_PARIS}°, distance ${geo.KM_TO_PARIS} km, screen heading ${round(heading)}°`);
+console.log(`bearing ≈${geo.BEARING_DEG}°, distance ${geo.KM_RANGE.join("–")} km, screen heading ${round(heading)}°, route ends at ${D.routeEnd.join(", ")}`);

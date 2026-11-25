@@ -1,7 +1,7 @@
 import { site } from "@/content/site";
 import type { Bundle } from "@/content/i18n";
 import MapDraft from "@/components/MapDraft";
-import { BEARING_TO_PARIS, KM_TO_PARIS, bearingLabel } from "@/content/geo";
+import { BEARING_DEG, KM_RANGE, bearingLabel } from "@/content/geo";
 
 export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle["ui"] }) {
   // the CV in the page's language on the button; the locale's others beside it
@@ -59,8 +59,8 @@ export default function Origin({ copy, ui }: { copy: Bundle["site"]; ui: Bundle[
 
         {/* the drafted map: a layer behind the hero on wide screens, a figure here on small ones */}
         <MapDraft
-          km={`${new Intl.NumberFormat(ui.meta.htmlLang).format(KM_TO_PARIS)} km`}
-          bearing={ui.origin.bearingLabel.replace("{deg}", bearingLabel(BEARING_TO_PARIS))}
+          km={`${KM_RANGE.map((n) => new Intl.NumberFormat(ui.meta.htmlLang).format(n)).join("–")} km`}
+          bearing={ui.origin.bearingLabel.replace("{deg}", bearingLabel(BEARING_DEG))}
         />
 
         <dl className="titleblock" aria-label={ui.origin.titleBlockLabel}>

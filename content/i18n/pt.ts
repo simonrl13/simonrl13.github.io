@@ -31,7 +31,7 @@ export const pt: Bundle = {
       titleBlockLabel: "Carimbo do desenho",
       languagesLabel: "Idiomas falados",
       dimLabel: "FOLHA 1 / 1 — ESCALA 1:1",
-      bearingLabel: "RUMO {deg} → PARIS",
+      bearingLabel: "RUMO ≈{deg} → EUROPA",
     },
     journey: {
       title: "Trajetória",
