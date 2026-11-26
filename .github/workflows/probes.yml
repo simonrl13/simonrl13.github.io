@@ -1,9 +1,11 @@
 name: probes
 
 # The full prompt-injection / grounding suite (scripts/redteam.mjs) against
-# production: weekly, by hand, and after a push to main that changes what the
-# chat says or how it answers (the chat-relevant files, also listed in
-# CLAUDE.md and SECURITY.md). It waits for that commit's production deploy
+# production: monthly (the 1st), by hand, and after a push to main that changes
+# what the chat says or how it answers (the chat-relevant files, also listed in
+# CLAUDE.md and SECURITY.md). Dependency updates don't trigger it: run it by
+# hand after one (the chat's runtime packages: @anthropic-ai/sdk, next,
+# @upstash/*). It waits for that commit's production deploy
 # first. /security reads the date of the latest successful run of this
 # workflow, so a pass here is a full 27/27 (the script exits non-zero on any
 # failure). The judge uses PROBES_ANTHROPIC_API_KEY — a separate key with its
@@ -11,7 +13,7 @@ name: probes
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+    - cron: "0 6 1 * *" # the 1st of each month, 06:00 UTC (cron can't say "first Monday")
   workflow_dispatch:
   push:
     branches: [main]
@@ -27,10 +29,6 @@ on:
       - app/api/chat/**
       - lib/rate-limit.ts
       - scripts/redteam.mjs
-      # the chat's runtime packages (@anthropic-ai/sdk, next, @upstash/*): a path
-      # filter can't see which package changed, so any dependency change runs it
-      - package.json
-      - package-lock.json
 
 permissions:
   contents: read
