@@ -16,8 +16,9 @@ A plain-language summary for visitors lives at
   scoped to Vercel *Production* only.
 - **The probes judge key.** `PROBES_ANTHROPIC_API_KEY`, a GitHub Actions
   repository secret used only by the probes workflow to judge answers: a
-  separate key with its own Console spend limit, never the production key and
-  never in Vercel. For local runs the same role is `ANTHROPIC_API_KEY` in the
+  separate key in its own Console workspace with a US$5/month spend limit and
+  an expiry date (replaced before it expires), never the production key and
+  never in Vercel. The judge model is Claude Haiku 5.5. For local runs the same role is `ANTHROPIC_API_KEY` in the
   gitignored `.env.local`.
 - **The Upstash Redis credentials** that back the rate limits.
 - **The Resend API key** (email delivery for the contact form) and Simon's
@@ -100,8 +101,8 @@ OWASP Top 10 (2021):
   reported as such, never as a result.
 - **Probe policy.** The full prompt-injection and grounding suite
   (`scripts/redteam.mjs`) runs in `.github/workflows/probes.yml` against
-  production: weekly (Mondays 06:00 UTC), by hand, and after a push to `main`
-  that changes a chat-relevant file — `content/assistant-context.ts` (the prompt, `<facts>`, `<services>`, `<security>`), the content they're built from (`content/site.ts`, `content/projects.ts`, `content/pipeline.ts`, `content/services.ts`, `content/security.ts`), `content/i18n/**` and `content/locales.json` (the route's fallback and error messages, URLs), `app/api/chat/**` (route, checker, model config), `lib/rate-limit.ts`, `scripts/redteam.mjs` itself, and `package.json` / `package-lock.json` (the chat's runtime packages — `@anthropic-ai/sdk`, `next`, `@upstash/ratelimit`, `@upstash/redis`; a path filter can't tell which package changed, so any dependency change runs the suite). After such a push it first waits
+  production: monthly (the 1st, 06:00 UTC), by hand, and after a push to `main`
+  that changes a chat-relevant file — `content/assistant-context.ts` (the prompt, `<facts>`, `<services>`, `<security>`), the content they're built from (`content/site.ts`, `content/projects.ts`, `content/pipeline.ts`, `content/services.ts`, `content/security.ts`), `content/i18n/**` and `content/locales.json` (the route's fallback and error messages, URLs), `app/api/chat/**` (route, checker, model config), `lib/rate-limit.ts` and `scripts/redteam.mjs` itself. A dependency update doesn't trigger it (to keep the judge's cost down): the suite is run by hand after any change to the chat's runtime packages — `@anthropic-ai/sdk`, `next`, `@upstash/ratelimit`, `@upstash/redis`. After such a push it first waits
   for that commit's production deploy. Each run keeps every answer as a 90-day
   workflow artifact: probe questions, answers and verdicts only — no headers,
   keys, IPs or Upstash identifiers; an Anthropic API error prints only its HTTP
