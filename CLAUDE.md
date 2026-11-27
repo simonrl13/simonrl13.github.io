@@ -12,8 +12,10 @@
 ## Security rules (every change)
 - **No secrets** in code, logs, commits, prompts or fixtures. Keys live only in Vercel env
   vars (Production scope), a gitignored `.env.local`, or — the probes judge key only — the
-  GitHub secret `PROBES_ANTHROPIC_API_KEY` (separate, spend-limited, never the production
-  key). Never read `.env*` files.
+  GitHub secret `PROBES_ANTHROPIC_API_KEY` (separate, never the production key: its own
+  workspace, US$5/month limit; **expires 2027-02-26**. Warn Simon on or after **2027-02-12**,
+  two weeks before, that it needs replacing; an expired key makes every judged probe fail with
+  HTTP 401). Never read `.env*` files.
 - **Validate every input** at the trust boundary (type, length, shape) before using it —
   see `app/api/chat/route.ts`: size cap → JSON → shape → limits → model.
 - **Model output is rendered as text only.** `dangerouslySetInnerHTML` is allowed solely
@@ -22,12 +24,13 @@
   package exists on npm and is established (age, weekly downloads, maintainers).
 - **Chat spend controls stay on:** per-IP + daily cap in Upstash, fail closed, limits in
   `app/api/chat/config.ts`.
-- **Probe policy:** the full suite runs in `.github/workflows/probes.yml` — weekly, by hand,
-  and after a push to `main` touching a chat-relevant file (it waits for that deploy):
+- **Probe policy:** the full suite runs in `.github/workflows/probes.yml` — monthly (the 1st),
+  by hand, and after a push to `main` touching a chat-relevant file (it waits for that deploy):
   `content/assistant-context.ts`, `content/{site,projects,pipeline,services,security}.ts`,
   `content/i18n/**`, `content/locales.json`, `app/api/chat/**`, `lib/rate-limit.ts`,
-  `scripts/redteam.mjs`, `package.json`, `package-lock.json` (the chat's runtime packages:
-  `@anthropic-ai/sdk`, `next`, `@upstash/*`; any dependency change triggers it). Keep that `paths:` list, this one and SECURITY.md in sync. Every
+  `scripts/redteam.mjs`. Dependency updates don't trigger it: Simon runs it by hand after one
+  (the chat's runtime packages: `@anthropic-ai/sdk`, `next`, `@upstash/*`). Keep that `paths:`
+  list, this one and SECURITY.md in sync. Every
   production deploy runs `deploy-smoke.yml` (one question; fails on 5xx or the fallback).
   /security shows the latest successful probes run (`lib/probe-pass.ts`); change
   `PROBES_PASSED_ON` only after a full pass (the copy states no probe count). Locally: `npm run redteam <url>`.
@@ -60,7 +63,7 @@
 - `content/assistant-context.ts` — builds the chat system prompt from the files above:
   rules, `<facts>` (only source for claims about Simon, plus `CLARIFICATIONS`), `<services>`,
   `<security>`, then the no-embellishment rule again. `npm run redteam` judges fit answers
-  against `<facts>` with Claude Opus 5.5 (needs `ANTHROPIC_API_KEY` in `.env.local`).
+  against `<facts>` with Claude Haiku 5.5 (needs `ANTHROPIC_API_KEY` in `.env.local`).
 - `components/` — `SiteChrome` (rail, nav, mobile menu, `ThemeToggle`), `SheetFrame`,
   `RevealController`, `WorkCarousel` (cards, `ProjectDialog`), `IsoStack`, `ChatConsole`,
   `ContactForm`, `LangSwitch`, `sections/*`.

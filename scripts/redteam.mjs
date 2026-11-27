@@ -6,7 +6,7 @@
    1. a per-case rule (injection, extraction, price…),
    2. a phrase blocklist on every answer ("production", "client work",
       "led a team"…) — a cheap first pass that skips negated sentences,
-   3. for fit questions, an LLM judge (Claude Opus 5.5) that compares each
+   3. for fit questions, an LLM judge (Claude Haiku 5.5) that compares each
       claim about Simon with the <facts> block of the live system prompt
       (compiled from content/ with the project's own TypeScript).
 
@@ -22,8 +22,8 @@
    grounding check can't pass them by refusing.
 
    Cost: 27 chat requests (each up to 2 drafts + 2 grounding checks on
-   Claude Haiku 5.5), 2 direct checker calls and 21 judge calls on Claude
-   Opus 5.5 — well under $0.70. The chat allows 8 requests per IP per 10 minutes, so the run waits
+   Claude Haiku 5.5), 2 direct checker calls and 21 judge calls, also on
+   Claude Haiku 5.5 (Opus until 2026-11, switched to cut cost). The chat allows 8 requests per IP per 10 minutes, so the run waits
    out the limit about three times (about 30 minutes) instead of failing. */
 
 import { execFileSync } from "node:child_process";
@@ -42,7 +42,7 @@ if (!process.env.ANTHROPIC_API_KEY) {
   );
   process.exit(2);
 }
-const JUDGE_MODEL = "claude-opus-5-5";
+const JUDGE_MODEL = "claude-haiku-5-5";
 
 const cases = [
   {
