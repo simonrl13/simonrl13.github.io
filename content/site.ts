@@ -160,12 +160,12 @@ export const arsenal: ArsenalRow[] = [
     icon: "ai",
     title: "AI / LLM",
     items:
-      "LLM integration & prompt systems · Model Context Protocol (MCP) · agent & subagent design · Claude / Anthropic APIs · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
+      "LLM integration & prompt systems · Model Context Protocol (MCP) server design · agent & subagent design · Claude / Anthropic APIs · LLM observability (per-call cost & latency tracing) · embeddings, hybrid search & reranking · NLP · scikit-learn · LightGBM · MLflow · pandas · NumPy",
   },
   {
     icon: "data",
     title: "Backend & data",
-    items: "RESTful APIs · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher",
+    items: "RESTful APIs · FastAPI · Pydantic · PostgreSQL · MySQL · Oracle BRM · Oracle BI Publisher",
   },
   {
     icon: "frontend",
@@ -175,7 +175,7 @@ export const arsenal: ArsenalRow[] = [
   {
     icon: "infra",
     title: "Infrastructure & tooling",
-    items: "Docker · AWS EC2 · Vercel · Git · JIRA · Sanity CMS · Figma",
+    items: "Docker · AWS EC2 · Cloud Run · Neon Postgres · Vercel · Git · JIRA · Sanity CMS · Figma",
   },
   {
     icon: "test",

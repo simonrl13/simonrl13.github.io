@@ -22,12 +22,12 @@
   names keep their own colon ("AI Fluency: …", "AI-900:", "MedHelp:").
 -->
 <style>
-  @page { size: A4; margin: 14mm 16mm; }
+  @page { size: A4; margin: 11mm 16mm; }
   * { box-sizing: border-box; }
   body {
     font-family: Arial, Helvetica, "Segoe UI", sans-serif;
     color: #1a1a1a;
-    font-size: 10.3pt;
+    font-size: 9.7pt;
     line-height: 1.42;
     margin: 0;
   }
@@ -58,7 +58,7 @@
   h2 {
     font-size: 10.6pt;
     text-transform: uppercase;
-    letter-spacing: .08em;
+    letter-spacing: .06em; /* at .08em, text extraction (ATS) split some headings into letters */
     color: #B8763E;
     border-bottom: 0.75px solid #ccc;
     padding-bottom: 3px;
@@ -75,13 +75,16 @@
   }
   h3.subhead:first-of-type { margin-top: 0; }
   p { margin: 0 0 8px; }
-  .entry { margin-bottom: 8px; break-inside: avoid; }
+  /* entries may break between bullets (never inside one, see li); a title never ends a page
+     alone (.entry-head and h2: break-after: avoid) */
+  .entry { margin-bottom: 8px; break-inside: auto; }
   /* the long freelance entry may break between bullets (never inside one):
      kept whole, it pushes the French CV onto a third page */
   .entry--split { break-inside: auto; }
   li { break-inside: avoid; }
   .entry:last-child { margin-bottom: 0; }
   .entry-head {
+    break-after: avoid; /* a title never ends a page without its first bullet */
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -101,7 +104,9 @@
     column-gap: 24px;
   }
   .lang-line { margin-bottom: 2px; }
-  .cert-line { margin-bottom: 3px; }
+  /* certifications and courses run on as one paragraph each, separated by a dot */
+  .cert-line { display: inline; }
+  .cert-line + .cert-line::before { content: " · "; }
 </style>
 </head>
 <body>
@@ -132,15 +137,15 @@
   <div class="skills-row" lang="en"><b>Languages:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
   <div class="skills-row" lang="fr"><b>Langages&nbsp;:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
   <div class="skills-row" lang="pt-BR"><b>Linguagens:</b> Python, Java, JavaScript/TypeScript, C, C#, PL/SQL, Shell</div>
-  <div class="skills-row" lang="en"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP), agent &amp; subagent design, Claude / Anthropic APIs, Machine Learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
-  <div class="skills-row" lang="fr"><b>IA / LLM&nbsp;:</b> intégration de LLM et systèmes de prompts, Model Context Protocol (MCP), conception d’agents et de sous-agents, API Claude / Anthropic, machine learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
-  <div class="skills-row" lang="pt-BR"><b>IA / LLM:</b> integração de LLMs e sistemas de prompts, Model Context Protocol (MCP), design de agentes e subagentes, APIs Claude / Anthropic, machine learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
+  <div class="skills-row" lang="en"><b>AI / LLM:</b> LLM integration &amp; prompt systems, Model Context Protocol (MCP) server design, agent &amp; subagent design, Claude / Anthropic APIs, LLM observability (per-call cost and latency tracing), embeddings, hybrid search &amp; reranking, Machine Learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
+  <div class="skills-row" lang="fr"><b>IA / LLM&nbsp;:</b> intégration de LLM et systèmes de prompts, conception de serveurs Model Context Protocol (MCP), conception d’agents et de sous-agents, API Claude / Anthropic, observabilité des LLM (traçage du coût et de la latence par appel), embeddings, recherche hybride et reranking, machine learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
+  <div class="skills-row" lang="pt-BR"><b>IA / LLM:</b> integração de LLMs e sistemas de prompts, design de servidores Model Context Protocol (MCP), design de agentes e subagentes, APIs Claude / Anthropic, observabilidade de LLMs (rastreamento de custo e latência por chamada), embeddings, busca híbrida e reranking, machine learning, NLP, scikit-learn, LightGBM, MLflow, pandas, NumPy</div>
   <div class="skills-row" lang="en"><b>Web &amp; Mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
   <div class="skills-row" lang="fr"><b>Web et mobile&nbsp;:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
   <div class="skills-row" lang="pt-BR"><b>Web e mobile:</b> Next.js, React, React Native, Node.js, Expo, HTML/CSS, Bootstrap</div>
-  <div class="skills-row" lang="en"><b>Backend &amp; Data:</b> REST APIs, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
-  <div class="skills-row" lang="fr"><b>Backend et données&nbsp;:</b> API REST, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
-  <div class="skills-row" lang="pt-BR"><b>Backend e dados:</b> APIs REST, PostgreSQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
+  <div class="skills-row" lang="en"><b>Backend &amp; Data:</b> REST APIs, FastAPI, Pydantic, PostgreSQL, MySQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
+  <div class="skills-row" lang="fr"><b>Backend et données&nbsp;:</b> API REST, FastAPI, Pydantic, PostgreSQL, MySQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
+  <div class="skills-row" lang="pt-BR"><b>Backend e dados:</b> APIs REST, FastAPI, Pydantic, PostgreSQL, MySQL, Oracle Database, Oracle BRM, Oracle BI Publisher</div>
   <div class="skills-row" lang="en"><b>DevOps &amp; Cloud:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Cloud Run, Neon Postgres, Vercel</div>
   <div class="skills-row" lang="fr"><b>DevOps et cloud&nbsp;:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Cloud Run, Neon Postgres, Vercel</div>
   <div class="skills-row" lang="pt-BR"><b>DevOps e nuvem:</b> Docker, CI/CD (GitHub Actions), AWS EC2, Cloud Run, Neon Postgres, Vercel</div>
@@ -230,9 +235,9 @@
   <h2 lang="pt-BR">Projetos</h2>
   <!-- Scout numbers checked against the Scout repo (README, reports, TEST_LOG).
        The live demo ends 2027-01-01: remove its link before then; the video link stays (CLAUDE.md).
-       Add "(correct answers 4/36 → 24/36)" after the RAG clause, in all three
-       languages, once footballscout#41 is merged. -->
-  <div class="entry">
+       Retrieval: the M8 result (hits@1 0.52 → 0.91, keyword stays the default) is
+       merged in the Scout README; the older 4/36 → 24/36 (footballscout#41) stays out. -->
+  <div class="entry entry--split">
     <div class="entry-head">
       <span class="entry-title" lang="en">Scout — Football Market-Value Forecasting with an LLM Agent</span>
       <span class="entry-title" lang="fr">Scout — prévision de la valeur marchande de footballeurs, avec un agent LLM</span>
@@ -242,9 +247,29 @@
       <span class="entry-meta" lang="pt-BR"><a href="https://scout-246528398633.europe-west1.run.app">Demo ao vivo</a> · <a href="https://youtu.be/nnWtgHnnf54">Vídeo</a> · <a href="https://github.com/simonrl13/footballscout">github.com/simonrl13/footballscout</a></span>
     </div>
     <ul>
-      <li lang="en">Python, LightGBM, FastAPI, Postgres, Cloud Run. Trained on 8,190 players across seven European leagues; ~13% lower MAE than the no-change baseline; Claude agent with tool use, a number-checking guardrail and Wikipedia RAG with revision-level citations; 19/20 on a held-out eval; resisted 2/2 injection attempts</li>
-      <li lang="fr">Python, LightGBM, FastAPI, Postgres, Cloud Run. Entraîné sur 8&#8239;190 joueurs de sept championnats européens&#8239;; MAE inférieure d’environ 13&#8239;% à la référence «&nbsp;sans changement&nbsp;»&#8239;; agent Claude avec appel d’outils, garde-fou de vérification des chiffres et RAG sur Wikipédia avec citation de la révision exacte&#8239;; 19/20 sur une évaluation réservée (held-out)&#8239;; 2/2 tentatives d’injection repoussées</li>
-      <li lang="pt-BR">Python, LightGBM, FastAPI, Postgres, Cloud Run. Treinado com 8.190 jogadores de sete ligas europeias; MAE cerca de 13% menor que a referência “sem mudança”; agente Claude com uso de ferramentas, uma verificação de números e RAG sobre a Wikipédia com citação da revisão exata; 19/20 em uma avaliação held-out; resistiu a 2/2 tentativas de injeção</li>
+      <li lang="en">Python, LightGBM, FastAPI, Postgres, Cloud Run. 8,190 players, seven European leagues; point-in-time data, leakage tests, MLflow; test MAE 0.357 vs 0.410 for “no change” (~13% lower), 80% intervals with 82.2% coverage (2023–24)</li>
+      <li lang="fr">Python, LightGBM, FastAPI, Postgres, Cloud Run. 8&#8239;190 joueurs, sept championnats européens&#8239;; données point-in-time, tests de fuite de données, MLflow&#8239;; MAE de test 0,357 contre 0,410 pour «&nbsp;sans changement&nbsp;» (environ 13&#8239;% de moins), intervalles à 80&#8239;%, couverture 82,2&#8239;% (2023–24)</li>
+      <li lang="pt-BR">Python, LightGBM, FastAPI, Postgres, Cloud Run. 8.190 jogadores, sete ligas europeias; dados point-in-time, testes de vazamento, MLflow; MAE de teste 0,357 contra 0,410 da referência “sem mudança” (~13% menor), intervalos de 80% com cobertura de 82,2% (2023–24)</li>
+      <li lang="en">Claude agent over five read-only tools: numbers checked in code against tool results (retry, then block), spend cap before each call, planted injection cases in the evals, 19/20 held-out. MCP server (stdio): same tools, read-only annotations, Pydantic-checked arguments, read-only DB role, tested over a real stdio round trip (run locally). Per-call traces (tokens, cost, latency, tools, cache hits) and a dashboard (cost per day/conversation, cache hit rate, p50/p95 latency, violations)</li>
+      <li lang="fr">Agent Claude sur cinq outils en lecture seule&nbsp;: chiffres recoupés dans le code avec les résultats des outils (relance, puis blocage), plafond de dépenses avant chaque appel, cas d’injection de prompt intégrés aux évaluations, 19/20 en held-out. Serveur MCP (stdio)&nbsp;: mêmes outils, annotations de lecture seule, arguments validés par Pydantic, rôle de base de données en lecture seule, testé par un aller-retour stdio réel (en local). Traces par appel (jetons, coût, latence, outils, cache) et tableau de bord (coût par jour/conversation, taux de cache, latence p50/p95, violations)</li>
+      <li lang="pt-BR">Agente Claude sobre cinco ferramentas somente leitura: números conferidos em código contra os resultados das ferramentas (nova tentativa, depois bloqueio), teto de gasto antes de cada chamada, injeções plantadas nas avaliações, 19/20 held-out. Servidor MCP (stdio): mesmas ferramentas, anotações de somente leitura, argumentos validados com Pydantic, papel de banco somente leitura, testado com ida e volta real via stdio (rodado localmente). Traces por chamada (tokens, custo, latência, ferramentas, cache) e painel (custo por dia/conversa, taxa de cache, latência p50/p95, violações)</li>
+      <li lang="en">Wikipedia linked via Wikidata, split into 37,375 passages (≤ 1,200 chars, section and exact revision kept) for cited answers; Claude structured-output extraction (versioned prompt, Batch API) drops signals without a verbatim quote. Pre-registered retrieval test (70 blind-labelled questions): hybrid + reranking lifted hits@1 from 0.52 to 0.91 but missed the latency budget; keyword stays the default</li>
+      <li lang="fr">Wikipédia (via Wikidata) découpée en 37&#8239;375 passages (≤&nbsp;1&#8239;200 caractères, section et révision exacte) pour citer les sources&#8239;; extraction par sorties structurées de Claude (prompt versionné, Batch API)&#8239;; les signaux sans citation littérale sont écartés. Test de recherche préenregistré (70 questions étiquetées à l’aveugle)&nbsp;: hybride + reranking, hits@1 de 0,52 à 0,91, mais budget de latence dépassé&nbsp;; la recherche par mots-clés reste la méthode par défaut</li>
+      <li lang="pt-BR">Wikipédia ligada via Wikidata, dividida em 37.375 trechos (≤ 1.200 caracteres, com seção e revisão exata) para respostas com citação; extração com saídas estruturadas do Claude (prompt versionado, Batch API) descarta sinais sem citação literal. Teste de recuperação pré-registrado (70 perguntas rotuladas às cegas): híbrida + reranking elevou o hits@1 de 0,52 para 0,91, mas estourou o orçamento de latência; palavras-chave continua como padrão</li>
+    </ul>
+  </div>
+  <!-- Lastro: private repo (no link), Stage 0 of phase 1; describe only the design
+       (docs/PLAN.md, docs/adr/, docs/HANDOFF.md); answer generation is phase 2 -->
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title" lang="en">Lastro — Multi-tenant Support Assistant (in development)</span>
+      <span class="entry-title" lang="fr">Lastro — assistant de support multi-tenant (en développement)</span>
+      <span class="entry-title" lang="pt-BR">Lastro — assistente de suporte multi-tenant (em desenvolvimento)</span>
+    </div>
+    <ul>
+      <li lang="en">Design stage: two-layer tenant isolation (app scoping + Postgres row-level security, failing closed), permission-aware pgvector search; designed to answer only from a tenant’s documents with citations, or refuse; 7 ADRs after an adversarial design review</li>
+      <li lang="fr">Conception&nbsp;: isolation des tenants sur deux niveaux (filtrage applicatif + row-level security de Postgres, bloquant en cas d’échec), recherche pgvector selon les permissions&#8239;; conçu pour répondre uniquement à partir des documents du tenant avec citations, ou refuser&#8239;; 7 ADR après une revue de conception critique</li>
+      <li lang="pt-BR">Fase de design: isolamento de tenants em duas camadas (escopo na aplicação + row-level security do Postgres, que bloqueia em caso de falha), busca no pgvector por permissões; projetado para responder só a partir dos documentos do tenant com citações, ou recusar; 7 ADRs após uma revisão crítica do design</li>
     </ul>
   </div>
   <div class="entry">
@@ -254,12 +279,9 @@
       <span class="entry-title" lang="pt-BR">Assistente de IA do portfólio — simonlaborde.com</span>
     </div>
     <ul>
-      <li lang="en">Live chat assistant on my portfolio, grounded in structured site content via the Claude API (Haiku); every answer is checked against the profile before it is shown</li>
-      <li lang="fr">Assistant conversationnel en ligne sur mon portfolio, ancré dans le contenu structuré du site via l’API Claude (Haiku)&#8239;; chaque réponse est vérifiée par rapport au profil avant d’être affichée</li>
-      <li lang="pt-BR">Assistente de chat no meu portfólio, baseado no conteúdo estruturado do site via API Claude (Haiku); cada resposta é verificada contra o perfil antes de ser exibida</li>
-      <li lang="en">Hardened for production: per-IP rate limits and a daily spending cap, CSP and security headers (grade A on securityheaders.com), prompt-injection tests, and CI with CodeQL and secret scanning</li>
-      <li lang="fr">Sécurisé pour la production&nbsp;: limites de requêtes par IP et plafond de dépenses quotidien, CSP et en-têtes de sécurité (note A sur securityheaders.com), tests d’injection de prompt, et CI avec CodeQL et détection de secrets</li>
-      <li lang="pt-BR">Protegido para produção: limites de requisições por IP e teto de gasto diário, CSP e cabeçalhos de segurança (nota A no securityheaders.com), testes de prompt injection e CI com CodeQL e varredura de segredos</li>
+      <li lang="en">Live chat assistant on my portfolio, grounded in structured site content via the Claude API (Haiku), every answer checked against the profile before it is shown; per-IP rate limits and a daily spending cap, CSP and security headers (grade A on securityheaders.com), prompt-injection tests, and CI with CodeQL and secret scanning</li>
+      <li lang="fr">Chat en ligne ancré dans le contenu structuré du site via l’API Claude (Haiku), chaque réponse confrontée au profil avant affichage&#8239;; limites de requêtes par IP et plafond de dépenses quotidien, CSP et en-têtes de sécurité (note A sur securityheaders.com), tests d’injection de prompt, et CI avec CodeQL et détection de secrets</li>
+      <li lang="pt-BR">Assistente de chat no meu portfólio, baseado no conteúdo estruturado do site via API Claude (Haiku), com cada resposta verificada contra o perfil antes de ser exibida; limites de requisições por IP e teto de gasto diário, CSP e cabeçalhos de segurança (nota A no securityheaders.com), testes de prompt injection e CI com CodeQL e varredura de segredos</li>
     </ul>
   </div>
   <div class="entry">

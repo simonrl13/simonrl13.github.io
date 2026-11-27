@@ -87,7 +87,9 @@ export const projects: Project[] = [
     // were negative. M3 (public-text features) still open. Live demo on Cloud Run
     // (europe-west1, Neon Postgres) until 2027-01-01; before then the links,
     // status, chat facts, Scout probe and CV switch to the video (CLAUDE.md).
-    // The retrieval result (4/36 → 24/36) waits for footballscout#41.
+    // Retrieval (M8, README): hybrid + reranking hits@1 0.52 → 0.91 vs keyword on 70
+    // questions, latency budget missed, keyword stays the default (the demo uses it).
+    // The older 4/36 → 24/36 (footballscout#41, open) stays out.
     id: "scout",
     tag: "01 · ML forecasting + Claude agent",
     title: "Scout",
@@ -120,11 +122,11 @@ export const projects: Project[] = [
     ],
     video: { id: "nnWtgHnnf54", poster: "/assets/video/scout.webp", seconds: 25 },
     detail: {
-      body: "Scout forecasts how footballers’ Transfermarkt market values will change over 12 months, with a Claude agent that answers questions about the forecasts. Every number in an agent answer must match the data its tools returned; an answer that doesn’t is retried, then blocked. Wikipedia claims cite the exact page revision. Trained on 8,190 players across seven European leagues (2013–2024). LightGBM beat the no-change baseline by ~13% MAE (0.357 vs 0.410) and tied a linear model; 82.2% coverage on 80% intervals; 19/20 on a held-out agent eval. Two pre-registered experiments are reported as negative results. The agent runs on Claude Haiku 5.5, about 8x cheaper per question than Haiku 4.5 with the same dev-set result. Milestone M3 (public-text features) is still open.",
+      body: "Scout forecasts how footballers’ Transfermarkt market values will change over 12 months, with a Claude agent that answers questions about the forecasts. Every number in an agent answer must match the data its tools returned; an answer that doesn’t is retried, then blocked, and a spend cap is checked before each model call. The same five read-only tools are served by an MCP server (stdio) with read-only annotations, Pydantic-validated arguments and a read-only database role. Every model call is traced (tokens, cost, latency, tools, cache hits), with a dashboard of cost, cache hit rate, p50/p95 latency and violations. Wikipedia pages, linked through Wikidata, are split into 37,375 passages that keep their section and exact revision, so claims cite the revision. Trained on 8,190 players across seven European leagues (2013–2024). LightGBM beat the no-change baseline by ~13% MAE (0.357 vs 0.410) and tied a linear model; 82.2% coverage on 80% intervals; 19/20 on a held-out agent eval. Two pre-registered feature experiments are reported as negative results; a pre-registered retrieval test (70 blind-labelled questions) found hybrid search + reranking lifted hits@1 from 0.52 to 0.91 over keyword search but missed its latency budget, so keyword search stays the default. The agent runs on Claude Haiku 5.5, about 8x cheaper per question than Haiku 4.5 with the same dev-set result. Milestone M3 (public-text features) is still open.",
       role: "Independent project — live demo",
       outcome:
-        "On the 2023–24 test seasons: MAE 0.357 vs 0.410 for a no-change baseline (no gain over a linear baseline) and 82.2% coverage for 80% prediction intervals; agent at 19/20 held-out evals with 2/2 injection attempts resisted; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",
-      stack: "Python · LightGBM · FastAPI · Postgres · Claude API · RAG · Cloud Run",
+        "On the 2023–24 test seasons: MAE 0.357 vs 0.410 for a no-change baseline (no gain over a linear baseline) and 82.2% coverage for 80% prediction intervals; agent at 19/20 held-out evals with 2/2 injection attempts resisted; pre-registered retrieval test: hybrid + reranking hits@1 0.52 → 0.91 vs keyword, latency budget missed, keyword stays the default; CI with tests, dependency audits, secret scanning and CodeQL, and a documented threat model",
+      stack: "Python · LightGBM · FastAPI · Pydantic · Postgres · MLflow · Claude API · MCP (stdio) · RAG · Cloud Run",
     },
   },
   {
